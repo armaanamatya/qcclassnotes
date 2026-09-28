@@ -1,0 +1,8 @@
+\section{Citations}
+Bibliographic information can be cited using \verb|\cite|. For example, \verb|\cite{algopandu}| cites the algorithm textbook \cite{algopandu}.
+Typically, we keep bibliographic information in a \texttt{.bib} file (in this case, \texttt{references.bib}).
+
+Internal references (with hyperlinks) can be created using \verb|\ref|, \verb|\nameref|, and \verb|\cref| (though \verb|\cref| comes from the
+\href{https://ctan.org/pkg/cleveref}{Cleveref} package). The \verb|\ref| command will cite the corresponding numerical label (e.g.,
+\verb|\ref{alg:select}| outputs ``\ref{alg:select}''). The \verb|\nameref| command will cite the name (if given), and \verb|\cref| will
+output the numerical label with the type, e.g., \verb|\cref{alg:select}| outputs ``\cref{alg:select}''.

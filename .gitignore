@@ -1,0 +1,17 @@
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.auxlock
+*.edit
+*.pyg
+*.listing
+_minted*/
+tikzimages/
+build.log

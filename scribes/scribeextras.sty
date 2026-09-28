@@ -1,0 +1,45 @@
+\ProvidesPackage{scribeextras}[2026/09/28 Extras for my lecture scribes]
+
+% Load this AFTER scribe.sty. It only adds to the course style file, so
+% scribe.sty itself stays identical to the one in the course template.
+
+% scribe.sty turns on TikZ externalization, which needs a tikzimages/ folder.
+% Typeset TikZ figures inline instead.
+\tikzexternaldisable
+
+% Starts the notes of a new lecture day inside the single scribe document.
+% Usage: \newlecture{September 1, 2026}{Topic of the lecture}
+\newcommand{\newlecture}[2]{%
+    \clearpage
+    \phantomsection
+    \addcontentsline{toc}{part}{Lecture of #1}%
+    \hrule
+    \vspace{0.1in}
+    \noindent\textbf{Lecture Date:} #1\par
+    \vspace{0.1in}
+    \noindent\textbf{Lecture Topic:} #2\par
+    \vspace{0.1in}
+    \hrule
+    \vspace{0.1in}
+}
+
+% Exercises given in class (the dashed boxes in my handwritten notes).
+% Reuses the `exercise' environment from scribe.sty and draws a dashed frame
+% around it.
+\tcolorboxenvironment{exercise}{%
+    enhanced,
+    breakable,
+    colback=white,
+    frame hidden,
+    boxrule=0pt,
+    borderline={0.8pt}{0pt}{black, dashed},
+    left=3mm, right=3mm, top=1mm, bottom=2mm,
+    before skip=4mm, after skip=4mm,
+}
+
+% Blank space for a solution/proof that still has to be written.
+% Usage: \solutionspace or \solutionspace[10cm]
+% Replace the command with a proof environment once the solution is written.
+\newcommand{\solutionspace}[1][8cm]{%
+    \par\noindent\textbf{Solution.}\par
+    \vspace{#1}}

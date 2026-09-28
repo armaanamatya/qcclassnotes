@@ -1,0 +1,215 @@
+\ProvidesPackage{main}
+% Warn about obsolete commands, classes and packages
+\RequirePackage[l2tabu,orthodox]{nag}
+
+% Layout of document
+\usepackage[a4paper,margin=1in]{geometry}
+%\setlength{\marginparwidth}{2cm} 
+
+% Scale fonts
+\usepackage{anyfontsize}
+
+% Improves spacing between words
+\usepackage{microtype}
+
+% ams math stuff, theorem/proof environment, etc.
+\usepackage{mathtools, amsthm, thmtools, amssymb, amsfonts, mathrsfs}
+\usepackage{xcolor}
+
+\newtheorem{theorem}{Theorem}[section]
+ \newtheorem{lemma}[theorem]{Lemma}
+ \newtheorem{claim}[theorem]{Claim}
+ \newtheorem{definition}[theorem]{Definition}
+ \newtheorem{remark}[theorem]{Remark}
+ \newtheorem{corollary}[theorem]{Corollary}
+
+% Indent first line of paragraph after section, chapter, etc. start
+\usepackage{indentfirst}
+
+% Show keys of \label when document in draft mode
+\usepackage[notref, notcite, color]{showkeys}
+
+% Draft mode stuff
+\usepackage{ifdraft, xparse}
+\ifdraft{
+    \usepackage{draftwatermark}
+    \SetWatermarkAngle{90}
+    \SetWatermarkFontSize{2cm}
+    \SetWatermarkHorCenter{1cm}
+    }{} % sets DRAFT watermark along margins in draft mode
+
+% For enumerate environment. inline option allows for inline enumerate
+% for starred environment \begin{enumerate*}\item ... \end{enumerate}
+\usepackage[inline]{enumitem}
+
+% For captions
+\usepackage{caption, subcaption}
+
+% For improved tables
+\usepackage{tabularx}
+\usepackage{booktabs, multicol, multirow, adjustbox, blkarray}
+
+% Horizontal fraction formatting using \sfrac{num}{den}
+\usepackage{xfrac}
+\UseCollection{xfrac}{plainmath}
+\renewcommand{\sfrac}[2]{#1 / #2}
+
+% Improved formatting for \left ... \right pairs
+\usepackage{mleftright}
+\mleftright
+
+% Theorem environment setup
+\usepackage{tikz, amssymb, tcolorbox}
+\tcbuselibrary{theorems, skins, breakable}
+% Exercise environment --- optional argument in brackets adds number of
+% points to title
+\newcounter{exercise}[section]
+\newtcbtheorem{exercisebase}{\stepcounter{exercise}Exercise~\arabic{exercise}}{breakable,
+colframe=red!35!black,fonttitle=\bfseries, separator sign={ }}{exe}
+\newenvironment{exercise}[1][]{%
+    \begin{exercisebase*}{\ifthenelse{\equal{#1}{}}{}{(#1 Points)}}{}}{\end{exercisebase*}}
+
+% Footnote stuff for theorem boxes. If footnote in theorem, place \savenotes before
+% environment and \spewnotes after.
+\usepackage{footnote}
+\renewcommand{\thempfootnote}{\arabic{mpfootnote}}
+
+
+% Pseudocode 
+\usepackage{algorithm}
+\usepackage[noEnd=true,indLines,rightComments=false]{algpseudocodex}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{ifthen}
+\definecolor{algcolor}{HTML}{2979FF}
+\definecolor{keywordcolor}{HTML}{80CBC4}
+
+\newcommand{\AlgName}[1]{{\textcolor{algcolor}{#1}}}
+
+\newboolean{syntaxhighlightedpseudocode}
+\setboolean{syntaxhighlightedpseudocode}{true}
+
+\ifthenelse{\boolean{syntaxhighlightedpseudocode}}{
+    \definecolor{keyword}{HTML}{859900}
+    \definecolor{keyword2}{HTML}{93a1a1}
+    \definecolor{function}{HTML}{268bd2}
+    \definecolor{literal}{HTML}{d33682}
+}{
+    \definecolor{keyword}{gray}{000000}
+    \definecolor{keyword2}{HTML}{000000}
+    \definecolor{function}{HTML}{000000}
+    \definecolor{literal}{HTML}{000000}
+}
+
+\renewcommand{\algorithmicend}{\textcolor{keyword}{\textbf{end}}}
+\renewcommand{\algorithmicdo}{\textcolor{keyword}{\textbf{do}}}
+\renewcommand{\algorithmicwhile}{\textcolor{keyword}{\textbf{while}}}
+\renewcommand{\algorithmicfor}{\textcolor{keyword}{\textbf{for}}}
+\renewcommand{\algorithmicforall}{\textcolor{keyword}{\textbf{for all}}}
+\renewcommand{\algorithmicloop}{\textcolor{keyword}{\textbf{loop}}}
+\renewcommand{\algorithmicrepeat}{\textcolor{keyword}{\textbf{repeat}}}
+\renewcommand{\algorithmicuntil}{\textcolor{keyword}{\textbf{until}}}
+\renewcommand{\algorithmicprocedure}{\textcolor{keyword2}{\textbf{proc}}}
+\renewcommand{\algorithmicfunction}{\textcolor{keyword2}{\textbf{func}}}
+\renewcommand{\algorithmicif}{\textcolor{keyword}{\textbf{if}}}
+\renewcommand{\algorithmicthen}{\textcolor{keyword}{\textbf{then}}}
+\renewcommand{\algorithmicelse}{\textcolor{keyword}{\textbf{else}}}
+\renewcommand{\algorithmicrequire}{\textcolor{keyword}{\textbf{require}}}
+\renewcommand{\algorithmicensure}{\textcolor{keyword}{\textbf{ensure}}}
+\renewcommand{\algorithmicreturn}{\textcolor{keyword}{\textbf{return}}}
+\algnewcommand\algorithmicto{\textcolor{keyword}{\textbf{to}}}
+\algnewcommand\algorithmicforeach{\textcolor{keyword}{\textbf{for each}}}
+\algnewcommand\algorithmicbreak{\textcolor{keyword}{\textbf{break}}}
+\algnewcommand{\algorithmicand}{\textcolor{keyword}{\textbf{and}}}
+\algnewcommand{\algorithmicor}{\textcolor{keyword}{\textbf{or}}}
+\algnewcommand{\algorithmicnot}{\textcolor{keyword}{\textbf{not}}}
+\algnewcommand\algorithmicdownto{\textcolor{keyword}{\textbf{down to}}}
+\algnewcommand{\algorithmicdone}{\textcolor{keyword}{\textbf{done}}}
+\algnewcommand{\algorithmicin}{\textcolor{keyword}{\textbf{in}}}
+
+\newcommand{\pseudocodein}{\algorithmicin~}
+\newcommand{\logicaland}{\algorithmicand~}
+\newcommand{\logicalor}{\algorithmicor~}
+\newcommand{\logicalnot}{\algorithmicnot~}
+
+
+\makeatletter
+\algdef{SE}[FOREACH]{ForEach}{EndForEach}[1]{\algpx@startIndent\algpx@startCodeCommand\algorithmicforeach\ #1:}{\algpx@endIndent\algpx@startCodeCommand\algorithmicend\ \algorithmicforeach}%
+\algdef{SE}[FORRANGE]{ForRange}{EndForRange}[3]{\algpx@startIndent\algpx@startCodeCommand\algorithmicfor\ #1\ \ensuremath{\gets}\ #2\ \algorithmicto\ #3:}{\algpx@endIndent\algpx@startCodeCommand\algorithmicend\ \algorithmicfor}%
+\algdef{SE}[FORRANGEDOWN]{ForRangeDown}{EndForRangeDown}[3]{\algpx@startIndent\algpx@startCodeCommand\algorithmicfor\ #1\ \ensuremath{\gets}\ #2\ \algorithmicdownto\ #3\ \algorithmicdo}{\algpx@endIndent\algpx@startCodeCommand\algorithmicend\ \algorithmicfor}%
+\algdef{SE}[DONTIMES]{DoNTimes}{EndDoNTimes}[1]{\algpx@startIndent\algpx@startCodeCommand\algorithmicdo\ #1\ times}{\algpx@endIndent\algpx@startCodeCommand\algorithmicdone}%
+\ifbool{algpx@noEnd}{%
+    \algtext*{EndForEach}%
+    \algtext*{EndForRange}%
+    \algtext*{EndForRangeDown}%
+	\algtext*{EndDoNTimes}%
+    %
+      % end indent line after (not before), to get correct y position for multiline text in last command
+    \apptocmd{\EndForEach}{\algpx@endIndent}{}{}%
+    \apptocmd{\EndForRange}{\algpx@endIndent}{}{}%
+    \apptocmd{\EndForRangeDown}{\algpx@endIndent}{}{}%
+	\apptocmd{\EndDoNTimes}{\algpx@endIndent}{}{}%
+}{}%
+\pretocmd{\ForEach}{\algpx@endCodeCommand}{}{}
+\pretocmd{\ForRange}{\algpx@endCodeCommand}{}{}
+\pretocmd{\ForRangeDown}{\algpx@endCodeCommand}{}{}
+\pretocmd{\DoNTimes}{\algpx@endCodeCommand}{}{}
+
+% for end commands that may not be printed, tell endCodeCommand whether we are using noEnd
+\ifbool{algpx@noEnd}{%
+  \pretocmd{\EndForEach}{\algpx@endCodeCommand[1]}{}{}%
+  \pretocmd{\EndForRange}{\algpx@endCodeCommand[1]}{}{}%
+  \pretocmd{\EndForRangeDown}{\algpx@endCodeCommand[1]}{}{}%
+  \pretocmd{\EndDoNTimes}{\algpx@endCodeCommand[1]}{}{}%
+}{%
+\pretocmd{\EndForEach}{\algpx@endCodeCommand[0]}{}{}%
+\pretocmd{\EndForRange}{\algpx@endCodeCommand[0]}{}{}%
+\pretocmd{\EndForRangeDown}{\algpx@endCodeCommand[0]}{}{}%
+\pretocmd{\EndDoNTimes}{\algpx@endCodeCommand[0]}{}{}%
+}%
+\makeatother
+
+\renewcommand{\gets}{=}
+\newcommand{\plusgets}{\mathrel{+}=}
+\newcommand{\minusgets}{\mathrel{-}=}
+\newcommand{\timesgets}{\mathrel{*}=}
+\newcommand{\equalto}{\mathrel{==}}
+\newcommand{\notequalto}{\neq}
+
+\definecolor{literal}{HTML}{b58900}
+\newcommand{\False}{\textcolor{literal}{\texttt{False}}\xspace}
+\newcommand{\True}{\textcolor{literal}{\texttt{True}}\xspace}
+\newcommand{\Null}{\textcolor{literal}{\texttt{Null}}\xspace}
+\renewcommand*\Call[2]{\textproc{#1}\left(#2\right)}
+
+\newcommand{\comp}[1]{\overline{#1}}
+
+% Useful commands
+\newcommand{\set}[1]{\left\lbrace#1\right\rbrace}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\card}[1]{\left\lvert#1\right\rvert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\bigO}[1]{\mathcal{O}\left(#1\right)}
+\newcommand{\bigOm}[1]{\Omega\left(#1\right)}
+\newcommand{\bigTh}[1]{\Theta\left(#1\right)}
+\newcommand{\littleO}[1]{o\left(#1\right)}
+\newcommand{\littleOm}[1]{\omega\left(#1\right)}
+\newcommand{\suchthat}{\mid}
+
+% hyperlinks in document
+\usepackage[colorlinks=true, final]{hyperref}
+\usepackage[noabbrev,capitalize]{cleveref}
+\crefname{line}{line}{lines}
+
+\newenvironment{solution}{\begin{proof}[\textnormal{\textbf{Solution}}]}{\end{proof}}
+	\newcommand{\choice}[2]{\textbf{\{}#1, #2\textbf{\}}}
+
+\newcounter{problem}
+\newenvironment{problem}[1]{\stepcounter{problem}\section*{Problem \arabic{problem} (#1 Points)}}{\pagebreak}
+
+\usepackage{fancyhdr, lastpage}
+
+\usepackage{biblatex} % Imports biblatex package
+\addbibresource{references.bib} % Import the bibliography file
+

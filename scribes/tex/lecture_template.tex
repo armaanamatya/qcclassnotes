@@ -1,0 +1,44 @@
+% Blank lecture file. To add a lecture:
+%   1. copy this file to tex/lecture_YYYY-MM-DD.tex and fill it in,
+%   2. add these two lines at the end of the lecture list in main.tex:
+%        \newlecture{Month D, YYYY}{Topic of the lecture}
+%        \input{tex/lecture_YYYY-MM-DD}
+% This file itself is not included in main.tex.
+
+In this lecture, we \dots % one or two sentences summarizing the lecture
+
+\section{First Topic}
+
+Text of the notes goes here.
+
+\begin{definition}[Name of the Definition]
+    Statement of the definition.
+\end{definition}
+
+\begin{theorem}[Name of the Theorem]\label{thm:example}
+    Statement of the theorem.
+\end{theorem}
+
+\begin{proof}
+    Proof of the theorem.
+\end{proof}
+
+% A figure drawn with TikZ.
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \draw (0,0) rectangle (8,0.7);
+        \foreach \x in {1,2,3,7} {\draw (\x,0) -- (\x,0.7);}
+        \node at (5,0.35) {$\cdots$};
+        \node[below] at (0.5,0) {\small $1$};
+        \node[below] at (7.5,0) {\small $n$};
+    \end{tikzpicture}
+    \caption{Caption of the figure.}
+    \label{fig:example}
+\end{figure}
+
+% An exercise given in class (dashed box in my notes), with space for the solution.
+\begin{exercise}
+    Statement of the exercise.
+\end{exercise}
+\solutionspace % TODO: replace with \begin{proof} ... \end{proof}

@@ -1,0 +1,64 @@
+\section{Theorems}
+
+
+
+Theorems that we discuss in class should be stated correctly and proved. Here is an example.
+
+\bigskip
+
+Markov's inequality uses only the value of the expectation (also called ``first moment'').
+Hence it can be quite weak.
+
+\begin{theorem}[Markov Inequality]
+    For any non-negative random variable and for any $a > 0$
+    \[\prob{X\geq a}\leq \frac{\expectation{X}}{a}\]
+\end{theorem}
+
+
+Except for the easiest theorems and proofs, it is important to give an intuition for them.
+Here is an example.
+
+Intuitively, Markov's inequality says that for any (positive) random variable $X$, it is less likely  that
+$X$ takes a value  much larger than its expectation. 
+
+
+
+\begin{proof}
+    For any $a > 0$, let
+    $I$ be an indicator r.v. for the event  $X \geq a$.
+    Then $I \leq X/a$. Taking expectations on both sides, we get   $\expectation{I} = \prob{X \geq a} \leq \frac{\expectation{X}}{a}$.
+\end{proof}
+
+
+
+Chebyshev's inequality gives a stronger bound, which  assumes that the \emph{variance} (also called the ``second moment'') or \emph{standard deviation} of the random variable is known.
+These are defined below.
+
+
+It is good to define essential concepts formally by defining them. Here is an example.
+
+\begin{definition}
+    The \textbf{variance} of a random variable $X$ is
+    \[\variance{X} = \expectation{\left(X-\expectation{X}\right)^2}\]
+    The \textbf{standard deviation} of a random variable $X$ is
+    \[\sigma(X)=\sqrt{\variance{X}}\]
+\end{definition}
+
+Now we state and prove Chebyshev's inequality.
+
+\begin{theorem}{Chebyshev's Inequality}
+    For \textbf{any} random variable
+    \[\prob{\abs{X-\expectation{X}} \geq a} \leq \frac{\variance{X}}{a^2}\]
+\end{theorem}
+
+The proof uses Markov's inequality. Note that Chebyshev's inequality applies to any random variable,
+not necessarily positive. Thus to apply Markov (which applies only to positive r.v.) we 
+apply it to $\abs{X-\expectation{X}}$. The usual trick to get rid of absolute value, which is hard to deal with, is by squaring.
+
+
+\begin{proof}
+    \[\prob{\abs{X-\expectation{X}} \geq a} = \prob{(X-\expectation{X})^2 \geq a^2}\]
+    By Markov inequality,
+    \[ \prob{(X-\expectation{X})^2 \geq a^2} \leq \frac{\expectation{\left(X-\expectation{X}\right)^2}}{a^2}=\frac{\variance{X}}{a^2}\]
+\end{proof}
+

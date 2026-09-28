@@ -1,0 +1,238 @@
+In this lecture, we state and prove Markov's inequality and Chebyshev's inequality, and we state the
+Chernoff bound. We then look at the query complexity of search for classical and quantum algorithms,
+and we analyze the birthday paradox.
+
+\section{Markov's Inequality}
+
+Markov's inequality uses only the expectation $\expectation{X}$ of the random variable, which is
+also called the \emph{first moment}.
+
+\begin{theorem}[Markov's Inequality]\label{thm:markov}
+    Let $X \geq 0$ be a random variable. Then, for any $a > 0$,
+    \[\prob{X \geq a \expectation{X}} \leq \frac{1}{a}.\]
+    Equivalently, for any $b > 0$,
+    \[\prob{X \geq b} \leq \frac{\expectation{X}}{b}.\]
+\end{theorem}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \draw (0,0) -- (8,0);
+        \draw (0,0.1) -- (0,-0.1) node[below] {\small $0$};
+        \draw (3,0.1) -- (3,-0.1);
+        \node[above] at (3,0.1) {\small $\mu = \expectation{X}$};
+        \draw (6,0.1) -- (6,-0.1) node[below] {\small $a\mu$};
+        \draw[decorate, decoration={brace, amplitude=5pt}] (6,0.25) -- (8,0.25)
+        node[midway, above=6pt] {\small $\leq \frac{1}{a}$};
+    \end{tikzpicture}
+    \caption{Markov's inequality: the probability that $X$ is at least $a\mu$ is at most $\sfrac{1}{a}$.}
+    \label{fig:markov}
+\end{figure}
+
+\begin{proof}
+    Let
+    \[I = \begin{cases}
+            1 & \text{if } X \geq b, \\
+            0 & \text{otherwise.}
+        \end{cases}\]
+    Then
+    \[I \leq \frac{X}{b}.\]
+    This is true for $X \geq b$, since then $I = 1 \leq \frac{X}{b}$. It is also true for $X < b$,
+    since then $I = 0$ and $X \geq 0$.
+    Markov's inequality follows by taking expectations on both sides:
+    \[\expectation{I} \leq \expectation{\frac{X}{b}} = \frac{\expectation{X}}{b}.\]
+    Since
+    \[\prob{I = 1} = \prob{X \geq b} \qquad\text{and}\qquad \prob{I = 0} = \prob{X < b},\]
+    we have $\expectation{I} = \prob{I = 1}$, and hence
+    \[\prob{X \geq b} \leq \frac{\expectation{X}}{b}.\]
+    Taking $b = a \expectation{X}$ gives $\prob{X \geq a \expectation{X}} \leq \frac{1}{a}$.
+\end{proof}
+
+\section{Chebyshev's Inequality}
+
+Chebyshev's inequality uses the variance of the random variable, which is also called the
+\emph{second moment}.
+
+\begin{definition}[Variance and Standard Deviation]
+    The \textbf{variance} of a random variable $X$ is
+    \[\variance{X} = \expectation{\left(X - \expectation{X}\right)^2}.\]
+    The \textbf{standard deviation} of $X$ is
+    \[\sigma = \sqrt{\variance{X}}.\]
+\end{definition}
+
+\begin{theorem}[Chebyshev's Inequality]\label{thm:chebyshev}
+    For any random variable $X$ and any $a > 0$,
+    \[\prob{\abs{X - \expectation{X}} \geq a} \leq \frac{\variance{X}}{a^2} = \frac{\sigma^2}{a^2}.\]
+\end{theorem}
+
+Here $\abs{X - \expectation{X}}$ is the deviation of $X$ from its mean.
+
+\begin{proof}
+    \[\prob{\abs{X - \expectation{X}} \geq a}
+        = \prob{\left(X - \expectation{X}\right)^2 \geq a^2}
+        \leq \frac{\expectation{\left(X - \expectation{X}\right)^2}}{a^2}
+        = \frac{\variance{X}}{a^2},\]
+    where the inequality is Markov's inequality applied to the random variable
+    $\left(X - \expectation{X}\right)^2 \geq 0$.
+\end{proof}
+
+\section{Chernoff Bound}
+
+Let
+\[X = \sum_{i=1}^{n} X_i,
+    \qquad
+    X_i = \begin{cases}
+        1 & \text{with probability } p_i,     \\
+        0 & \text{with probability } 1 - p_i,
+    \end{cases}\]
+where the $X_i$ are \emph{mutually independent}. By linearity of expectation,
+\[\expectation{X} = \mu = \sum_{i=1}^{n} \expectation{X_i} = \sum_{i=1}^{n} p_i.\]
+
+\begin{theorem}[Chernoff Bound]\label{thm:chernoff-0903}
+    Let $X$ and $\mu$ be as above. Then
+    \begin{itemize}
+        \item for $0 < \delta < 1$,
+              \[\prob{X \geq (1+\delta)\mu} \leq e^{-\frac{\mu \delta^2}{3}};\]
+        \item for $R \geq 6\mu$,
+              \[\prob{X \geq R} \leq 2^{-R};\]
+        \item for $0 < \delta < 1$,
+              \[\prob{X < (1-\delta)\mu} \leq e^{-\frac{\mu \delta^2}{2}}.\]
+    \end{itemize}
+\end{theorem}
+
+\section{Search}
+
+Let $f \colon D \to R$ be a function from a domain $D$ to a range $R$ (\cref{fig:function}).
+Given $y$, we ask: is there an $x$ such that $f(x) = y$? We consider
+\[f \colon [1, \dots, N] \to [1, \dots, N],\]
+and we want to find an $x$ such that $f(x) = k$. The function can be seen as an array with $n$
+slots, where $n$ is the size of the domain, and the cost of an algorithm is the number of queries
+to $f$.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        % array
+        \draw (0,0) rectangle (6,0.7);
+        \foreach \x in {1,2,4,5} {\draw (\x,0) -- (\x,0.7);}
+        \node at (3,0.35) {$\cdots$};
+        \node[below] at (0.5,0) {\small $1$};
+        \node[below] at (5.5,0) {\small $n$};
+        % function from D to R
+        \draw (8.5,0.35) ellipse (0.6 and 1);
+        \draw (11.5,0.35) ellipse (0.6 and 1);
+        \node at (8.5,1.65) {$D$};
+        \node at (11.5,1.65) {$R$};
+        \node[point] (y) at (11.5,0.35) {};
+        \foreach \h in {0.95,0.35,-0.25} {
+                \node[point] (x) at (8.5,\h) {};
+                \draw[->] (x) -- (y);
+            }
+        \node at (10,1.35) {$f$};
+    \end{tikzpicture}
+    \caption{Left: an array with $n$ slots. Right: a function $f \colon D \to R$.}
+    \label{fig:function}
+\end{figure}
+
+\begin{itemize}
+    \item Randomized classical algorithm: $\bigTh{n}$ queries.
+    \item Grover's algorithm: $\bigO{\sqrt{n}}$ queries.
+\end{itemize}
+
+For the random sampling algorithm,
+\[\expectation{\text{queries}} = \bigO{n}, \qquad \prob{\text{Success}} = \frac{1}{n}.\]
+
+\paragraph{Probability amplitude amplification.} If the classical success probability is $p$, then
+in the quantum case it becomes $\sqrt{p}$.
+
+\section{Birthday Paradox}
+
+There are $m$ people and $n$ birthdays ($n = 365$). We are looking for a \emph{collision}, i.e.,
+$x \neq y$ such that
+\[f(x) = f(y),\]
+where $f(x)$ is the birthday of person $x$.
+
+Let $E_i$ be the event that the $\nth{i}$ birthday is different from the first $i-1$ birthdays. Then
+\begin{align*}
+    \prob{\bigcap_{i=1}^{m} E_i}
+     & = \prob{\text{all birthdays different}}                                                                        \\
+     & = \prob{E_1} \cdot \prob{E_2 \given E_1} \cdot \prob{E_3 \given E_2 \cap E_1} \cdots                           \\
+     & = 1 \cdot \left(1 - \frac{1}{n}\right) \cdot \left(1 - \frac{2}{n}\right) \cdots \left(1 - \frac{m-1}{n}\right) \\
+     & = \prod_{i=0}^{m-1} \left(1 - \frac{i}{n}\right)                                                                \\
+     & \leq \prod_{i=0}^{m-1} e^{-\sfrac{i}{n}}                                                                        \\
+     & = e^{-\sum_{i=0}^{m-1} \frac{i}{n}}                                                                             \\
+     & = e^{-\frac{(m-1)m}{2n}}.
+\end{align*}
+For $m = \sqrt{2n} + 1$,
+\[\prob{\text{all birthdays different}}
+    \leq e^{-\frac{\sqrt{2n}\left(\sqrt{2n}+1\right)}{2n}}
+    \leq e^{-\frac{2n}{2n}}
+    = \frac{1}{e}
+    \leq \frac{1}{2}.\]
+Hence $\bigO{\sqrt{n}}$ people are enough to have a constant probability of collision.
+
+\subsection{Expected Number of Collisions}
+
+The birthday paradox can be seen as throwing $m$ balls into $n$ bins (\cref{fig:ballsbins}).
+We show that for $m \approx \sqrt{2n}$,
+\[\expectation{\text{\# collisions}} \geq 1.\]
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        % bins
+        \draw (0,0) rectangle (1,3.2);
+        \foreach \y in {0.8,1.6,2.4} {\draw (0,\y) -- (1,\y);}
+        \node[above] at (0.5,3.2) {$n$};
+        % balls
+        \node[above] at (4.2,2.75) {$m$ balls};
+        \foreach \b/\t in {2.4/2.8, 1.6/1.2, 0.8/2.0} {
+                \draw (4.2,\b) circle (0.1);
+                \draw[->] (4.05,\b) -- (1.1,\t);
+            }
+    \end{tikzpicture}
+    \caption{$m$ balls are thrown into $n$ bins.}
+    \label{fig:ballsbins}
+\end{figure}
+
+Let $X$ be the number of collisions. $X$ takes values from $0$ to $\binom{m}{2}$. Write
+\[X = \sum_{i \neq j} X_{ij},
+    \qquad
+    X_{ij} = \begin{cases}
+        1 & \text{if } f(i) = f(j), \\
+        0 & \text{else,}
+    \end{cases}\]
+where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. The random variables $X_{ij}$ are
+\emph{pairwise independent}. By linearity of expectation,
+\begin{align*}
+    \expectation{X}
+     & = \sum_{i \neq j} \expectation{X_{ij}} \\
+     & = \sum_{i \neq j} \prob{X_{ij} = 1}    \\
+     & = \sum_{i \neq j} \frac{1}{n}          \\
+     & = \binom{m}{2} \frac{1}{n}
+    = \frac{m(m-1)}{2n}
+    \sim \frac{m^2}{n}.
+\end{align*}
+
+\newpage
+% Dashed box in my notes: exercise given in class.
+\begin{exercise}
+    Show that
+    \[\prob{X \geq 1} \geq \bigTh{1},\]
+    i.e., the birthday paradox occurs.
+\end{exercise}
+
+\noindent From class:
+\[\variance{X} = \variance{\sum_{i \neq j} X_{ij}}.\]
+\solutionspace % TODO: replace with \begin{proof} ... \end{proof}
+
+\section{Quantum Birthday Paradox}
+
+An algorithm makes $k$ queries
+\[f(x_1), \dots, f(x_k).\]
+
+% Not in a dashed box in my notes, but written as something to show.
+\begin{exercise}
+    Show a $\sqrt{n}$ lower bound in the classical case.
+\end{exercise}
+\solutionspace % TODO: replace with \begin{proof} ... \end{proof}
