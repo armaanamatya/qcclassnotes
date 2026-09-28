@@ -1,0 +1,58 @@
+% My scribes for all the lectures, in one document.
+% Every lecture day has its own file in tex/ and starts with \newlecture{date}{topic}.
+% scribe.sty is an unmodified copy of the course file.
+
+\documentclass[a4paper,11pt,final]{article}
+\usepackage{scribecompat} % must come before scribe
+\usepackage{scribe}
+\usepackage{scribeextras} % \newlecture, dashed exercise boxes, \solutionspace, inline TikZ
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document begins here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+\textbf{\large Quantum Computing} \\
+
+Professor Gopal Pandurangan\\
+\vspace{0.1in}
+\end{center}
+
+\hrule
+
+\vspace{0.1in}
+
+\textbf{Scribe Author:} Armaan Amatya
+
+\vspace{0.1in}
+
+\hrule
+
+\vspace{0.1in}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lectures, in order. Append new lectures at the end. %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newlecture{September 1, 2026}{Query Complexity of Search, Coupon Collector Problem,
+    Lower Bound for Randomized Algorithms, Chernoff Bounds}
+\input{tex/lecture_2026-09-01}
+
+\newlecture{September 3, 2026}{Markov, Chebyshev and Chernoff Inequalities, Search,
+    Birthday Paradox}
+\input{tex/lecture_2026-09-03}
+
+% AI use declaration (required by the course if AI tools were used).
+% \clearpage
+% \section*{AI Use Declaration}
+% TODO: say which tool was used, how it was used, what I modified,
+% and give the shareable link of the chat.
+
+% Uncomment if something is cited with \cite{...}.
+% \bibliographystyle{abbrv}
+% \bibliography{references}
+\end{document}

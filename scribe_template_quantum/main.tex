@@ -1,0 +1,207 @@
+% Everything before `\begin{document}` is called the preamble. The preamble for this document is
+% included in the `main.sty` file and is imported into the main document. There is usually no need to
+% change anything before the \begin{document} command. However, you can add things as needed, 
+% such as additional commands and new environments.
+
+\documentclass[a4paper,11pt,final]{article}
+\usepackage{scribe}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document begins here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Keep everything up to here. Start writing your notes from here.
+
+\begin{center}
+\textbf{\large Quantum Computing} \\
+
+Professor Gopal Pandurangan\\
+\vspace{0.1in}
+\end{center}
+
+\hrule
+
+\vspace{0.1in}
+
+\textbf{Lecture Topic:} TOPIC \\
+
+\textbf{Lecture Date:} DATE \\
+
+
+
+\textbf{Scribe Author:} 
+
+\vspace{0.1in}
+
+\hrule
+
+\vspace{0.1in}
+
+In this lecture, we recall basic definitions and concepts of probability theory. 
+
+\section{Events, Probability, Probability Space}
+Consider an experiment with a finite (or countably infinite)
+number of outcomes. Each outcome is a simple event (or a sample point).
+The \emph{sample space} is the set of all possible simple events.
+An \emph{event} $\mathcal{E}$ is a union of simple events --- a subset of the sample space.
+
+Two events are said to be \textbf{mutually exclusive} if $A \cap B = 0$.
+
+With each simple event $s$ we associate a number $\prob{s}$ which is
+called as the \emph{probability} of $s$.
+
+\begin{definition}[Probability Space]
+    A probability distribution $\Pr$ on a
+    discrete sample space $S$ is a function from events of $S$ to $\mathbb{R}$
+    such that it satisfies the following three \emph{axioms}:
+    \begin{enumerate}
+        \item $\prob{A} \geq 0$ for any event $A$.
+        \item $\prob{S} = 1$.
+        \item For any (finite or countably infinite)  sequence of pairwise mutually exclusive events
+              $A_1, A_2, \dots$:
+              \[\prob{\cup_i A_i} = \sum_i\prob{A_i}\]
+    \end{enumerate}
+    The pair $(S, \Pr)$ is called a discrete \textbf{probability space}.
+\end{definition}
+
+The probability of any event $\mathcal{E}$  can be computed as the sum of the probabilities of the simple events
+that it is composed of; this follows from the third axiom:
+\[\prob{\mathcal{E}} = \sum_{s\in\mathcal{E}} \prob{s}\]
+
+
+\section{Principle of Inclusion-Exclusion}
+
+The \emph{inclusion-exclusion} principle gives a formula for computing the probability
+of the union of a set of events in terms of the probabilities of the individual events and their intersections.
+
+\begin{theorem}[Inclusion-Exclusion Principle]
+    Let $E_1,E_2, \dots, E_n$ be arbitrary events. Then
+    \begin{align*}\prob{\cup_{i=1}^nE_i}
+         & = \sum_{i=1}^n\prob{E_i} - \sum_{1 \leq i < j\leq n}\prob{E_i \cap E_j} + \sum_{1 \leq i < j < k \leq n}\prob{E_i \cap E_j \cap E_k} \\
+         & \phantom{=} - \dots + (-1)^n\prob{E_1 \cap E_2 \dots \cap E_b}                                                                       \\
+         & = \sum_{k=1}^n(-1)^{k+1}\left(\sum_{1\leq i_1<\dots<i_k\leq n}\prob{E_{i_1}\cap E_{i_2}\cap\dots\cap E_{i_k}}\right)
+    \end{align*}
+\end{theorem}
+
+An important consequence of the inclusion-exclusion principle is a simple upper bound on the probability
+of the union of events known as \emph{Boole's inequality or union bound}.
+
+\begin{theorem}[Boole's inequality (union bound)]\label{thm:boole}
+    For any
+    arbitrary sequence of events $E_1, E_2, \dots, E_n$:
+    \[\prob{\cup_{i=1}^nE_i} \leq \sum_i \prob{E_i}\]
+\end{theorem}
+
+The union bound is used often in upper bounding the occurrence of the union of a set of ``bad'' events. If this upper bound is small,
+then it implies that none of the bad events occur with high probability.
+
+
+\section{Conditional Probability}
+
+\begin{definition}[Conditional Probability]
+    Given two events $A$ and $B$, the conditional probability of $A$ given $B$ is defined as follows:
+    \[\prob{A \given B} = \frac{\prob{A\cap B}}{\prob{B}}\]
+    assuming $\prob{B} \neq 0$.
+\end{definition}
+
+In the above definition, by conditioning on $B$ we restrict the sample space to the set $B$.
+Thus the conditional probability can be considered as  $\prob{A \cap B}$ ``normalized'' by $\prob{B}$.
+
+Given two events $E_1$ and $E_2$, Bayes' rule relates the conditional probability of the first given the second,
+to the conditional probability of the second given the first. This is useful to infer one conditional probability from the other.
+\begin{theorem}[Bayes' rule]
+    \[\prob{E_1 \given E_2}=\frac{\prob{E_1 \cap E_2}}{\prob{E_2}} = \frac{\prob{E_2 \given E_1}\prob{E_1}}{\prob{E_2}}\]
+\end{theorem}
+
+The following are some useful identities that involve computing the probability of the intersection of many events.
+
+\khalid{When you compile this theorem looks ugly. Not clear why?}
+\begin{theorem}[Chain rule of Conditional Probabilities]\label{thm:chainrule}
+    \begin{itemize}
+        \item $\prob{A\cap B}=\prob{A \given B} \prob{B}$.
+        \item $\prob{A\cap B\cap C}=\prob{A \given B\cap C}\prob{B\cap C} = \prob{A \given B\cap C} \prob{B \given C}\prob{C}$.
+        \item The following is a generalization of the above identity.
+              Let $A_1$, $\dots$, $A_n$ be a sequence of events.
+              Let $E_i = \bigcap_{j=1}^i A_i$. Then
+              \begin{align*}\prob{E_n}
+                   & =\prob{A_n \given E_{n-1}}\prob{E_{n-1}}                                                      \\
+                   & = \prob{A_n \given E_{n-1}}\prob{A_{n-1} \given E_{n-2}}\dots \prob{A_2 \given E_1}\prob{A_1}
+              \end{align*}
+    \end{itemize}
+\end{theorem}
+
+A fundamental concept that follows from conditional probability is that of \emph{independence}.
+
+\begin{definition}[Independence of events]
+    Two events $A$ and $B$ are  said to be \emph{independent} if
+    \[\prob{A\cap B} = \prob{A} \times \prob{B}\]
+    or (when $\prob{B} > 0$)
+    \[\prob{A \given B} = \frac{\prob{A\cap B}}{\prob{B}} = \prob{A}\]
+\end{definition}
+
+
+\section{The Birthday Paradox}
+
+We study a problem called the ``Birthday Paradox'', that arises often in algorithm design and analysis.
+The problem also serves to illustrate basic concepts in probability theory.
+
+Question: What is the probability that among $m$ people no two have the same birthday?
+We make the  following two assumptions: (1) All birthdays are equally likely and (2) Birthdays are independent events.
+
+To compute the above probability, we first define the sample space of the experiment.
+The sample space is the set of all vectors $S = \{(b_1, \dots, b_m) | b_i \in [1,
+        \dots, N]\}$, where $b_i$ denotes the birthday of the $\nth{i}$ person, and $N$ is the total number of different birthdays ($N= 365$ in Earth).
+We need to compute $\prob{E}$ where the event $E = \{(b_1,\dots, b_m | b_i \neq b_j \mbox{ for all }
+    i \neq j\}$, i.e., the event $E$ is the set of all events where no two birthdays are the same.
+
+How many different atomic events are counted in $E$?
+The number of possible $m$ different birthdays is $N.(N-1).(N-2) \dots (N-m+1)$.
+Hence,
+\begin{align*}\prob{E}
+     & = \frac{N\cdot(N-1)\cdot(N-2)\dots(N-m+1)}{N^m} \\
+     & = \prod_{i=0}^{m-1}(1 - i/N)                    \\
+     & \leq \prod_{i=0}^{m-1} e^{-i/N}                 \\
+     & = e^{-\sum_{i=0}^{m-1} i/N}                     \\
+     & = e^{-m(m-1)/2N}
+\end{align*}
+For $m = \sqrt{2N} + 1 \leq 28$, $\prob{E} < 1/e < 1/2$.
+
+The apparent ``paradox'' in this problem is that significantly less number of people, i.e.,  only about $\sqrt{N}$ people (which is much smaller than $N$), are needed to have a good chance (about 50\%) to have two people to have a common birthday.
+
+\subsubsection*{Alternate Analysis}
+Assume that we choose one birthday after the other independently and uniformly at
+random from $[1, 2, \dots, N]$.
+Let the event $E_i$ denote: ''the $\nth{i}$ choice is different from the first $i-1$ choices''.
+Then, we compute:
+\begin{align*}\prob{E}
+     & = \prob{\cap_{i=1}^mE_i}                                                                                     \\
+     & = \prob{E_1} \prob{E_2 \given E_1}\prob{E_3 \given E_2 \cap E_1} \dots \prob{E_m \given \cap_{i=1}^{m-1}E_i} \\
+     & = 1 (1 - 1/N) (1 - 2/N) \dots (1 - (m-1)/N)                                                                  \\
+     & = \prod_{i=1}^{m} (1 -\frac{i-1}{N})
+\end{align*}
+This gives the same result as before.
+
+This analysis uses a very useful principle called the  \textbf{Principle of Deferred Decisions}. In this principle,
+the idea is to defer the fixing of choices of events to ``when they are needed'' and not a priori (i.e., all at once).
+Typically, this type of analysis will use conditional probabilities. In the above analysis, to compute $\prob{E}$,
+we first computed $\prob{E_1}$, then $\prob{E_2 \given E_1}$ and so on. At each stage, we only fixed the  event that
+determined the respective conditional probabilities, i.e., first $E_1$ which fixes $b_1$, and then the event
+$E_2$ conditioned on $E_1$, which fixes $b_2 \neq b_1$, and so on.
+
+
+
+% For readability, it is good to write each chapter/section in its own .tex file
+% and input them into the main document. See below.
+
+
+\input{tex/latex-resources}
+\input{tex/theorem-in-latex}
+\input{tex/lemma-in-latex}
+\input{tex/figures-and-pseudocode}
+\input{tex/citations}
+
+\bibliographystyle{abbrv}
+\bibliography{references}
+\end{document}

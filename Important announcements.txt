@@ -1,0 +1,35 @@
+Important announcements
+ 
+@everyone
+ 
+See the attached syllabus (also posted in simple syllabus a while ago).
+ 
+Here are more details on the scribes, exams, and project.
+ 
+You have to scribe the lectures in class faithfully and add as much details as required, e.g., 
+if I mention some proof and asked you to do it or did it only partially in class, it must
+be done in full in your scribes. Generally, the scribes should be as complete as possible.
+Only topics covered in class need to be done; no need to do any extra material that is not
+covered in class (unless mentioned in class). Figures are highly encouraged and can help in getting better  scores.
+ 
+Here is the template for the scribe: Overleaf, Online LaTeX Editor
+This also has some Latex tips.
+ 
+The scribe has to be in latex and overleaf is the best way to do it.
+You can access the overleaf link above and copy it and create you own overleaf project (note that you cannot edit the file itself).
+There will be 3 submission deadlines for scribes. The first will be mid September, the second in mid October and the last will be after the end of the last lecture. All submissions will include the latex files, figures,  and the pdf. Submissions will be in Teams.
+ 
+ Note that you can use AI tools for creating scribes, but if they are not relevant to what was done in class, this will actually lose points. If you do use AI, you have to declare how you used it, and say how you modified it. You should also provide sharable links of the AI chat that you did (e.g., chatgpt shareable link). Generally, any stuff that is not understandable by me will lose points. So in many cases, it may not be advantageous to use AI at all. The best is to understand yourself what you write.
+ 
+The two exams will be in  class and will be open scribes, i.e., you can bring the scribes that you have written for the exams. The first exam will be in the beginning of October and the second will be on the last day of class. The exact dates will be posted soon. The exams will be based on the topics covered in class.
+ 
+There will be a final project and will require submitting a report and doing a presentation. You will be judged based on the report and presentation. It will be big plus if you can do something original, that is even publishable. In these days with the help of AI, one can write decent papers if you are able to understand the material. AI typically may not give proofs that are understandable, which is not acceptable. You are allowed to use AI tools for the project,
+but you should take full ownership and responsibility and have to clearly state where the AI is used and provide AI links (e.g., if you used chatgpt, you have to share the appropriate link). 
+If the proofs/arguments are not human understandable, then this will result in no credit.
+ 
+I will  more post more details on the project. This involves reading some papers that I will post, understanding them well, writing a good explanation of it, and solving any new problems motivated by it.
+ 
+Overleaf, Online LaTeX Editor
+An online LaTeX editor that’s easy to use. No installation, real-time collaboration, version control, hundreds of LaTeX templates, and more.
+COSC 6397 26162 Topics Computer Science - Simple Syllabus.pdf
+ 

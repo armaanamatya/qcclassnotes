@@ -1,0 +1,50 @@
+\section{Figures and Pseudocode}
+
+\subsection{Figures in Latex}
+
+You can write figures in latex as in Figure \ref{fig:big-o}.
+One way of creating figure is to draw using some software (e.g., MS Paint, Photoshop) and save it as a vector graphic (e.g. svg, pdf).
+Then insert the file into the document using the figure environment. Here, Big-O.pdf and Big-O1.pdf are the figure files.
+ 
+\begin{figure*}
+    %\centering
+    \includegraphics*[width=2in,height=2in]{figures/Big-O}
+    \includegraphics*[width=2in, height=2in]{figures/Big-O1}
+    \caption{Illustration of the Big-O notation. $g(n) = O(f(n))$.}
+    \label{fig:big-o}
+\end{figure*}
+
+Alternatively, there are packages to draw figures directly. \href{https://tikz.dev/}{Tikz} is a popular one, though it has a high learning curve. For an example, see  \href{https://texample.net/tikz/examples/cycle/}{here}.
+
+
+
+\subsection{Algorithms in Latex}
+
+Pseudocode can be written in a few different ways. Using the \href{https://ctan.org/pkg/algpseudocodex}{algpseudocodex package}, Algorithm \nameref{alg:select} is given in \cref{alg:select}.
+
+\begin{algorithm}
+    \caption{Select}
+    \label{alg:select}
+    \begin{algorithmic}[1]
+        \Function{\nameref*{alg:select}}{$S$, $k$}
+        \If {$\card{S} \equalto 1$}
+        \State \Return $S[1]$
+        \EndIf
+        \State Partition $S$ into $\ceil{\sfrac{n}{5}}$ groups of 5 elements each and a leftover group of up to 4 elements. \label{line:selectpartition}
+        \State Find the median of each group \label{line:selectfindmedians}
+        \State $R \gets$ the set of these $\ceil{\frac{n}{5}}$ medians \label{line:selectsetofmedians}
+        \State $m \gets \card{R}$
+        \State $p\gets \Call{Select}{R,\ceil{\sfrac{m}{2}}}$\label{line:selectmedianofmedians}
+        \State $S_1 \gets \set{x\in S \suchthat x < p}$\label{line:selectleftpartition}
+        \State $S_2 \gets \set{x\in S \suchthat x > p}$\label{line:selectrightpartition}
+        \If {$\card{S_1} = k-1$}
+        \State \Return $p$
+        \ElsIf {$\card{S_1} > k - 1$}
+        \State \Return $\Call{Select}{S_1 ,k}$
+        \Else
+        \State \Return $\Call{Select}{S_2,k-\card{S_1}-1}$
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
