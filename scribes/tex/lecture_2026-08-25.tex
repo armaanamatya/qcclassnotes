@@ -175,15 +175,16 @@ deterministic algorithms.
 
 \section{Probability}
 
-We review the basic notions of (discrete) probability (\cref{fig:probability-0825}).
-
-\begin{definition}[Sample Space, Probability Function, Events]
-    A \textbf{sample space} $S$ is a finite set of \emph{simple events}; we write $\abs{S} = n$. A
-    \textbf{probability function} is a function
-    \[\Pr \colon S \to [0,1] \subseteq \mathbb{R}.\]
-    An \textbf{event} is a subset $A \subseteq S$, and its probability is
-    \[\prob{A} = \sum_{a \in A} \prob{a}.\]
-\end{definition}
+We review the basic notions of (discrete) probability (\cref{fig:probability-0825}). A
+\textbf{sample space} $S$ is a finite set of \emph{simple events}, $\abs{S} = n$. A
+\textbf{probability function} $\Pr \colon S \to [0,1] \subseteq \mathbb{R}$ assigns a probability to every
+simple event. An \textbf{event} is a subset $A \subseteq S$, with probability
+$\prob{A} = \sum_{a \in A} \prob{a}$. The probability function satisfies the \emph{axioms}
+$\prob{A} \geq 0$ for every event $A$, $\prob{S} = 1$, and
+$\prob{A_1 \cup A_2 \cup \dots \cup A_n} = \sum_{i=1}^{n} \prob{A_i}$ for pairwise disjoint events
+$A_1, \dots, A_n$ (i.e., $A_i \cap A_j = \emptyset$ for all $i \neq j$). A \textbf{random variable} is a
+function $X \colon S \to V$ from the sample space to a set of values $V$ (usually $V \subseteq \mathbb{R}$),
+and for a value $r \in V$, $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}$.
 
 \begin{figure}[ht]
     \centering
@@ -221,23 +222,6 @@ We review the basic notions of (discrete) probability (\cref{fig:probability-082
         value in $V$.}
     \label{fig:probability-0825}
 \end{figure}
-
-The probability function satisfies the following \emph{axioms}:
-\begin{enumerate}
-    \item $\prob{A} \geq 0$ for every event $A$;
-    \item $\prob{S} = 1$;
-    \item if $A_1, A_2, \dots, A_n$ are pairwise disjoint events, i.e., $A_i \cap A_j = \emptyset$ for
-          all $i \neq j$, then
-          \[\prob{A_1 \cup A_2 \cup \dots \cup A_n} = \sum_{i=1}^{n} \prob{A_i}.\]
-\end{enumerate}
-
-\begin{definition}[Random Variable]
-    A \textbf{random variable} is a function
-    \[X \colon S \to V\]
-    from the sample space to a set of values $V$ (usually $V \subseteq \mathbb{R}$). For a value
-    $r \in V$,
-    \[\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}.\]
-\end{definition}
 
 For example, in random sampling the sample space $S$ is the set of the $n$ possible outcomes of the
 $\log n$ coin flips, and the random variable $X$ is the index that is sampled. Every $s \in S$ has

@@ -100,34 +100,18 @@ amplitude from the non-solutions to the solution.
 
 \section{Grover's Algorithm on \texorpdfstring{$n$}{n} Qubits}
 
-Now let $f \colon \set{0,1}^n \to \set{0,1}$ have a unique solution $x^*$, and write the state of the
-$n$ qubits as the vector $(a_x)_{x \in \set{0,1}^n}$ of its $N$ amplitudes. The register starts in
-$\ket{0^n}$, i.e., $(a_x)_x = (1, 0, \dots, 0)$.
-\begin{enumerate}
-    \item After the Hadamard gates, $(a_x)_x = \left(\tfrac{1}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right)$.
-    \item After the phase flip, the entry of $x^*$ is $-\tfrac{1}{\sqrt{N}}$ and all other entries are
-          $\tfrac{1}{\sqrt{N}}$:
-          \[\left(\tfrac{1}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right)
-              \longmapsto \left(\tfrac{1}{\sqrt{N}}, \dots, -\tfrac{1}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right).\]
-    \item The mean is
-          \[\mu = \frac{1}{N}\left(\frac{N-1}{\sqrt{N}} - \frac{1}{\sqrt{N}}\right) = \frac{N-2}{N\sqrt{N}} \approx \frac{1}{\sqrt{N}},\]
-          so the diffusion operator maps the solution's amplitude to
-          $2\mu + \tfrac{1}{\sqrt{N}} = \tfrac{3N - 4}{N\sqrt{N}} \approx \tfrac{3}{\sqrt{N}}$ and every other
-          amplitude to $2\mu - \tfrac{1}{\sqrt{N}} = \tfrac{N - 4}{N\sqrt{N}} \approx \tfrac{1}{\sqrt{N}}$:
-          \[\left(\tfrac{1}{\sqrt{N}}, \dots, -\tfrac{1}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right)
-              \longmapsto \left(\tfrac{1}{\sqrt{N}}, \dots, \tfrac{3}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right)
-              \quad (\text{approximately}).\]
-    \item Repeating steps 2 and 3, the solution's amplitude goes to $-\tfrac{3}{\sqrt{N}}$ under the phase
-          flip and then to about $2\mu + \tfrac{3}{\sqrt{N}} \approx \tfrac{5}{\sqrt{N}}$ under the diffusion,
-          then to about $\tfrac{7}{\sqrt{N}}$, and so on:
-          \[\left(\tfrac{1}{\sqrt{N}}, \dots, \tfrac{3}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right)
-              \longmapsto \left(\tfrac{1}{\sqrt{N}}, \dots, -\tfrac{3}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right)
-              \longmapsto \left(\tfrac{1}{\sqrt{N}}, \dots, \tfrac{5}{\sqrt{N}}, \dots, \tfrac{1}{\sqrt{N}}\right).\]
-\end{enumerate}
-As long as the solution's amplitude is small, each iteration adds about $\tfrac{2}{\sqrt{N}}$ to it
-(the mean stays close to $\tfrac{1}{\sqrt{N}}$), so after about $\sqrt{N}$ iterations the amplitude of
-$x^*$ is a constant and a measurement finds $x^*$ with constant probability. The exact analysis in
-\cref{sec:grover-analysis-1006} confirms this and gives the right number of iterations.
+For $n$ qubits and a unique solution $x^*$ the same steps apply to the vector $(a_x)_{x \in \set{0,1}^n}$
+of the $N$ amplitudes. After the Hadamard gates every amplitude is $\sfrac{1}{\sqrt{N}}$, and the phase
+flip makes the amplitude of $x^*$ equal to $-\sfrac{1}{\sqrt{N}}$. The mean is then
+\[\mu = \frac{1}{N}\left(\frac{N-1}{\sqrt{N}} - \frac{1}{\sqrt{N}}\right) = \frac{N-2}{N\sqrt{N}} \approx \frac{1}{\sqrt{N}},\]
+so the diffusion operator maps the amplitude of $x^*$ to $2\mu + \sfrac{1}{\sqrt{N}} \approx \sfrac{3}{\sqrt{N}}$
+and every other amplitude to $2\mu - \sfrac{1}{\sqrt{N}} \approx \sfrac{1}{\sqrt{N}}$. The next iteration
+takes $x^*$ to $-\sfrac{3}{\sqrt{N}}$ and then to about $\sfrac{5}{\sqrt{N}}$, the one after to about
+$\sfrac{7}{\sqrt{N}}$, and so on: as long as the solution's amplitude is small, the mean stays close to
+$\sfrac{1}{\sqrt{N}}$ and each iteration adds about $\sfrac{2}{\sqrt{N}}$ to it, so after about $\sqrt{N}$
+iterations the amplitude of $x^*$ is a constant and a measurement finds $x^*$ with constant probability.
+The exact analysis in \cref{sec:grover-analysis-1006} confirms this and gives the right number of
+iterations.
 
 \subsection{The Operators \texorpdfstring{$Z_f$}{Zf}, \texorpdfstring{$Z_0$}{Z0} and \texorpdfstring{$D$}{D}}
 
@@ -328,31 +312,13 @@ written down, but the computation was not finished; we complete it here.
     and $\sin\theta$.) As a check, the columns are unit vectors and orthogonal:
     $\left(\sfrac{(b-a)}{N}\right)^2 + \left(\sfrac{2\sqrt{ab}}{N}\right)^2 = \sfrac{(b^2 - 2ab + a^2 + 4ab)}{N^2} = \sfrac{(a+b)^2}{N^2} = 1$.
 
-    \emph{One iteration.} Using \cref{lem:giter-1006} in the form with $a$ and $b$,
-    \begin{align*}
-        G\ket{h}
-         & = \sqrt{\frac{a}{N}} \left(\left(1 - \frac{2a}{N}\right)\ket{A} - \frac{2\sqrt{ab}}{N}\ket{B}\right)
-        + \sqrt{\frac{b}{N}} \left(\frac{2\sqrt{ab}}{N}\ket{A} - \left(1 - \frac{2b}{N}\right)\ket{B}\right)                   \\
-         & = \sqrt{\frac{a}{N}} \left(1 - \frac{2a}{N} + \frac{2b}{N}\right) \ket{A}
-        + \sqrt{\frac{b}{N}} \left(-\frac{2a}{N} - 1 + \frac{2b}{N}\right) \ket{B}                            \\
-         & = \sqrt{\frac{a}{N}} \cdot \frac{3b - a}{N} \ket{A} + \sqrt{\frac{b}{N}} \cdot \frac{b - 3a}{N} \ket{B},
-    \end{align*}
-    where we used $\sqrt{\sfrac{b}{N}} \cdot \sfrac{2\sqrt{ab}}{N} = \sqrt{\sfrac{a}{N}} \cdot \sfrac{2b}{N}$,
-    $\sqrt{\sfrac{a}{N}} \cdot \sfrac{2\sqrt{ab}}{N} = \sqrt{\sfrac{b}{N}} \cdot \sfrac{2a}{N}$ and
-    $N = a + b$. The first term is the one that was started in class,
-    $\sqrt{\sfrac{a}{N}} - \sfrac{2a}{N}\sqrt{\sfrac{a}{N}} + \dots$. In terms of $\theta$, with
-    $\sfrac{a}{N} = \sin^2\theta$ and $\sfrac{b}{N} = \cos^2\theta$, the coefficients are
-    \begin{align*}
-        \sin\theta \left(3\cos^2\theta - \sin^2\theta\right) & = 3\sin\theta - 4\sin^3\theta = \sin 3\theta, \\
-        \cos\theta \left(\cos^2\theta - 3\sin^2\theta\right) & = 4\cos^3\theta - 3\cos\theta = \cos 3\theta,
-    \end{align*}
-    by the triple angle formulas (using $\cos^2\theta = 1 - \sin^2\theta$ in the first and
-    $\sin^2\theta = 1 - \cos^2\theta$ in the second). Hence
-    \[G\ket{h} = \sin 3\theta \ket{A} + \cos 3\theta \ket{B}.\]
-    The same result follows directly from the trigonometric form of \cref{lem:giter-1006} and the
-    addition formulas:
+    \emph{One iteration.} By the trigonometric form of \cref{lem:giter-1006} and the addition formulas,
     \[G\ket{h} = \sin\theta\, (\cos 2\theta \ket{A} - \sin 2\theta \ket{B}) + \cos\theta\, (\sin 2\theta \ket{A} + \cos 2\theta \ket{B})
-        = \sin(\theta + 2\theta)\ket{A} + \cos(\theta + 2\theta)\ket{B}.\]
+        = \sin 3\theta \ket{A} + \cos 3\theta \ket{B}.\]
+    (In the $a, b$ form started in class, the coefficient of $\ket{A}$ is
+    $\sqrt{\sfrac{a}{N}}\,(1 - \sfrac{2a}{N}) + \sqrt{\sfrac{b}{N}} \cdot \sfrac{2\sqrt{ab}}{N}
+        = \sqrt{\sfrac{a}{N}} \cdot \sfrac{(3b - a)}{N} = \sin\theta \left(3\cos^2\theta - \sin^2\theta\right) = \sin 3\theta$
+    by the triple angle formula $\sin 3\theta = 3\sin\theta - 4\sin^3\theta$.)
 
     \emph{$k$ iterations.} We claim that for every $k \geq 0$,
     \[G^k \ket{h} = \sin\left((2k+1)\theta\right) \ket{A} + \cos\left((2k+1)\theta\right) \ket{B}.\]

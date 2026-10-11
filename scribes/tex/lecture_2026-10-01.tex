@@ -20,37 +20,9 @@ the algorithm has no direct evidence of $s$.
 \subsection{Deterministic Algorithms}
 
 The exercise of the last lecture (\cref{ex:simon-det-0929}) gives a deterministic algorithm with
-$\bigO{\sqrt{N}}$ queries. In class it was stated that this is optimal, that the classical running time
-is $\bigOm{\sqrt{2^n}}$ for deterministic algorithms; here is the (short) proof. It also follows from
-the lower bound for randomized algorithms below (\cref{thm:simon-rand-lb-1001}), since a deterministic
-algorithm is a randomized algorithm with success probability $1$, but the direct argument is simpler.
-
-\begin{theorem}[Deterministic Lower Bound]\label{thm:simon-det-lb-1001}
-    Every deterministic classical algorithm for Simon's problem makes at least $\sqrt{2(N-1)}$ queries
-    in the worst case. Hence the deterministic query complexity of Simon's problem is $\bigTh{\sqrt{N}}$.
-\end{theorem}
-
-\begin{proof}
-    Let $A$ be a deterministic algorithm that makes at most $k$ queries, where $\binom{k}{2} < N - 1$.
-    We play the adversary: whatever $A$ queries, we answer with a new value, say $f(q_i) = q_i$. After
-    $k$ queries, $A$ has seen the answers $f(q_1) = q_1, \dots, f(q_k) = q_k$ and outputs some string. We
-    show that two valid inputs with different correct answers are consistent with these answers, so
-    $A$ is wrong on one of them.
-
-    The first input is the identity function $f(x) = x$, which is $1$-to-$1$, so its correct answer is
-    $s = 0^n$. For the second input, the $k$ queries determine at most $\binom{k}{2} < N - 1$ strings of
-    the form $q_i \oplus q_j$ with $i < j$, so there is a nonzero string $s$ that is not of this form. For
-    this $s$ no two queries lie in the same pair $\set{x, x \oplus s}$. Define $g$ on the pair of each
-    query $q_i$ by $g(q_i) = g(q_i \oplus s) = q_i$, and on the remaining $\sfrac{N}{2} - k$ pairs by
-    assigning to each of them a different value from $\set{0,1}^n \setminus \set{q_1, \dots, q_k}$ (there
-    are $N - k \geq \sfrac{N}{2} - k$ such values). Then $g$ is $2$-to-$1$ with period $s$, so it
-    satisfies the promise, its correct answer is $s \neq 0^n$, and $g(q_i) = q_i$ for every query.
-
-    Since $A$ is deterministic and sees the same answers on $f$ and on $g$, it asks the same queries and
-    gives the same output on both, but the correct outputs $0^n$ and $s$ differ. So $A$ errs on one of
-    them. Therefore a correct algorithm needs $\binom{k}{2} \geq N - 1$, i.e.,
-    $k(k-1) \geq 2(N-1)$, which gives $k \geq \sqrt{2(N-1)}$.
-\end{proof}
+$\bigO{\sqrt{N}}$ queries. In class it was stated that this is optimal: every deterministic algorithm
+needs $\bigOm{\sqrt{2^n}}$ queries. This is a special case of the lower bound for randomized algorithms
+proved below (\cref{thm:simon-det-lb-1001}).
 
 \subsection{A Randomized Algorithm}
 
@@ -299,6 +271,17 @@ difference between the two distributions. The success probability $\sfrac{2}{3}$
 same proof with $\epsilon = \sqrt{2\gamma}$ shows that, for $\gamma \leq \sfrac{1}{8}$, success
 probability $\sfrac{1}{2} + \gamma$ needs more than $\sqrt{2\gamma N}$ queries.
 
+\begin{corollary}[Deterministic Lower Bound]\label{thm:simon-det-lb-1001}
+    Every deterministic classical algorithm for Simon's problem makes more than $\sfrac{\sqrt{N}}{2}$
+    queries on some input. Hence the deterministic query complexity of Simon's problem is $\bigTh{\sqrt{N}}$.
+\end{corollary}
+
+\begin{proof}
+    A deterministic algorithm that is always correct is a randomized algorithm (one that ignores its
+    random bits) with success probability $1 \geq \sfrac{2}{3}$ on every input, so
+    \cref{thm:simon-rand-lb-1001} applies to it. The matching upper bound is \cref{ex:simon-det-0929}.
+\end{proof}
+
 \begin{corollary}[Classical Query Complexity of Simon's Problem]
     The classical query complexity of Simon's problem is $\bigTh{\sqrt{N}} = \bigTh{\sqrt{2^n}}$, both
     for deterministic algorithms (\cref{ex:simon-det-0929}, \cref{thm:simon-det-lb-1001}) and for
@@ -322,24 +305,12 @@ We used the following elementary inequality.
 
 \section{Simon's Algorithm Revisited}
 
-We now go through the quantum algorithm again (\cref{fig:simon-0929} of the last lecture), this time
-keeping track of the probabilities exactly; the computations are those of \cref{thm:simon-run-0929},
-redone in class with the measurement probabilities written out. The circuit has $n$ control qubits and $n$ target qubits,
-all in $\ket{0}$, and uses the query in the form $U_f \colon \ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$.
-Recall the Walsh--Hadamard transform (\cref{lem:wh-0929}),
-$H^{\otimes n}\ket{x} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}$. Substituting
-$x = 0^n$ gives $(-1)^{x \cdot y} = 1$ for every $y$; the uniform superposition
-$\frac{1}{\sqrt{2^n}} \sum_y \ket{y}$ is the same as $\frac{1}{\sqrt{2^n}} \sum_x \ket{x}$, the renaming of
-the summation index is just notation and no actual change. So the state evolves as follows:
-\begin{align*}
-    \text{after the first } H^{\otimes n}: \quad & \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}\ket{0^n},                                                        \\
-    \text{after } U_f: \quad                      & \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}\ket{f(x)},                                                      \\
-    \text{after the second } H^{\otimes n}: \quad & \frac{1}{2^n} \sum_{x \in \set{0,1}^n} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}\ket{f(x)} \\
-                                                  & \qquad = \sum_{y \in \set{0,1}^n} \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)} \ket{y},
-\end{align*}
-where in the last step we rearranged the sums and wrote the target register first. For a fixed $y$, the
-probability of measuring $y$ in the control register is the squared norm of the vector
-$\frac{1}{2^n} \sum_{x} (-1)^{x \cdot y} \ket{f(x)}$ that multiplies $\ket{y}$,
+In class the quantum algorithm was gone through again (\cref{fig:simon-0929} of the last lecture) with
+the measurement probabilities written out; the computations are those of \cref{thm:simon-run-0929}, so we
+only record what is new. Just before the measurement the state is
+\[\sum_{y \in \set{0,1}^n} \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)} \ket{y}\]
+(target register written first), so for a fixed $y$ the probability of measuring $y$ in the control
+register is the squared norm of the vector that multiplies $\ket{y}$,
 \[\prob{y} = \norm{\frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)}}_2^2,\]
 because the probability of a measurement outcome is the sum of the squared amplitudes of all basis
 states $\ket{z}\ket{y}$ with this $y$.
@@ -370,26 +341,12 @@ whether this is right and whether the total is $1$.
 
 \subsection{The \texorpdfstring{$2$}{2}-to-\texorpdfstring{$1$}{1} Case}
 
-Now let $f$ be $2$-to-$1$ with period $s \neq 0^n$, and let $R$ be the range of $f$, $\abs{R} = 2^{n-1}$.
-Every $z \in R$ has exactly two preimages, $x$ and $x' = x \oplus s$, with $f(x) = f(x') = z$. Collecting
-the two preimages of each $z$,
-\begin{align*}
-    \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)}
-     & = \frac{1}{2^n} \sum_{z \in R} \left((-1)^{x \cdot y} + (-1)^{x' \cdot y}\right) \ket{z}
-    = \frac{1}{2^n} \sum_{z \in R} (-1)^{x \cdot y} \left(1 + (-1)^{s \cdot y}\right) \ket{z},
-\end{align*}
-where $x = x_z$ denotes one preimage of $z$, and we used $(x \oplus s) \cdot y = x \cdot y \oplus s \cdot y$.
-The $2^{n-1}$ basis states $\ket{z}$, $z \in R$, are orthonormal, so
-\begin{align*}
-    \prob{y} & = \norm{\frac{1}{2^n} \sum_{z \in R} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right) \ket{z}}_2^2
-    = \frac{\left(1 + (-1)^{s \cdot y}\right)^2}{2^{2n}} \cdot 2^{n-1}                                              \\
-             & = \begin{cases}
-                     \dfrac{4 \cdot 2^{n-1}}{2^{2n}} = \dfrac{2}{2^n} = \dfrac{1}{2^{n-1}} & \text{if } s \cdot y = 0, \\[2ex]
-                     0                                                                      & \text{if } s \cdot y = 1.
-                 \end{cases}
-\end{align*}
-So we only ever measure strings $y$ with $s \cdot y = 0$, and each of the $2^{n-1}$ such strings is
-equally likely; the total is $2^{n-1} \cdot \sfrac{1}{2^{n-1}} = 1$.
+For $f$ $2$-to-$1$ with period $s \neq 0^n$, collecting the two preimages $x_z$ and $x_z \oplus s$ of every
+$z$ in the range $R$ of $f$ turns the vector into
+$\frac{1}{2^n} \sum_{z \in R} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right) \ket{z}$, whose squared norm is
+$2^{n-1} \cdot \sfrac{4}{2^{2n}} = \sfrac{1}{2^{n-1}}$ if $s \cdot y = 0$ and $0$ if $s \cdot y = 1$
+(\cref{thm:simon-run-0929}, case 1). So we only ever measure strings $y$ with $s \cdot y = 0$, each of the
+$2^{n-1}$ such strings equally likely, and the total is $2^{n-1} \cdot \sfrac{1}{2^{n-1}} = 1$.
 
 \subsection{Solving for \texorpdfstring{$s$}{s}}
 

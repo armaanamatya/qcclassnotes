@@ -78,27 +78,14 @@ Here $\abs{X - \expectation{X}}$ is the deviation of $X$ from its mean.
 
 \section{Chernoff Bound}
 
-Let
-\[X = \sum_{i=1}^{n} X_i,
+The Chernoff bounds of the last lecture (\cref{thm:chernoff-0901}) were restated in class with the
+independence assumption made explicit. For a sum $X = \sum_{i=1}^{n} X_i$ of \emph{mutually
+independent} indicator random variables with $\prob{X_i = 1} = p_i$, linearity of expectation gives
+$\mu = \expectation{X} = \sum_{i=1}^{n} p_i$, and for $0 < \delta < 1$
+\[\prob{X \geq (1+\delta)\mu} \leq e^{-\frac{\mu \delta^2}{3}},
     \qquad
-    X_i = \begin{cases}
-        1 & \text{with probability } p_i,     \\
-        0 & \text{with probability } 1 - p_i,
-    \end{cases}\]
-where the $X_i$ are \emph{mutually independent}. By linearity of expectation,
-\[\expectation{X} = \mu = \sum_{i=1}^{n} \expectation{X_i} = \sum_{i=1}^{n} p_i.\]
-
-\begin{theorem}[Chernoff Bound]\label{thm:chernoff-0903}
-    Let $X$ and $\mu$ be as above. Then
-    \begin{itemize}
-        \item for $0 < \delta < 1$,
-              \[\prob{X \geq (1+\delta)\mu} \leq e^{-\frac{\mu \delta^2}{3}};\]
-        \item for $R \geq 6\mu$,
-              \[\prob{X \geq R} \leq 2^{-R};\]
-        \item for $0 < \delta < 1$,
-              \[\prob{X < (1-\delta)\mu} \leq e^{-\frac{\mu \delta^2}{2}}.\]
-    \end{itemize}
-\end{theorem}
+    \prob{X < (1-\delta)\mu} \leq e^{-\frac{\mu \delta^2}{2}},\]
+and $\prob{X \geq R} \leq 2^{-R}$ for $R \geq 6\mu$.
 
 \section{Search}
 

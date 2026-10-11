@@ -4,28 +4,10 @@ for randomized search algorithms using Yao's minmax principle, and introduce Che
 
 \section{Query Complexity for Search}
 
-We are given an array of $n$ slots (\cref{fig:array}). The array can only be accessed through
-\emph{queries}: a query to a slot $x$ returns the value $f(x)$. In the \emph{search} problem, the goal
-is to find the slot $x$ such that
-\[f(x) = 1.\]
-The cost of an algorithm is its \emph{query complexity}, i.e., the number of queries that it makes.
-
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}
-        \draw (0,0) rectangle (8,0.7);
-        \foreach \x in {1,2,3,7} {\draw (\x,0) -- (\x,0.7);}
-        \node at (5,0.35) {$\cdots$};
-        \node[below] at (0.5,0) {\small $1$};
-        \node[below] at (1.5,0) {\small $2$};
-        \node[below] at (2.5,0) {\small $3$};
-        \node[below] at (7.5,0) {\small $n$};
-    \end{tikzpicture}
-    \caption{An array of $n$ slots. We want to find the slot $x$ with $f(x) = 1$.}
-    \label{fig:array}
-\end{figure}
-
-\subsection{Monte Carlo and Las Vegas Algorithms}
+Recall the search problem of the last lecture (\cref{fig:coinflips-0825}): an array of $n$ slots can
+only be accessed through \emph{queries}, a query to a slot $x$ returns the value $f(x)$, and the goal is
+to find the slot $x$ with $f(x) = 1$. The cost of an algorithm is its \emph{query complexity}, the number
+of queries that it makes.
 
 \begin{definition}[Monte Carlo and Las Vegas Algorithms]
     A \textbf{Monte Carlo} algorithm is a randomized algorithm whose error probability is $> 0$.
@@ -33,19 +15,13 @@ The cost of an algorithm is its \emph{query complexity}, i.e., the number of que
     A \textbf{Las Vegas} algorithm is a randomized algorithm whose error probability is $= 0$.
 \end{definition}
 
-\subsection{Random Sampling}
-
-Consider random sampling \emph{with replacement}: in every step we query a slot that is chosen
-uniformly at random among the $n$ slots. For every query,
-\[\prob{\text{Success}} = \frac{1}{n}.\]
-The number of queries until the first success is a \emph{geometric} random variable with
-parameter $\sfrac{1}{n}$. Hence
-\[\expectation{\text{queries}} = n.\]
-
-If random sampling is stopped after a fixed number of queries, then it is a Monte Carlo algorithm,
-since it can fail to find the slot. If we keep sampling until the slot is found, then it is a Las Vegas
-algorithm, and
-\[\expectation{\text{queries until find}} = n.\]
+Random sampling \emph{with replacement} queries in every step a slot chosen uniformly at random, so every
+query succeeds with probability $\sfrac{1}{n}$, and the number of queries until the first success is a
+\emph{geometric} random variable with parameter $\sfrac{1}{n}$. Hence
+\[\expectation{\text{queries until find}} = n,\]
+which proves the claim of the last lecture. Stopped after a fixed number of queries, random sampling is
+a Monte Carlo algorithm, since it can fail to find the slot; run until the slot is found, it is a Las
+Vegas algorithm with $n$ expected queries.
 
 \section{Coupon Collector Problem}
 

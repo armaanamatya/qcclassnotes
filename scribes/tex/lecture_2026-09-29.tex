@@ -7,47 +7,24 @@ Simon's algorithm is the first one where the quantum speed-up is exponential.
 
 \section{Recap: Quantum Queries and the Walsh--Hadamard Transform}
 
-\subsection{The Quantum Query}
-
-A function $f \colon \set{0,1}^n \to \set{0,1}^m$ is given to us as a black box. In the quantum query
-model the black box is the unitary
-\[U_f \colon \ket{x}\ket{b} \longmapsto \ket{x}\ket{b \oplus f(x)},
-    \qquad x \in \set{0,1}^n,\ b \in \set{0,1}^m,\]
+We recall the tools of the last lecture that both algorithms below use; the proofs are in the scribe of
+September~24. A function $f \colon \set{0,1}^n \to \set{0,1}^m$ is given as a black box, and in the
+quantum query model the black box is the unitary
+\[U_f \colon \ket{x}\ket{b} \longmapsto \ket{x}\ket{b \oplus f(x)},\]
 which XORs $f(x)$ into the \emph{target} register and leaves the \emph{control} register $\ket{x}$
-unchanged. Every classical circuit can be made into a quantum circuit (a reversible circuit built from
-Toffoli gates), so whenever $f$ has a classical circuit, $U_f$ has a quantum circuit of about the same
-size. One application of $U_f$ is one query.
-
-\subsection{The Hadamard Gate and the Walsh--Hadamard Transform}
-
-The Hadamard gate acts on one qubit as
-\[H\ket{0} = \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right) = \ket{+},
-    \qquad
-    H\ket{1} = \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right) = \ket{-},\]
-i.e., for $a \in \set{0,1}$,
-\[H\ket{a} = \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)
-    = \frac{1}{\sqrt{2}} \sum_{y \in \set{0,1}} (-1)^{ay} \ket{y}.\]
-On two qubits, with $\ket{x} = \ket{x_1 x_2}$,
-\begin{align*}
-    (H \otimes H)\ket{x_1 x_2}
-     & = \frac{1}{\sqrt{2}} \sum_{y_1 \in \set{0,1}} (-1)^{x_1 y_1} \ket{y_1}
-    \otimes \frac{1}{\sqrt{2}} \sum_{y_2 \in \set{0,1}} (-1)^{x_2 y_2} \ket{y_2} \\
-     & = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x_1 y_1 + x_2 y_2} \ket{y}.
-\end{align*}
-In general we write $x \cdot y = x_1 y_1 \oplus \dots \oplus x_n y_n$ for the inner product of two bit
-strings modulo $2$, and we have the \emph{Walsh--Hadamard transform} of the last lecture:
-
-\begin{lemma}[Walsh--Hadamard Transform, proved as \cref{lem:wh-0924}]\label{lem:wh-0929}
-    For every $x \in \set{0,1}^n$,
-    \[H^{\otimes n} \ket{x} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}.\]
-    In particular, $H^{\otimes n}\ket{0^n} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} \ket{y}$ is the
-    uniform superposition.
-\end{lemma}
-
-The Walsh--Hadamard transform is the \emph{Fourier transform} over the group $\set{0,1}^n$ (with
-$\oplus$ as the group operation): the sign $(-1)^{x \cdot y}$ plays the role that the root of unity
-$\omega^{xy} = e^{2\pi i\, xy / N}$ plays in the usual discrete Fourier transform. We will use the
-following sum many times; it is the Fourier-transform fact that ``a nonzero character sums to zero''.
+unchanged (\cref{fig:uf-0924}). Every classical circuit can be made into a reversible quantum circuit, so
+whenever $f$ has a classical circuit, $U_f$ has a quantum circuit of about the same size. One application
+of $U_f$ is one query. The Hadamard gate acts as
+$H\ket{a} = \frac{1}{\sqrt{2}} \sum_{y \in \set{0,1}} (-1)^{ay} \ket{y}$, and on $n$ qubits, with
+$x \cdot y = x_1 y_1 \oplus \dots \oplus x_n y_n$ the inner product of bit strings modulo $2$, the
+\emph{Walsh--Hadamard transform} (\cref{lem:wh-0924}) is
+\[H^{\otimes n} \ket{x} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y},
+    \qquad \text{in particular} \qquad
+    H^{\otimes n} \ket{0^n} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} \ket{y}.\]
+It is the \emph{Fourier transform} over the group $\set{0,1}^n$ (with $\oplus$ as the group operation):
+the sign $(-1)^{x \cdot y}$ plays the role that the root of unity $e^{2\pi i\, xy / N}$ plays in the usual
+discrete Fourier transform. We will use the following sum many times; it is the Fourier-transform fact
+that ``a nonzero character sums to zero''.
 
 \begin{lemma}[Sum of Signs]\label{lem:signsum-0929}
     For every $z \in \set{0,1}^n$,
@@ -68,29 +45,19 @@ following sum many times; it is the Fourier-transform fact that ``a nonzero char
     whole sum is $0$.
 \end{proof}
 
-\subsection{Deutsch--Jozsa, Once More}
-
-Recall the Deutsch--Jozsa circuit (\cref{fig:dj-0924} of the last lecture): $n$ control qubits in
-$\ket{0}$ and one target qubit in $\ket{1}$ go through Hadamard gates, then through $U_f$, then the
-control qubits go through Hadamard gates again and are measured. After the first layer of Hadamard
-gates the state is
-\[\underbrace{\frac{1}{\sqrt{2^n}} \sum_{k \in \set{0,1}^n} \ket{k}}_{\text{control}}
-    \otimes
-    \underbrace{\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)}_{\text{target}}.\]
-Applying the controlled-$f$ gate $U_f$ with the target in $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$ gives
-the \emph{phase flip}: the value $f(k)$ appears as a sign,
-\[\frac{1}{\sqrt{2^n}} \sum_{k \in \set{0,1}^n} (-1)^{f(k)} \ket{k} \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right).\]
-From now on we drop the target qubit, which never changes again. Applying the second layer of Hadamard
-gates and using \cref{lem:wh-0929},
-\[\frac{1}{\sqrt{2^n}} \sum_{k \in \set{0,1}^n} (-1)^{f(k)} \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{k \cdot y} \ket{y}
-    = \sum_{y \in \set{0,1}^n} \frac{1}{2^n} \left(\sum_{k \in \set{0,1}^n} (-1)^{f(k) + k \cdot y}\right) \ket{y}.\]
-The probability of measuring $y = 0^n$ is the squared absolute value of the amplitude of $\ket{0^n}$:
-\[\abs{\frac{1}{2^n} \sum_{k \in \set{0,1}^n} (-1)^{f(k)}}^2 =
-    \begin{cases}
-        1 & \text{if $f$ is constant (all terms have the same sign)},  \\
-        0 & \text{if $f$ is balanced (half the terms are $+1$, half $-1$)}.
-    \end{cases}\]
-So one query decides whether $f$ is constant or balanced (\cref{thm:dj-0924}).
+In the Deutsch--Jozsa circuit (\cref{fig:dj-0924}) the $n$ control qubits start in $\ket{0^n}$ and the
+target qubit in $\ket{1}$. After the first layer of Hadamard gates the target is
+$\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$, so the query acts on the control register as the \emph{phase flip}
+$\ket{k} \mapsto (-1)^{f(k)} \ket{k}$ and the target never changes again. After the second layer of
+Hadamard gates the control register is in the state
+\begin{equation}\label{eq:dj-state-0929}
+    \sum_{y \in \set{0,1}^n} \alpha_y \ket{y},
+    \qquad
+    \alpha_y = \frac{1}{2^n} \sum_{k \in \set{0,1}^n} (-1)^{f(k) + k \cdot y},
+\end{equation}
+and $\abs{\alpha_{0^n}}^2 = \abs{\frac{1}{2^n} \sum_{k} (-1)^{f(k)}}^2$ is $1$ if $f$ is constant and $0$ if
+$f$ is balanced, which is \cref{thm:dj-0924}. This computation was redone on the board;
+\cref{eq:dj-state-0929} is all that the next section needs.
 
 \section{Bernstein--Vazirani Algorithm}
 
@@ -100,13 +67,9 @@ So one query decides whether $f$ is constant or balanced (\cref{thm:dj-0924}).
     for some unknown $n$-bit string $s$, find $s$.
 \end{problem}
 
-Again this is a promise problem: we are told that $f$ has this form. Classically, $n$ queries suffice:
-querying the unit string $e_i$ (a single $1$ in position $i$) returns $f(e_i) = s_i$, so $n$ queries
-reveal $s$ bit by bit. Moreover, a deterministic classical algorithm needs $n$ queries: every answer is a
-single bit, so after $k < n$ queries the algorithm has seen one of at most $2^k < 2^n$ answer sequences,
-and some two different strings $s \neq s'$ produce the same answers to its queries (the answers depend
-only on $s$ and on the queried strings, and the queried strings are fixed by the previous answers), so the
-algorithm cannot output both correctly.
+Again this is a promise problem: we are told that $f$ has this form. Classically, $n$ queries suffice and
+are needed: querying the unit string $e_i$ (a single $1$ in position $i$) returns $f(e_i) = s_i$, one bit
+of $s$ per query.
 
 \subsection{The Algorithm}
 
@@ -119,12 +82,8 @@ It makes one query.
 \end{theorem}
 
 \begin{proof}
-    By the computation of the previous section, before the measurement the control register is in the
-    state
-    \[\sum_{y \in \set{0,1}^n} \alpha_y \ket{y},
-        \qquad \text{where} \qquad
-        \alpha_y = \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{f(x) + x \cdot y},\]
-    and
+    By \cref{eq:dj-state-0929} (with the summation index $k$ renamed $x$), before the measurement the
+    control register is in the state $\sum_{y} \alpha_y \ket{y}$ with
     \[\alpha_y = \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{s \cdot x \oplus y \cdot x}
         = \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{(s \oplus y) \cdot x},\]
     where we used that only the parity of the exponent matters and that
@@ -263,11 +222,11 @@ states $\ket{y}\ket{z}$ with this $y$ add up).
 
 \begin{proof}
     We follow the state through the circuit. After the first layer of Hadamard gates, by
-    \cref{lem:wh-0929},
+    \cref{lem:wh-0924},
     \[\frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}\ket{0^n}.\]
     After the query $U_f$,
     \[\frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}\ket{f(x)}.\]
-    After the second layer of Hadamard gates on the control register, by \cref{lem:wh-0929} applied to
+    After the second layer of Hadamard gates on the control register, by \cref{lem:wh-0924} applied to
     every $\ket{x}$,
     \begin{equation}\label{eq:simon-final-0929}
         \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}\ket{f(x)}
