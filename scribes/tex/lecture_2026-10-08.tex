@@ -130,7 +130,7 @@ $\ket{A}$ (\cref{fig:reflections-1008}).
 So $D$ keeps the $\ket{h}$ component and negates the $\ket{h^\perp}$ component: it is the reflection of
 the plane about the line of $\ket{h}$. Without the minus sign, $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$
 negates the $\ket{h}$ component instead, so it is the reflection about the line of $\ket{h^\perp}$; in
-the form written in my notes,
+the form written in the notes,
 \[\left(I - 2\ket{h}\bra{h}\right)\left(\sin\alpha \ket{h} + \cos\alpha \ket{h^\perp}\right)
     = \sin(-\alpha) \ket{h} + \cos\alpha \ket{h^\perp}.\]
 
@@ -280,7 +280,7 @@ want the angle $(2k+1)\theta$ to be $\sfrac{\pi}{2}$:
 \[(2k+1)\theta \approx \frac{\pi}{2}
     \quad\Longrightarrow\quad 2k + 1 \approx \frac{\pi}{2\theta}
     \quad\Longrightarrow\quad k \approx \frac{\pi}{4\theta} - \frac{1}{2}.\]
-(Dividing $2k + 1 \approx \sfrac{\pi}{2\theta}$ by $2$ gives $\sfrac{\pi}{4\theta}$; my handwritten
+(Dividing $2k + 1 \approx \sfrac{\pi}{2\theta}$ by $2$ gives $\sfrac{\pi}{4\theta}$; the handwritten
 copy of the last line has $\sfrac{\pi}{2\theta}$, which is a copying mistake.) So $k$ is
 $\frac{\pi}{4}\sqrt{\sfrac{N}{a}}$ up to rounding, which is the $k = \sqrt{\sfrac{N}{a}}$ of the recap
 with the right constant. For a unique solution ($a = 1$), $\theta \approx \sfrac{1}{\sqrt{N}}$, so
@@ -385,10 +385,11 @@ way out is to choose $k$ \emph{at random}.
     Grover iterations are made, then $\prob{\text{success}} = \bigTh{1}$.
 \end{exercise}
 
-On the board the set was written as $\set{1, \dots, \sqrt{N}}$ and in my notes as
+On the board the set was written as $\set{1, \dots, \sqrt{N}}$ and in the notes as
 $\set{1, \dots, 2\sqrt{N}}$; we prove the statement for both. Since $\sqrt{N}$ need not be an
 integer, the sets are $\set{1, \dots, \floor{\sqrt{N}}}$ and $\set{1, \dots, \floor{2\sqrt{N}}}$. The
-theorem holds for every number of solutions up to $\sfrac{N}{2}$, and the algorithm does not use $a$.
+algorithm does not use $a$: for the larger set the theorem holds for every number of solutions, and
+for the smaller set for every number of solutions up to $\sfrac{N}{2}$.
 
 \begin{theorem}[Grover's Algorithm with a Random Number of Iterations]\label{thm:randomk-1008}
     Let $N = 2^n$ and let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$. Let $K \geq 1$ be an
@@ -465,7 +466,7 @@ $\theta$ is. A constant success probability is enough: given the measured $x$ we
 one more query and repeat the whole algorithm if the check fails, so the expected number of
 repetitions is at most $4$.
 
-For the set $\set{1, \dots, \floor{2\sqrt{N}}}$ of my notes the theorem needs no assumption on $a$. For
+For the set $\set{1, \dots, \floor{2\sqrt{N}}}$ of the notes the theorem needs no assumption on $a$. For
 the smaller set $\set{1, \dots, \floor{\sqrt{N}}}$ of the board it assumes $a \leq \sfrac{N}{2}$, and an
 algorithm that does not know $a$ cannot check this; one more classical query removes the assumption.
 If more than half of the inputs are solutions ($a > \sfrac{N}{2}$), a uniformly random $x$ is a
