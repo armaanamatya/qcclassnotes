@@ -4,8 +4,8 @@ for randomized search algorithms using Yao's minmax principle, and introduce Che
 
 \section{Query Complexity for Search}
 
-Recall the search problem of the last lecture (\cref{fig:coinflips-0825}): an array of $n$ slots can
-only be accessed through \emph{queries}, a query to a slot $x$ returns the value $f(x)$, and the goal is
+Recall the search problem of the last lecture (\cref{fig:coinflips-0825}). An array of $n$ slots can
+only be accessed through \emph{queries}. A query to a slot $x$ returns the value $f(x)$, and the goal is
 to find the slot $x$ with $f(x) = 1$. The cost of an algorithm is its \emph{query complexity}, the number
 of queries that it makes.
 
@@ -15,48 +15,18 @@ of queries that it makes.
     A \textbf{Las Vegas} algorithm is a randomized algorithm whose error probability is $= 0$.
 \end{definition}
 
-Random sampling \emph{with replacement} queries in every step a slot chosen uniformly at random, so every
-query succeeds with probability $\sfrac{1}{n}$, and the number of queries until the first success is a
-\emph{geometric} random variable with parameter $\sfrac{1}{n}$. Hence
-\[\expectation{\text{queries until find}} = n,\]
-as stated in the last lecture. Stopped after a fixed number of queries, random sampling is
-a Monte Carlo algorithm, since it can fail to find the slot; run until the slot is found, it is a Las
-Vegas algorithm with $n$ expected queries.
+Random sampling \emph{with replacement} queries in every step a slot chosen uniformly at random. Every
+query succeeds with probability $\sfrac{1}{n}$, so the number of queries until the first success is a
+\emph{geometric} random variable with parameter $\sfrac{1}{n}$ and
+$\expectation{\text{queries until find}} = n$.
+Stopped after a fixed number of queries, random sampling is a Monte Carlo algorithm (it can fail to
+find the slot). Run until the slot is found, it is a Las Vegas algorithm with $n$ expected queries.
 
 \section{Coupon Collector Problem}
 
-Suppose that we want to distinguish 2 binary arrays (\cref{fig:binaryarrays}). To do this with
-random sampling, all the $n$ slots have to be accessed. The number of queries needed by random sampling
-(with replacement) to access all the $n$ slots is the \emph{coupon collector problem}.
-We show that
-\[\expectation{\text{queries}} \leq \bigO{n \log n}
-    \quad\text{and}\quad
-    \expectation{\text{queries}} \geq \bigOm{n \log n},\]
-i.e., $\expectation{\text{queries}} = \bigTh{n \log n}$.
-
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[scale=0.7]
-        % first array
-        \draw (0,1.7) rectangle (6,2.3);
-        \foreach \x in {1,2,3,5} {\draw (\x,1.7) -- (\x,2.3);}
-        \node at (0.5,2.0) {$0$};
-        \node at (1.5,2.0) {$0$};
-        \node at (2.5,2.0) {$1$};
-        \node at (4,2.0) {$\cdots$};
-        % arrow between the arrays
-        \node at (3,1.15) {\large $\Updownarrow$};
-        % second array
-        \draw (0,0) rectangle (6,0.6);
-        \foreach \x in {1,2,3,5} {\draw (\x,0) -- (\x,0.6);}
-        \node at (0.5,0.3) {$0$};
-        \node at (1.5,0.3) {$0$};
-        \node at (2.5,0.3) {$1$};
-        \node at (4,0.3) {$\cdots$};
-    \end{tikzpicture}
-    \caption{To distinguish 2 binary arrays.}
-    \label{fig:binaryarrays}
-\end{figure}
+To distinguish 2 binary arrays with random sampling, all the $n$ slots have to be accessed. The
+number of queries needed by random sampling (with replacement) to access all the $n$ slots is the
+\emph{coupon collector problem}.
 
 \begin{theorem}[Coupon Collector]\label{thm:coupon}
     Let $X$ be the number of queries made by random sampling (with replacement) until all the
@@ -66,39 +36,25 @@ i.e., $\expectation{\text{queries}} = \bigTh{n \log n}$.
 \end{theorem}
 
 \begin{proof}
-    Write
-    \[X = X_1 + X_2 + \dots + X_n,\]
-    where $X_i$ is the number of queries made to access a new slot, after $i-1$ different slots
-    have already been accessed. When $i-1$ slots have been accessed, a query accesses a new slot
-    with probability $\frac{n-(i-1)}{n}$. Hence $X_i$ is a geometric random variable,
-    \[X_i \sim G\left(\frac{n-(i-1)}{n}\right),
-        \qquad
-        \expectation{X_i} = \frac{n}{n-(i-1)}.\]
-    By linearity of expectation,
-    \begin{align*}
-        \expectation{X}
-         & = \expectation{X_1 + X_2 + \dots + X_n} \\
-         & = \sum_{i=1}^{n} \expectation{X_i}      \\
-         & = \sum_{i=1}^{n} \frac{n}{n-(i-1)}      \\
-         & = n \sum_{i=1}^{n} \frac{1}{n-i+1}      \\
-         & = n H_n.
-    \end{align*}
-    Since $H_n = \bigTh{\log n}$, we get $\expectation{X} = \bigTh{n \log n}$.
+    Write $X = X_1 + X_2 + \dots + X_n$, where $X_i$ is the number of queries made to access a new
+    slot after $i-1$ different slots have already been accessed. Such a query accesses a new slot
+    with probability $\frac{n-(i-1)}{n}$, so $X_i \sim G\left(\frac{n-(i-1)}{n}\right)$ is geometric
+    with $\expectation{X_i} = \frac{n}{n-(i-1)}$. By linearity of expectation,
+    \[\expectation{X} = \sum_{i=1}^{n} \expectation{X_i} = n \sum_{i=1}^{n} \frac{1}{n-i+1} = n H_n,\]
+    and $H_n = \bigTh{\log n}$.
 \end{proof}
 
-\section{High Probability Bound}
+\subsection{High Probability Bound}
 
-The following was given in class as an exercise. Its solution uses the Chernoff bounds, which
-are stated at the end of this lecture, so it is given in \cref{sec:exercise-0901}.
+The solution of the following exercise uses the Chernoff bounds and is given in
+\cref{sec:exercise-0901}.
 
-% Dashed box in my notes: exercise given in class.
 \begin{exercise}\label{ex:maxload-0901}
     Show that
     \[\prob{\text{any slot is accessed} \leq c \log n \text{ times}} \leq \frac{1}{n^2}.\]
 \end{exercise}
 
-The expectation of the number of queries is $\bigTh{n \log n}$. We now show that
-$3 n \log n$ queries are enough with high probability. Here $\log$ is the natural logarithm.
+With high probability $3 n \log n$ queries are enough. Here $\log$ is the natural logarithm.
 
 \begin{theorem}\label{thm:whp}
     If random sampling makes $3 n \log n$ queries, then
@@ -109,17 +65,13 @@ $3 n \log n$ queries are enough with high probability. Here $\log$ is the natura
 \end{theorem}
 
 \begin{proof}
-    Let $B_i$ be the event that slot $i$ is not accessed. A query does not access slot $i$ with
-    probability $1 - \frac{1}{n}$. Using $1 - x \leq e^{-x}$,
-    \begin{align*}
-        \prob{B_i} = \prob{\text{slot $i$ not accessed}}
-         & \leq \left(1 - \frac{1}{n}\right)^{3 n \log n} \\
-         & \leq e^{-\frac{1}{n} \cdot 3 n \log n}         \\
-         & = e^{-3 \ln n}                                  \\
-         & = \frac{1}{n^3}.
-    \end{align*}
-    By the union bound,
-    \[\prob{\bigcup_{i} B_i} \leq \sum_{i=1}^{n} \prob{B_i} = \frac{n}{n^3} = \frac{1}{n^2}.\]
+    Let $B_i$ be the event that slot $i$ is not accessed. A query misses slot $i$ with
+    probability $1 - \frac{1}{n}$ and the queries are independent, so using $1 - x \leq e^{-x}$,
+    \[\prob{B_i} \leq \left(1 - \frac{1}{n}\right)^{3 n \log n}
+        \leq e^{-3 \log n} = \frac{1}{n^3},
+        \qquad
+        \prob{\bigcup_{i} B_i} \leq \sum_{i=1}^{n} \prob{B_i} \leq \frac{n}{n^3} = \frac{1}{n^2}\]
+    by the union bound.
 \end{proof}
 
 \section{Lower Bound for Randomized Algorithms}
@@ -144,11 +96,9 @@ The quantity $\operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right
 
 \section{Chernoff Bounds}
 
-Let's say that a coin gives heads ($H$) with probability $\frac{1}{2} + \eps$ and tails ($T$) with
-probability $\frac{1}{2} - \eps$. If we toss the coin $n$ times, then
-\[\expectation{\text{Heads}} = n\left(\frac{1}{2} + \eps\right) = \frac{n}{2} + n\eps.\]
-Chernoff bounds show that the number of heads is close to its expectation, so that
-\[\prob{\text{Heads} < \frac{n}{2}} \sim \text{very small}.\]
+If a coin gives heads with probability $\frac{1}{2} + \eps$ and is tossed $n$ times, then
+$\expectation{\text{Heads}} = \frac{n}{2} + n\eps$. Chernoff bounds show that the number of heads is
+close to its expectation, so that $\prob{\text{Heads} < \frac{n}{2}}$ is very small.
 
 In general, let
 \[X = \sum_{i=1}^{n} X_i,
@@ -158,28 +108,8 @@ In general, let
         0 & \text{with probability } 1 - p_i,
     \end{cases}\]
 where the $X_i$ are independent Bernoulli random variables. If $p_i = p$ for all $i$, then
-\[\expectation{X} = np, \qquad \variance{X} = np(1-p).\]
-The distribution of $X$ is concentrated around its mean $np$ (\cref{fig:concentration}).
-
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[xscale=0.82, yscale=0.45]
-        % axes
-        \draw[->] (-0.3,0) -- (8,0);
-        \draw[->] (0,-0.2) -- (0,3.2);
-        % distribution of X
-        \draw[thick, domain=0:7.5, smooth, samples=120]
-        plot (\x, {2.6*exp(-(\x-1.5)*(\x-1.5)/1.3)});
-        % ticks
-        \foreach \x/\l in {0.5/{\frac{1}{3}np}, 1.5/{np}, 4.5/{3np}, 7.5/{n}} {
-                \draw (\x,0.08) -- (\x,-0.08) node[below] {\small $\l$};
-            }
-        \node[below left] at (0,0) {\small $0$};
-        \draw[dashed] (4.5,0) -- (4.5,1.2);
-    \end{tikzpicture}
-    \caption{The distribution of $X$ is concentrated around the mean $np$.}
-    \label{fig:concentration}
-\end{figure}
+$\expectation{X} = np$ and $\variance{X} = np(1-p)$, and the distribution of $X$ is concentrated
+around its mean $np$.
 
 \begin{theorem}[Chernoff Bounds]\label{thm:chernoff-0901}
     Let $X = \sum_{i=1}^{n} X_i$ be as above and let $\mu = \expectation{X}$.
@@ -193,42 +123,15 @@ The distribution of $X$ is concentrated around its mean $np$ (\cref{fig:concentr
     \end{itemize}
 \end{theorem}
 
-\section{Solution of the Exercise}\label{sec:exercise-0901}
+\subsection{Solution of the Exercise}\label{sec:exercise-0901}
 
-We now solve \cref{ex:maxload-0901} with the Chernoff bounds of \cref{thm:chernoff-0901}. The
-exercise says that the queries of random sampling are spread evenly over the slots: every slot is
-accessed about $\log n$ times, up to a constant $c$. We prove this in both directions. First, with
-$3 n \log n$ queries no slot is accessed much \emph{more} than the expected $3 \log n$ times (upper
-tail, $c = 18$). Second, with a constant factor more queries no slot is accessed much \emph{less}
-than expected (lower tail, $c = 6$); we also explain why the lower tail needs the extra queries.
-As before, $\log$ is the natural logarithm.
-
-Fix a slot $i$ and suppose that random sampling makes $T$ queries. Let
-\[Y_i = \sum_{t=1}^{T} Z_t,
-    \qquad
-    Z_t = \begin{cases}
-        1 & \text{if the $\nth{t}$ query accesses slot $i$}, \\
-        0 & \text{otherwise},
-    \end{cases}\]
-be the number of times that slot $i$ is accessed. Every query accesses slot $i$ with probability
-$\sfrac{1}{n}$, and the queries are independent (sampling with replacement), so the $Z_t$ are
-independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, exactly as in
-\cref{thm:chernoff-0901}, and
-\[\mu = \expectation{Y_i} = \frac{T}{n}.\]
-
-\begin{lemma}[Upper Tail: No Slot Is Accessed Too Often]\label{lem:maxload-upper-0901}
-    If random sampling makes $3 n \log n$ queries, then
-    \[\prob{\text{some slot is accessed} \geq 18 \log n \text{ times}} \leq \frac{1}{n^2}.\]
-\end{lemma}
-
-\begin{proof}
-    Fix a slot $i$. Here $T = 3 n \log n$, so $\mu = 3 \log n$, and $R = 18 \log n = 6\mu$. The
-    second Chernoff bound of \cref{thm:chernoff-0901} gives
-    \[\prob{Y_i \geq 18 \log n} \leq \frac{1}{2^{18 \log n}} = \frac{1}{n^{18 \log 2}} \leq \frac{1}{n^3},\]
-    where $2^{18 \log n} = e^{18 \log 2 \cdot \log n} = n^{18 \log 2}$ and $18 \log 2 > 12 > 3$. Let
-    $C_i$ be the event that slot $i$ is accessed at least $18 \log n$ times. By the union bound,
-    \[\prob{\bigcup_{i=1}^{n} C_i} \leq \sum_{i=1}^{n} \prob{C_i} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}. \qedhere\]
-\end{proof}
+We solve \cref{ex:maxload-0901}. As before, $\log$ is the natural logarithm.
+Fix a slot $i$, suppose that random sampling makes $T$ queries, and let $Y_i = \sum_{t=1}^{T} Z_t$
+be the number of times that slot $i$ is accessed, where $Z_t = 1$ if the $\nth{t}$ query accesses
+slot $i$ and $Z_t = 0$ otherwise. The queries are independent (sampling with replacement) and each
+accesses slot $i$ with probability $\sfrac{1}{n}$, so the $Z_t$ are independent Bernoulli random
+variables with $p_t = \sfrac{1}{n}$, as in \cref{thm:chernoff-0901}, and
+$\mu = \expectation{Y_i} = \sfrac{T}{n}$.
 
 \begin{lemma}[Lower Tail: No Slot Is Accessed Too Rarely]\label{lem:maxload-lower-0901}
     If random sampling makes $24 n \log n$ queries, then
@@ -239,36 +142,20 @@ independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, exactly as in
 \end{lemma}
 
 \begin{proof}
-    Fix a slot $i$. Now $T = 24 n \log n$, so $\mu = 24 \log n$. Take $\delta = \sfrac{1}{2}$ in the
-    lower tail bound of \cref{thm:chernoff-0901}; then $(1 - \delta)\mu = 12 \log n$ and
-    \[\prob{Y_i < 12 \log n} = \prob{Y_i < (1 - \delta)\mu}
-        \leq e^{-\frac{\mu \delta^2}{2}} = e^{-\frac{24 \log n}{8}} = e^{-3 \log n} = \frac{1}{n^3}.\]
-    Let $D_i$ be the event that slot $i$ is accessed fewer than $12 \log n$ times. By the union bound,
-    \[\prob{\bigcup_{i=1}^{n} D_i} \leq \sum_{i=1}^{n} \prob{D_i} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}.\]
-    The lower tail bound is stated for the strict event $X < (1 - \delta)\mu$, which is why the
-    lemma has ``$<$''. For $n \geq 2$ we have $\log n > 0$, so a slot that is accessed at most
-    $6 \log n$ times is accessed fewer than $12 \log n$ times; the event of the second statement is
-    contained in $\bigcup_i D_i$ and has probability at most $\sfrac{1}{n^2}$ as well.
+    Here $T = 24 n \log n$, so $\mu = 24 \log n$. The lower tail bound of \cref{thm:chernoff-0901}
+    with $\delta = \sfrac{1}{2}$, for which $(1 - \delta)\mu = 12 \log n$, gives for every slot $i$
+    \[\prob{Y_i < 12 \log n} \leq e^{-\frac{\mu \delta^2}{2}} = e^{-\frac{24 \log n}{8}} = \frac{1}{n^3},\]
+    and by the union bound over the $n$ slots some slot has $Y_i < 12 \log n$ with probability at
+    most $n \cdot \sfrac{1}{n^3} = \sfrac{1}{n^2}$. For $n \geq 2$ we have $\log n > 0$, so
+    $Y_i \leq 6 \log n$ implies $Y_i < 12 \log n$: the event of the second statement is contained
+    in the first and has probability at most $\sfrac{1}{n^2}$ as well.
 \end{proof}
 
-\paragraph{Why the lower tail needs more queries.} With only $T = 3 n \log n$ queries we have
-$\mu = 3 \log n$, and the lower tail bound gives, for every $0 < \delta < 1$,
-\[\prob{Y_i < (1 - \delta) \, 3 \log n} \leq e^{-\frac{3 \log n \cdot \delta^2}{2}}
-    = \frac{1}{n^{3 \delta^2 / 2}} > \frac{1}{n^{3/2}}.\]
-After the union bound over the $n$ slots this is more than $n^{-1/2}$, which is far from the
-$n^{-2}$ that the exercise asks for. In general, with $T = a \, n \log n$ queries the same computation
-gives $n \cdot n^{-a \delta^2 / 2}$, which is at most $\sfrac{1}{n^2}$ as soon as $a \geq \sfrac{6}{\delta^2}$;
-\cref{lem:maxload-lower-0901} is the choice $\delta = \sfrac{1}{2}$, $a = 24$. The upper tail does
-not have this problem because the bound $2^{-R}$ for $R \geq 6\mu$ is much stronger.
-
-\begin{corollary}[Every Slot Is Accessed $\bigTh{\log n}$ Times]\label{cor:maxload-0901}
-    If random sampling makes $24 n \log n$ queries, then with probability at least $1 - \sfrac{2}{n^2}$
-    every slot is accessed at least $12 \log n$ and fewer than $144 \log n$ times.
-\end{corollary}
-
-\begin{proof}
-    The lower bound is \cref{lem:maxload-lower-0901}. For the upper bound, repeat the proof of
-    \cref{lem:maxload-upper-0901} with $\mu = 24 \log n$ and $R = 6\mu = 144 \log n$:
-    $\prob{Y_i \geq 144 \log n} \leq 2^{-144 \log n} \leq n^{-3}$, and the union bound gives
-    $\sfrac{1}{n^2}$. The two failure events together have probability at most $\sfrac{2}{n^2}$.
-\end{proof}
+The lemma uses $24 n \log n$ queries and not the $3 n \log n$ of \cref{thm:whp}: with
+$\mu = 3 \log n$ the lower tail bound is $n^{-3\delta^2/2} > n^{-3/2}$ per slot, which is too weak
+for the union bound over the $n$ slots. Similarly, still with $24 n \log n$ queries
+($\mu = 24 \log n$), the second Chernoff bound with $R = 6\mu = 144 \log n$ gives
+$\prob{Y_i \geq 144 \log n} \leq 2^{-144 \log n} \leq n^{-3}$, so by the union bound, with
+probability at least $1 - \sfrac{1}{n^2}$ no slot is accessed $144 \log n$ times or more. So the
+exercise also holds with ``$\geq$'' in place of ``$\leq$'' ($c = 144$), and with $24 n \log n$
+queries every slot is accessed $\bigTh{\log n}$ times with probability at least $1 - \sfrac{2}{n^2}$.

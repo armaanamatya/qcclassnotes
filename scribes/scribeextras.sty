@@ -26,10 +26,16 @@
 % the Tuesday lecture), to avoid half-empty pages.
 % Usage: \newlecture{Tuesday, September 1, 2026}{Topic of the lecture}
 \RequirePackage{placeins} % \FloatBarrier
+\newcounter{scribelecture}
+\renewcommand{\theHsection}{\arabic{scribelecture}.\arabic{section}}
 \newcommand{\newlecture}[2]{%
     \par\FloatBarrier
     \vspace{0.4in}%
     \needspace{2.5in}%
+    % Sections are numbered 1, 2, 3, ... inside each lecture. The hyperlink names stay unique
+    % because they carry the number of the lecture.
+    \stepcounter{scribelecture}%
+    \setcounter{section}{0}%
     \phantomsection
     \addcontentsline{toc}{lecture}{#1}%
     \hrule

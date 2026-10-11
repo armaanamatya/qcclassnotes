@@ -1,8 +1,6 @@
 In this lecture, we see the first quantum algorithms that beat every classical algorithm in the
-query model. We study Deutsch's algorithm, which decides with a single query whether a function
-$f \colon \set{0,1} \to \set{0,1}$ is constant or balanced, the \emph{phase flip} form of a quantum
-query, the $n$-qubit Hadamard (Walsh--Hadamard) transform, and the Deutsch--Jozsa algorithm, which
-does the same for $f \colon \set{0,1}^n \to \set{0,1}$, again with a single query.
+query model: Deutsch's algorithm and, using the \emph{phase flip} form of a query and the $n$-qubit
+Hadamard (Walsh--Hadamard) transform, the Deutsch--Jozsa algorithm.
 
 \section{Deutsch's Algorithm}
 
@@ -16,12 +14,10 @@ Quantumly, Deutsch's algorithm does it with $1$ query.
 
 \subsection{The Quantum Query \texorpdfstring{$U_f$}{Uf}}
 
-A quantum circuit is reversible, but $f$ need not be (a constant $f$ forgets its input). We therefore
-convert $f$ into a reversible \emph{quantum version} $U_f$: a controlled-$f$ gate modeled on the
-CNOT gate of \cref{def:cnot-0915}. Where CNOT XORs the control bit $a$ into the target, $U_f$ XORs
-$f(a)$ into it (\cref{fig:uf-0924}):
+A quantum circuit is reversible, but $f$ need not be. We therefore convert $f$ into a reversible
+\emph{quantum version} $U_f$, a controlled-$f$ gate like the CNOT gate of \cref{def:cnot-0915}
+(\cref{fig:uf-0924}):
 \[U_f \colon \ket{a}\ket{b} \longmapsto \ket{a}\ket{b \oplus f(a)}.\]
-The first qubit (the input $a$) is left unchanged, and $f(a)$ is XORed into the second qubit.
 Applying $U_f$ twice gives back $\ket{a}\ket{b}$, so $U_f$ is reversible. One application of $U_f$
 counts as one query to $f$.
 
@@ -37,18 +33,14 @@ counts as one query to $f$.
         \node[right] at (3,1) {$\ket{a}$};
         \node[right] at (3,0) {$\ket{b \oplus f(a)}$};
     \end{tikzpicture}
-    \caption{The quantum query $U_f$, a controlled-$f$ gate (compare the CNOT gate of
-        \cref{fig:cnot-0915}).}
+    \caption{The quantum query $U_f$.}
     \label{fig:uf-0924}
 \end{figure}
 
 \subsection{The Circuit}
 
-Deutsch's algorithm is usually given in the form of \cref{fig:deutsch-0924}: the first qubit starts in
-$\ket{0}$ and the second in $\ket{1}$; both go through a Hadamard gate, then through $U_f$, then
-through a Hadamard gate again, and are measured. We will show that the measurement of the first qubit
-gives $\ket{0}$ if $f$ is constant and $\ket{1}$ if $f$ is balanced (the second qubit always gives
-$\ket{1}$).
+In Deutsch's algorithm (\cref{fig:deutsch-0924}) the qubits start in $\ket{0}$ and $\ket{1}$, go
+through a Hadamard gate each, then through $U_f$, then through a Hadamard gate each, and are measured.
 
 \begin{figure}[ht]
     \centering
@@ -73,13 +65,11 @@ $\ket{1}$).
         \node[right] at (7,1) {$\ket{0}$ if constant, $\ket{1}$ if balanced};
         \node[right] at (7,0) {$\ket{1}$};
     \end{tikzpicture}
-    \caption{Deutsch's algorithm. It makes one query ($U_f$); the first measurement decides whether
-        $f$ is constant or balanced.}
+    \caption{Deutsch's algorithm.}
     \label{fig:deutsch-0924}
 \end{figure}
 
-The action of the Hadamard gate on $\ket{0}$ and $\ket{1}$ (\cref{eq:hadamard-0915}) can be written
-in one formula: for $a \in \set{0,1}$,
+By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
 \begin{equation}\label{eq:hadamard-0924}
     H\ket{a} = \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)
     = \frac{1}{\sqrt{2}} \sum_{b \in \set{0,1}} (-1)^{ab} \ket{b}.
@@ -95,64 +85,52 @@ gives back $\ket{a}$.
 
 \begin{proof}
     After the first two Hadamard gates the state is (by \cref{eq:mixed-0915})
-    \begin{align*}
-        \ket{\psi_1}
-         & = H\ket{0} \otimes H\ket{1}
-        = \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right) \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right) \\
-         & = \frac{1}{2}\left(\ket{0}\left(\ket{0} - \ket{1}\right) + \ket{1}\left(\ket{0} - \ket{1}\right)\right).
-    \end{align*}
-    Applying $U_f$ to each term, and using that
-    $\ket{0 \oplus c} - \ket{1 \oplus c} = (-1)^{c}\left(\ket{0} - \ket{1}\right)$ for $c \in \set{0,1}$
-    (for $c = 1$ the two kets are swapped),
-    \begin{align*}
-        \ket{\psi_2} = U_f \ket{\psi_1}
-         & = \frac{1}{2}\left(\ket{0}\left(\ket{0 \oplus f(0)} - \ket{1 \oplus f(0)}\right)
-        + \ket{1}\left(\ket{0 \oplus f(1)} - \ket{1 \oplus f(1)}\right)\right)                        \\
-         & = \frac{1}{2}\left(\ket{0}(-1)^{f(0)}\left(\ket{0} - \ket{1}\right)
-        + \ket{1}(-1)^{f(1)}\left(\ket{0} - \ket{1}\right)\right)                                    \\
-         & = \frac{1}{\sqrt{2}}\left((-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}\right)
-        \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)                                     \\
-         & = (-1)^{f(0)} \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{f(0) \oplus f(1)}\ket{1}\right)
-        \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right),
-    \end{align*}
-    where in the last step we used $(-1)^{f(1)} = (-1)^{f(0)} (-1)^{f(0) \oplus f(1)}$. The first qubit
-    is now exactly the right-hand side of \cref{eq:hadamard-0924} with $a = f(0) \oplus f(1)$, up to the
-    sign $(-1)^{f(0)}$. Applying $H$ to it therefore gives
-    \[\ket{\psi_3} = (-1)^{f(0)} \ket{f(0) \oplus f(1)} \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right).\]
-    The factor $(-1)^{f(0)}$ is a global phase and does not affect the measurement, so measuring the
-    first qubit gives $f(0) \oplus f(1)$ with probability $1$. (Applying $H$ to the second qubit gives
-    $\ket{1}$, which is why the second measurement in \cref{fig:deutsch-0924} always gives $1$.)
+    $\ket{\psi_1} = H\ket{0} \otimes H\ket{1}
+        = \frac{1}{2}\left(\ket{0} + \ket{1}\right)\left(\ket{0} - \ket{1}\right)$.
+    For $c \in \set{0,1}$ we have
+    $\ket{0 \oplus c} - \ket{1 \oplus c} = (-1)^{c}\left(\ket{0} - \ket{1}\right)$ (for $c = 1$ the two
+    kets are swapped), so $U_f$ maps $\ket{a}\left(\ket{0} - \ket{1}\right)$ to
+    $(-1)^{f(a)} \ket{a}\left(\ket{0} - \ket{1}\right)$ and, by linearity,
+    \[\ket{\psi_2} = U_f \ket{\psi_1}
+        = \frac{1}{\sqrt{2}}\left((-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}\right)
+        \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right).\]
+    Since $(-1)^{f(1)} = (-1)^{f(0)} (-1)^{f(0) \oplus f(1)}$, the first qubit is
+    $(-1)^{f(0)} \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{f(0) \oplus f(1)}\ket{1}\right)$, i.e., up to the
+    sign $(-1)^{f(0)}$, the right-hand side of \cref{eq:hadamard-0924} with $a = f(0) \oplus f(1)$; the
+    second qubit is $H\ket{1}$. So the last two Hadamard gates give
+    $\ket{\psi_3} = (-1)^{f(0)} \ket{f(0) \oplus f(1)} \ket{1}$.
+    The global phase $(-1)^{f(0)}$ does not affect the measurement: the first qubit gives
+    $f(0) \oplus f(1)$ with probability $1$, and the second always gives $1$.
 \end{proof}
 
-\section{Phase Flip}
+\section{Phase Flip and the \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
-The computation above shows a general trick. If the second (target) qubit of $U_f$ is in the state
-$\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then for every input $x$
-\[U_f \, \ket{x} \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)
-    = (-1)^{f(x)} \, \ket{x} \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right),\]
-i.e., the target qubit is unchanged and the value $f(x)$ shows up as a sign in front of $\ket{x}$.
-Since the target qubit never changes, we drop it and write the query in the short-hand
-\emph{phase flip} form
-\[U_f \colon \ket{x} \longmapsto (-1)^{f(x)} \ket{x},\]
-instead of the original form $U_f \colon \ket{a}\ket{b} \mapsto \ket{a}\ket{b \oplus f(a)}$. By
-linearity, $U_f$ maps a superposition $\sum_x \alpha_x \ket{x}$ to $\sum_x \alpha_x (-1)^{f(x)} \ket{x}$:
-one query flips the sign of every $\ket{x}$ with $f(x) = 1$ at once.
+If the second (target) qubit of $U_f$ is in the state
+$\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then, by the computation in the proof of
+\cref{thm:deutsch-0924}, for every input $x$ (also for $x \in \set{0,1}^n$, where
+$U_f \colon \ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$),
+\[U_f \, \ket{x} \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = (-1)^{f(x)} \, \ket{x} \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}).\]
+We drop the target qubit and write the query in the \emph{phase flip} form
+\[U_f \colon \ket{x} \longmapsto (-1)^{f(x)} \ket{x}.\]
+By linearity, $U_f$ maps $\sum_x \alpha_x \ket{x}$ to $\sum_x \alpha_x (-1)^{f(x)} \ket{x}$: one query
+flips the sign of every $\ket{x}$ with $f(x) = 1$.
 
-\section{The \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
+\subsection{The \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
-To generalize Deutsch's algorithm to $n$ bits we need the Hadamard gate applied to each of $n$ qubits.
+To generalize Deutsch's algorithm to $n$ bits we apply the Hadamard gate to each of $n$ qubits.
 Start with $n = 2$ and let $\ket{x} = \ket{x_1 x_2} = \ket{x_1}\ket{x_2}$. Using
 \cref{eq:mixed-0915} and then \cref{eq:hadamard-0924} on each qubit,
 \begin{align*}
     (H \otimes H)\ket{x}
-     & = H\ket{x_1} \otimes H\ket{x_2}                                                                 \\
-     & = \left(\frac{1}{\sqrt{2}} \sum_{y_1 \in \set{0,1}} (-1)^{x_1 y_1} \ket{y_1}\right)
-    \left(\frac{1}{\sqrt{2}} \sum_{y_2 \in \set{0,1}} (-1)^{x_2 y_2} \ket{y_2}\right)                 \\
+     & = H\ket{x_1} \otimes H\ket{x_2}
+    = \left(\frac{1}{\sqrt{2}} \sum_{y_1 \in \set{0,1}} (-1)^{x_1 y_1} \ket{y_1}\right)
+    \left(\frac{1}{\sqrt{2}} \sum_{y_2 \in \set{0,1}} (-1)^{x_2 y_2} \ket{y_2}\right) \\
      & = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x_1 y_1 + x_2 y_2} \ket{y}
     = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x \cdot y} \ket{y},
 \end{align*}
-where $x \cdot y = x_1 y_1 \oplus x_2 y_2$ is the inner product of the bit strings modulo $2$ (only the
-parity of the exponent matters). In general, for $x, y \in \set{0,1}^n$ we write
+where $x \cdot y = x_1 y_1 \oplus x_2 y_2$, since only the parity of the exponent matters. For
+example, $(H \otimes H)\ket{01} = \frac{1}{2}\left(\ket{00} - \ket{01} + \ket{10} - \ket{11}\right)$.
+In general, for $x, y \in \set{0,1}^n$, the inner product of the bit strings modulo $2$ is
 \[x \cdot y = x_1 y_1 \oplus x_2 y_2 \oplus \dots \oplus x_n y_n.\]
 
 \begin{lemma}[Walsh--Hadamard Transform]\label{lem:wh-0924}
@@ -162,13 +140,16 @@ parity of the exponent matters). In general, for $x, y \in \set{0,1}^n$ we write
 \end{lemma}
 
 \begin{proof}
-    Exactly as for $n = 2$: apply \cref{eq:hadamard-0924} to each of the $n$ qubits and multiply out
-    the $n$ sums. The exponent is $x_1 y_1 + \dots + x_n y_n$, and $(-1)$ to this power only depends on
-    its parity $x \cdot y$.
+    By \cref{eq:mixed-0915} applied repeatedly, $H^{\otimes n} \ket{x} = H\ket{x_1} \otimes \dots \otimes H\ket{x_n}$,
+    and by \cref{eq:hadamard-0924} the $\nth{i}$ factor is
+    $\frac{1}{\sqrt{2}} \sum_{y_i \in \set{0,1}} (-1)^{x_i y_i} \ket{y_i}$. Multiplying out the $n$ sums,
+    \[H^{\otimes n} \ket{x}
+        = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x_1 y_1 + \dots + x_n y_n} \ket{y},\]
+    and $(-1)$ to the power $x_1 y_1 + \dots + x_n y_n$ only depends on its parity $x \cdot y$.
 \end{proof}
 
-The most important special case is $x = 0^n = 00 \cdots 0$: then $x \cdot y = 0$ for every $y$, and
-\[H^{\otimes n} \ket{00 \cdots 0} = \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}\]
+For $x = 0^n = 00 \cdots 0$ we have $x \cdot y = 0$ for every $y$, so
+$H^{\otimes n} \ket{00 \cdots 0} = \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}$
 is the uniform superposition of all $2^n$ bit strings.
 
 \section{Deutsch--Jozsa Algorithm}
@@ -179,33 +160,29 @@ is the uniform superposition of all $2^n$ bit strings.
     which is the case.
 \end{problem}
 
-This is the same problem as Deutsch's, but on $n$ bits. It is a \emph{promise problem}: we are told in
-advance that $f$ is one of the two kinds. Let $N = 2^n$ be the number of inputs.
+This is Deutsch's problem on $n$ bits. It is a \emph{promise problem}: we are told in advance that $f$
+is one of the two kinds. Let $N = 2^n$ be the number of inputs.
 
 \subsection{Classical Query Complexity}
 
-\begin{itemize}
-    \item \emph{Deterministic:} in the worst case $2^{n-1} + 1 = N/2 + 1$ queries are needed. If an
-          algorithm has seen only $N/2$ values and they are all equal, then $f$ may still be either
-          constant or balanced. The same holds for a randomized algorithm that has to succeed with
-          probability $1$: in the worst case it needs $2^{n-1} + 1$ queries.
-    \item \emph{Randomized (Monte Carlo):} query $f$ on $\alpha$ independent uniformly random inputs. If
-          two of the answers differ, output ``balanced''; otherwise output ``constant''. If $f$ is
-          constant, we are always right. If $f$ is balanced, every answer is $0$ or $1$ with probability
-          $\sfrac{1}{2}$ each, so all $\alpha$ answers agree, and we fail, with probability
-          \[2 \cdot \left(\frac{1}{2}\right)^{\alpha} = \left(\frac{1}{2}\right)^{\alpha - 1}.\]
-          A constant number of queries gives a constant error probability, and $\alpha = \bigO{\log N}$
-          queries bring the error probability down to $\sfrac{1}{N}$.
-    \item \emph{Quantum:} the Deutsch--Jozsa algorithm needs $1$ query (and $n$ measurements) and makes
-          no error.
-\end{itemize}
+\emph{Deterministic:} in the worst case $2^{n-1} + 1 = N/2 + 1$ queries are needed, since after $N/2$
+equal values $f$ may still be either constant or balanced. The same holds for a randomized algorithm
+that has to succeed with probability $1$.
+
+\emph{Randomized (Monte Carlo):} query $f$ on $\alpha$ independent uniformly random inputs and output
+``balanced'' if two answers differ, ``constant'' otherwise. If $f$ is constant, we are always right. If
+$f$ is balanced, every answer is $0$ or $1$ with probability $\sfrac{1}{2}$ each, so all $\alpha$
+answers agree, and we fail, with probability
+$2 \cdot (\sfrac{1}{2})^{\alpha} = (\sfrac{1}{2})^{\alpha - 1}$. A constant number of queries gives a
+constant error probability, and $\alpha = \bigO{\log N}$ queries give error probability $\sfrac{1}{N}$.
+
+\emph{Quantum:} the Deutsch--Jozsa algorithm needs $1$ query (and $n$ measurements) and makes no error.
 
 \subsection{The Algorithm}
 
 The circuit (\cref{fig:dj-0924}) is Deutsch's circuit with $n$ input qubits: $n$ qubits in $\ket{0}$
-and one qubit in $\ket{1}$ go through Hadamard gates, then through $U_f$ (one query), then the $n$
-input qubits go through Hadamard gates again and are measured. If any of the $n$ measurements gives
-$1$, then $f$ is balanced; if they all give $0$, then $f$ is constant.
+and one qubit in $\ket{1}$ go through Hadamard gates and then $U_f$ (one query); then the $n$ input
+qubits go through Hadamard gates again and are measured.
 
 \begin{figure}[ht]
     \centering
@@ -236,8 +213,7 @@ $1$, then $f$ is balanced; if they all give $0$, then $f$ is constant.
         \draw[decorate, decoration={brace, amplitude=5pt}] (-0.9,0.8) -- (-0.9,3.2)
         node[midway, left=6pt] {\small $n$ inputs};
     \end{tikzpicture}
-    \caption{The Deutsch--Jozsa algorithm. It makes one query and $n$ measurements; the last qubit is
-        not needed after the query and is not measured.}
+    \caption{The Deutsch--Jozsa algorithm. The last qubit is not measured.}
     \label{fig:dj-0924}
 \end{figure}
 
@@ -249,28 +225,18 @@ $1$, then $f$ is balanced; if they all give $0$, then $f$ is constant.
 
 \begin{proof}
     We use the phase flip form of $U_f$: the last qubit is $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$
-    throughout and is dropped. The $n$ input qubits start in $\ket{00 \cdots 0}$. After the first
-    layer of Hadamard gates,
-    \[H^{\otimes n} \ket{00 \cdots 0} = \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}.\]
-    The query $U_f$ flips the sign of every $\ket{x}$ with $f(x) = 1$:
-    \[\frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} (-1)^{f(x)} \ket{x}.\]
-    After the second layer of Hadamard gates, by \cref{lem:wh-0924},
-    \begin{align*}
-        \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} (-1)^{f(x)}
-        \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}
-         & = \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{f(x) + x \cdot y} \ket{y}.
-    \end{align*}
-    Look at the amplitude of $\ket{y}$ for $y = 0^n$. Since $x \cdot 0^n = 0$ for every $x$, it is
-    \[\frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{f(x)}
-        = \begin{cases}
-            \pm 1 & \text{if $f$ is constant (all $2^n$ terms are equal)},         \\
-            0     & \text{if $f$ is balanced (half the terms are $+1$, half are $-1$)}.
-        \end{cases}\]
-    If $f$ is constant, the state is $\pm \ket{00 \cdots 0}$ (all other amplitudes must be $0$, since
-    the amplitudes squared sum to $1$), so the measurement gives $0^n$ with probability $1$. If $f$ is
-    balanced, the amplitude of $\ket{00 \cdots 0}$ is $0$, so the measurement gives $0^n$ with
-    probability $0$, i.e., at least one of the $n$ measurements gives $1$.
+    throughout and is dropped. The first layer of Hadamard gates maps the input register
+    $\ket{00 \cdots 0}$ to $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}$, and the query flips the sign of
+    every $\ket{x}$ with $f(x) = 1$. After the second layer of Hadamard gates, by \cref{lem:wh-0924},
+    the state is
+    \[\frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} (-1)^{f(x)} H^{\otimes n} \ket{x}
+        = \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{f(x) + x \cdot y} \ket{y}.\]
+    Since $x \cdot 0^n = 0$ for every $x$, the amplitude of $\ket{0^n}$ is
+    $\frac{1}{2^n} \sum_{x} (-1)^{f(x)}$. If $f$ is constant, all $2^n$ terms are equal and the
+    amplitude is $\pm 1$; the amplitudes squared sum to $1$, so all others are $0$ and the measurement
+    gives $0^n$ with probability $1$. If $f$ is balanced, half the terms are $+1$ and half are $-1$, so
+    the amplitude is $0$: the measurement gives $0^n$ with probability $0$, i.e., at least one of the
+    $n$ measurements gives $1$.
 \end{proof}
 
-For $n = 1$ this is exactly Deutsch's algorithm. In both cases a single query suffices, whereas any
-classical algorithm with zero error needs $2^{n-1} + 1$ queries.
+For $n = 1$ this is Deutsch's algorithm.
