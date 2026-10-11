@@ -36,8 +36,11 @@ computation, and sends messages on some of its edges.
                     \node[point] (r\i) at (3.2,\h) {};
                 }
             \node[right] at (3.3,0.6) {\small $r$};
-            \foreach \i in {1,2,3} {\draw[->] (u) -- (r\i);}
-            \foreach \i in {3,4,5} {\draw[->] (v) -- (r\i);}
+            \foreach \i in {1,2} {\draw[->, shorten >=2pt] (u) -- (r\i);}
+            \foreach \i in {4,5} {\draw[->, shorten >=2pt] (v) -- (r\i);}
+            % the two arrows into the common referee end slightly apart
+            \draw[->, shorten >=2pt] (u) -- ([yshift=3pt]r3.west);
+            \draw[->, shorten >=2pt] (v) -- ([yshift=-3pt]r3.west);
             \node at (0,2.4) {\small candidates};
             \node at (3.2,2.4) {\small referees};
         \end{scope}
@@ -299,7 +302,7 @@ is random, so we finish with an expectation over all pairs of nodes.
 \end{proof}
 
 \paragraph{Remark (the failure probability).} The bound $\frac{2 \log^2 n}{n}$ tends to $0$, but it is
-not of the form $\sfrac{1}{n^c}$ with $c > 1$. This is easy to repair: let every candidate contact
+not of the form $\sfrac{1}{n^c}$ with $c \geq 1$. This is easy to repair: let every candidate contact
 $k' = \left\lceil 2\sqrt{n \log n} \right\rceil$ referees instead of $k$ (for $n \geq 9$ we have
 $4 \log n \leq n$ and hence $k' \leq n$). The proof of \cref{lem:disjoint-0908} goes through with
 $k'$ in place of $k$ and gives $e^{-\sfrac{k'^2}{n}} \leq e^{-4 \log n} = \sfrac{1}{n^4}$, so that
