@@ -92,9 +92,8 @@ Suppose that we are looking for one particular element of the array. For every s
 If we keep sampling (with replacement) until the element is found, then the expected number of
 samples, i.e., the number of steps of the algorithm, is
 \[\expectation{\text{samples}} = \frac{1}{\prob{\text{element} = \text{sample}}} = n.\]
-We will prove this in the next lecture, when we introduce the expectation and the geometric random
-variable. For now we can already compute the probability of \emph{not} finding the element: a sample
-misses it with probability $1 - \frac{1}{n}$, and since the samples are independent,
+The probability of \emph{not} finding the element is computed directly: a sample misses it with
+probability $1 - \frac{1}{n}$, and since the samples are independent,
 \[\prob{\text{not found after $k$ samples}} = \left(1 - \frac{1}{n}\right)^k,
     \qquad
     \prob{\text{found within $k$ samples}} = 1 - \left(1 - \frac{1}{n}\right)^k.\]
@@ -225,6 +224,4 @@ and for a value $r \in V$, $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s
 
 For example, in random sampling the sample space $S$ is the set of the $n$ possible outcomes of the
 $\log n$ coin flips, and the random variable $X$ is the index that is sampled. Every $s \in S$ has
-$\prob{s} = \sfrac{1}{n}$, and $\prob{X = i} = \sfrac{1}{n}$ for every index $i$. In the next lecture
-we define the expectation $\expectation{X}$ of a random variable and prove that the expected number
-of samples until a given element is found is $n$.
+$\prob{s} = \sfrac{1}{n}$, and $\prob{X = i} = \sfrac{1}{n}$ for every index $i$.
