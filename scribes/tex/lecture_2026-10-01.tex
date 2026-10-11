@@ -194,10 +194,12 @@ The same bound holds if the algorithm only has to tell the two cases apart.
     before and the answers $a_1, \dots, a_{i-1}$. By the proof of \cref{lem:collision-1001},
     $p_i \leq \sfrac{2(i-1)}{N}$, and without a collision the $\nth{i}$ answer is uniform among the
     $N - i + 1$ unused values. Hence, by \cref{lem:prodsum-1001} below,
-    \[\prob[\mathcal{D}]{T = t} \geq \prod_{i=1}^{k} \frac{1 - p_i}{N - i + 1}
-        \geq \left(1 - \sum_{i=1}^{k} \frac{2(i-1)}{N}\right) \prob[\mathcal{P}]{T = t}
-        = \left(1 - \frac{k(k-1)}{N}\right) \prob[\mathcal{P}]{T = t}
-        \geq \frac{3}{4} \prob[\mathcal{P}]{T = t},\]
+    \begin{align*}
+        \prob[\mathcal{D}]{T = t} \geq \prod_{i=1}^{k} \frac{1 - p_i}{N - i + 1}
+         & \geq \left(1 - \sum_{i=1}^{k} \frac{2(i-1)}{N}\right) \prob[\mathcal{P}]{T = t} \\
+         & = \left(1 - \frac{k(k-1)}{N}\right) \prob[\mathcal{P}]{T = t}
+        \geq \frac{3}{4} \prob[\mathcal{P}]{T = t},
+    \end{align*}
     because $k(k-1) \leq k^2 \leq \sfrac{N}{4}$.
 
     Let $\mathcal{T}$ be the set of sequences on which $A$ answers ``$1$-to-$1$'', and let
