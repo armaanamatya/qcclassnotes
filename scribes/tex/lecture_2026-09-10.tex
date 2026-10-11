@@ -1,6 +1,7 @@
 In this lecture, we state the law of large numbers and return to random walks on graphs. We describe
 a random walk by its transition matrix $P$, show that the distribution of the token evolves as
-$p_{t+1} = p_t P$, and study the stationary distribution $\pi = \pi P$ and when the walk converges to it.
+$p_{t+1} = p_t P$, find the stationary distribution $\pi = \pi P$, and prove by an analysis of the
+eigenvalues of $P$ that the walk on a connected, non-bipartite graph converges to it.
 
 \section{Law of Large Numbers}
 
@@ -238,6 +239,17 @@ class: (1) the graph should be connected, and (2) it should be non-bipartite. Th
 for the walk to converge to one and the same limit from every start; a stationary distribution itself
 exists for every graph without isolated vertices, by \cref{thm:stationary-0910}.
 
+% Pages 3-4: "As t -> oo, p_t -> pi" with the two conditions (connected, non-bipartite). Assigned in
+% class: prove the convergence by eigenvalue analysis.
+\needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
+\begin{exercise}\label{ex:convergence-0910}
+    Let $G$ be connected and non-bipartite. Prove, by analysing the eigenvalues of the transition
+    matrix $P$, that the random walk on $G$ converges to the stationary distribution: $p_t \to \pi$ as
+    $t \to \infty$, for every starting distribution $p_0$.
+\end{exercise}
+
+The solution is \cref{thm:convergence-0910}, which is proved in \cref{sec:eigen-0910}.
+
 \begin{theorem}[Convergence of Random Walks]\label{thm:convergence-0910}
     Let $G$ be a connected, non-bipartite graph with $m$ edges. Then for every starting distribution
     $p_0$,
@@ -245,16 +257,195 @@ exists for every graph without isolated vertices, by \cref{thm:stationary-0910}.
     In particular, $\pi$ is the only stationary distribution of the walk.
 \end{theorem}
 
-We do not prove the convergence. It is the fundamental theorem of Markov chains (the convergence
-theorem for irreducible and aperiodic chains); see Levin, Peres and Wilmer, \emph{Markov Chains and
-Mixing Times}, Chapter~4. It can also be derived from the Perron--Frobenius theorem. A random walk on a
-graph
-is irreducible exactly when the graph is connected, and for a connected graph it is aperiodic exactly
-when the graph is not bipartite. The uniqueness follows at once from the convergence: if $\pi'$ is any
-stationary distribution and we start the walk with $p_0 = \pi'$, then $p_t = \pi'$ for all $t$, and
-$p_t \to \pi$ forces $\pi' = \pi$. The triangle is connected and not bipartite (it is an odd cycle), and
-\cref{lem:triangle-0908} shows the convergence there explicitly. The two graphs of
-\cref{fig:counter-0910} show that neither condition can be dropped.
+\subsection{Proof by Eigenvalue Analysis}\label{sec:eigen-0910}
+
+The idea is to write $P^t$ in terms of the eigenvalues of $P$. The eigenvalue $1$ gives the limit $\pi$,
+and every other eigenvalue $\lambda$ has $\abs{\lambda} < 1$, so its contribution $\lambda^t$ dies out.
+Connectedness is what makes the eigenvalue $1$ occur only once, and non-bipartiteness is what excludes
+the eigenvalue $-1$, whose powers $(-1)^t$ would not die out.
+
+In this subsection $p_t$ and $\pi$ are row vectors as before, while $x$, $w$ and $z$ denote real
+column vectors with entries $x_u$ ($u \in V$), and $\mathbf{1}$ is the column vector with all entries $1$.
+A nonzero column vector $x$ is an \emph{eigenvector} of a matrix $M$ with \emph{eigenvalue} $\lambda$ if
+$Mx = \lambda x$.
+
+\paragraph{A symmetric matrix with the same eigenvalues.} The adjacency matrix $A$ is symmetric, but
+$P = D^{-1} A$ is symmetric only if all degrees are equal. Let $D^{1/2}$ be the diagonal matrix with
+entries $\sqrt{d_1}, \dots, \sqrt{d_n}$ and $D^{-1/2}$ its inverse, and put
+\[N = D^{-1/2} A D^{-1/2}, \qquad \text{i.e.,} \qquad N_{uv} = \frac{A_{uv}}{\sqrt{d_u d_v}}.\]
+Since $A_{uv} = A_{vu}$, the matrix $N$ is symmetric. Moreover,
+\[D^{-1/2} N D^{1/2} = D^{-1/2} D^{-1/2} A D^{-1/2} D^{1/2} = D^{-1} A = P,\]
+and in the product of $t$
+copies of $D^{-1/2} N D^{1/2}$ every inner pair $D^{1/2} D^{-1/2}$ cancels, so
+\begin{equation}\label{eq:similar-0910}
+    P = D^{-1/2} N D^{1/2}, \qquad P^t = D^{-1/2} N^t D^{1/2} \quad \text{for all } t \geq 0.
+\end{equation}
+Eigenvectors of $N$ give eigenvectors of $P$ with the same eigenvalue: if $Nw = \lambda w$ and
+$w \neq 0$, then $x = D^{-1/2} w \neq 0$ and
+\begin{equation}\label{eq:transfer-0910}
+    P x = D^{-1/2} N D^{1/2} D^{-1/2} w = D^{-1/2} N w = \lambda D^{-1/2} w = \lambda x.
+\end{equation}
+
+\paragraph{The spectral theorem.} For symmetric matrices we use the following standard theorem of
+linear algebra, without proof.
+
+\begin{theorem}[Spectral Theorem for Real Symmetric Matrices]\label{thm:spectral-0910}
+    Let $N$ be a real symmetric $n \times n$ matrix. Then there are real numbers
+    $\lambda_1, \dots, \lambda_n$ and real column vectors $w_1, \dots, w_n$ such that
+    $N w_i = \lambda_i w_i$ for all $i$, and $w_1, \dots, w_n$ is an orthonormal basis of
+    $\mathbb{R}^n$: $w_i^{T} w_i = 1$, and $w_i^{T} w_j = 0$ for $i \neq j$.
+\end{theorem}
+
+Let $x$ be a real column vector. Since $w_1, \dots, w_n$ is a basis, $x = \sum_{i} c_i w_i$ for unique
+numbers $c_i$, and multiplying from the left by $w_j^{T}$ gives $c_j = w_j^{T} x$. Applying $N$ to this
+expansion $t$ times multiplies the $\nth{i}$ term by $\lambda_i^t$, so
+\[N^t x = \sum_{i=1}^{n} \lambda_i^t \left(w_i^{T} x\right) w_i
+    = \left(\sum_{i=1}^{n} \lambda_i^t\, w_i w_i^{T}\right) x.\]
+This holds for every $x$, so
+\begin{equation}\label{eq:powers-0910}
+    N^t = \sum_{i=1}^{n} \lambda_i^t\, w_i w_i^{T} \qquad \text{for all } t \geq 0,
+\end{equation}
+where $w_i w_i^{T}$ is the $n \times n$ matrix with entries $(w_i)_u (w_i)_v$.
+
+\paragraph{The eigenvalues of $P$.} For a column vector $x$, the $\nth{u}$ entry of $Px$ is the average
+of $x$ over the neighbours of $u$:
+\begin{equation}\label{eq:average-0910}
+    (Px)_u = \sum_{v \in V} P_{uv} x_v = \frac{1}{\deg(u)} \sum_{v \sim u} x_v.
+\end{equation}
+
+\begin{lemma}[Eigenvalues of the Transition Matrix]\label{lem:eigen-0910}
+    Let $G$ be a connected graph with at least two vertices, let $\lambda$ be a real number, and let
+    $x \neq 0$ be a real column vector with $Px = \lambda x$.
+    \begin{enumerate}
+        \item $\abs{\lambda} \leq 1$.
+        \item If $\lambda = 1$, then all entries of $x$ are equal, i.e., $x = c \mathbf{1}$ for some $c \neq 0$.
+        \item If $\lambda = -1$, then $G$ is bipartite.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    A connected graph with at least two vertices has no isolated vertices, so $P$ is defined and every
+    vertex has a neighbour. Let $M = \max_{u} \abs{x_u}$; since $x \neq 0$, we have $M > 0$.
+
+    \emph{Part 1.} Let $u$ be a vertex with $\abs{x_u} = M$. By \cref{eq:average-0910} and the triangle
+    inequality,
+    \[\abs{\lambda} M = \abs{\lambda x_u} = \abs{(Px)_u}
+        \leq \frac{1}{\deg(u)} \sum_{v \sim u} \abs{x_v} \leq \frac{1}{\deg(u)} \cdot \deg(u) \cdot M = M.\]
+    Dividing by $M > 0$ gives $\abs{\lambda} \leq 1$.
+
+    \emph{Part 2.} Let $\lambda = 1$, let $K = \max_u x_u$, and let $S = \set{u \suchthat x_u = K}$, which
+    is not empty. Let $u \in S$. By \cref{eq:average-0910}, $K = x_u = (Px)_u$ is the average of the
+    numbers $x_v$ over the neighbours $v$ of $u$. Each of these numbers is at most $K$, and if one of
+    them were smaller than $K$ the average would be smaller than $K$. So $x_v = K$ for every neighbour
+    $v$ of $u$: every neighbour of a vertex of $S$ is in $S$. Since $G$ is connected, every vertex can
+    be reached from a vertex of $S$ along a path, so $S = V$ and $x = K \mathbf{1}$. Finally $K \neq 0$
+    because $x \neq 0$.
+
+    \emph{Part 3.} Let $\lambda = -1$, and let
+    \[S_+ = \set{u \suchthat x_u = M}, \qquad S_- = \set{u \suchthat x_u = -M}.\]
+    These two sets are disjoint because $M > 0$, and at least one of them is not empty. Let $u \in S_+$.
+    By \cref{eq:average-0910}, the average of $x_v$ over the neighbours $v$ of $u$ is
+    $(Px)_u = -x_u = -M$. Each $x_v$ is at least $-M$, so, as in Part 2, all of them are equal to
+    $-M$: every neighbour of a vertex of $S_+$ is in $S_-$. In the same way, if $u \in S_-$ then the
+    average of $x_v$ over the neighbours of $u$ is $-x_u = M$, each $x_v$ is at most $M$, and so every
+    neighbour of a vertex of $S_-$ is in $S_+$. Hence every neighbour of a vertex of $S_+ \cup S_-$ is
+    again in $S_+ \cup S_-$, and since $G$ is connected, $S_+ \cup S_- = V$. So every vertex is in
+    exactly one of $S_+$ and $S_-$, and every edge joins a vertex of $S_+$ to a vertex of $S_-$. This
+    is a bipartition of $G$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:convergence-0910}]
+    A non-bipartite graph contains an odd cycle, so $G$ has at least three vertices, and it is
+    connected, so \cref{lem:eigen-0910} applies. Let $\lambda_1, \dots, \lambda_n$ and $w_1, \dots, w_n$
+    be the eigenvalues and the orthonormal eigenvectors of the symmetric matrix $N$ given by
+    \cref{thm:spectral-0910}. By \cref{eq:transfer-0910}, $x_i = D^{-1/2} w_i$ is a real eigenvector of $P$
+    with eigenvalue $\lambda_i$, so \cref{lem:eigen-0910} applies to every pair $\lambda_i$, $x_i$.
+
+    \emph{Step 1: the eigenvalue $1$ occurs exactly once.} Let $z = D^{1/2} \mathbf{1}$, the column
+    vector with entries $\sqrt{d_u}$. The $\nth{u}$ entry of $A \mathbf{1}$ is the number of neighbours of
+    $u$, so $A \mathbf{1} = D \mathbf{1}$ and
+    \[N z = D^{-1/2} A D^{-1/2} D^{1/2} \mathbf{1} = D^{-1/2} A \mathbf{1} = D^{-1/2} D \mathbf{1} = D^{1/2} \mathbf{1} = z.\]
+    So $z$ is an eigenvector of $N$ with eigenvalue $1$, and
+    $z^{T} z = \sum_{u} d_u = 2m$ by the handshake lemma.
+
+    At least one $\lambda_i$ equals $1$: write $z = \sum_i c_i w_i$. Then
+    $\sum_i c_i w_i = z = Nz = \sum_i c_i \lambda_i w_i$, and the coefficients with respect to a basis are
+    unique, so $c_i = c_i \lambda_i$ for all $i$. Since $z \neq 0$, some $c_i$ is not $0$, and for this
+    $i$ we get $\lambda_i = 1$.
+
+    If $\lambda_i = 1$, then by part 2 of \cref{lem:eigen-0910} we have $D^{-1/2} w_i = c \mathbf{1}$ for
+    some $c \neq 0$, i.e., $w_i = c D^{1/2} \mathbf{1} = c z$. Hence at most one $\lambda_i$ equals $1$: if
+    $\lambda_i = \lambda_j = 1$ with $i \neq j$, then $w_i = c z$ and $w_j = c' z$ with $c, c' \neq 0$,
+    and $w_i^{T} w_j = c c' \cdot 2m \neq 0$, which contradicts the orthogonality. We number the
+    eigenvalues so that $\lambda_1 = 1$. Then $w_1 = c z$ with $1 = w_1^{T} w_1 = c^2 \cdot 2m$, and
+    therefore
+    \begin{equation}\label{eq:first-0910}
+        w_1 w_1^{T} = c^2 z z^{T} = \frac{1}{2m} z z^{T}.
+    \end{equation}
+
+    \emph{Step 2: all other eigenvalues are smaller than $1$ in absolute value.} Let $i \geq 2$. Then
+    $\abs{\lambda_i} \leq 1$ by part 1 of \cref{lem:eigen-0910}, $\lambda_i \neq 1$ by Step 1, and
+    $\lambda_i \neq -1$ by part 3, because $G$ is not bipartite. Hence
+    \[\rho := \max_{2 \leq i \leq n} \abs{\lambda_i} < 1.\]
+
+    \emph{Step 3: the limit of $N^t$.} By \cref{eq:powers-0910,eq:first-0910},
+    \[N^t = \frac{1}{2m} z z^{T} + E_t, \qquad \text{where } E_t = \sum_{i=2}^{n} \lambda_i^t\, w_i w_i^{T}.\]
+    Every entry of a vector of length $1$ is at most $1$ in absolute value, so every entry of
+    $w_i w_i^{T}$ is at most $1$ in absolute value, and therefore
+    \[\abs{(E_t)_{uv}} \leq \sum_{i=2}^{n} \abs{\lambda_i}^t \leq (n-1) \rho^t \qquad \text{for all } u, v.\]
+
+    \emph{Step 4: the limit of $p_t$.} By \cref{lem:evolution-0910} and \cref{eq:similar-0910},
+    \[p_t = p_0 P^t = p_0 D^{-1/2} N^t D^{1/2}
+        = \frac{1}{2m}\, p_0 D^{-1/2} z z^{T} D^{1/2} + p_0 D^{-1/2} E_t D^{1/2}.\]
+    In the first term, $D^{-1/2} z = \mathbf{1}$, and $p_0 \mathbf{1} = \sum_u p_0^u = 1$ because $p_0$ is a
+    probability vector; and $z^{T} D^{1/2} = \mathbf{1}^{T} D = (d_1, \dots, d_n)$. So the first term is
+    \[\frac{1}{2m} \left(p_0 \mathbf{1}\right) \left(z^{T} D^{1/2}\right) = \frac{1}{2m} (d_1, \dots, d_n) = \pi,\]
+    for every $t$ and every $p_0$. The $\nth{v}$ entry of the second term is
+    $\sum_{u} p_0^u\, d_u^{-1/2}\, (E_t)_{uv}\, d_v^{1/2}$. Since $1 \leq d_u$ and $d_v \leq n$, we have
+    $\sqrt{d_v / d_u} \leq \sqrt{n}$, and with Step 3 and $\sum_u p_0^u = 1$ we obtain
+    \begin{equation}\label{eq:rate-0910}
+        \abs{p_t^v - \pi_v} \leq \sum_{u} p_0^u \sqrt{\frac{d_v}{d_u}}\, \abs{(E_t)_{uv}}
+        \leq \sqrt{n}\, (n-1)\, \rho^t \leq n^{3/2} \rho^t \qquad \text{for every } v \in V.
+    \end{equation}
+    Since $0 \leq \rho < 1$, the right-hand side tends to $0$ as $t \to \infty$. Hence $p_t \to \pi$.
+
+    \emph{Uniqueness.} Let $\pi'$ be any stationary distribution, and start the walk with $p_0 = \pi'$.
+    Then $p_t = \pi'$ for all $t$, and $p_t \to \pi$ forces $\pi' = \pi$.
+\end{proof}
+
+\paragraph{The rate of convergence.} \Cref{eq:rate-0910} says more than the theorem: the distance to
+$\pi$ is at most a constant times $\rho^t$, i.e., it decreases geometrically, where $\rho$ is the largest absolute
+value of an eigenvalue of $P$ other than the eigenvalue $1$. The closer $\rho$ is to $1$, the slower the
+walk converges.
+
+\paragraph{The regular case.} If $G$ is $d$-regular, then $D = dI$ and $N = \sfrac{A}{d} = P$: the
+transition matrix itself is symmetric, and no change of matrix is needed. Here $z = \sqrt{d}\, \mathbf{1}$,
+and we may take $w_1 = \sfrac{\mathbf{1}}{\sqrt{n}}$. Writing the starting distribution as a column vector
+$p_0^{T} = \sum_i c_i w_i$, we have $c_1 = w_1^{T} p_0^{T} = \sfrac{1}{\sqrt{n}}$, and since $P^{T} = P$,
+\[p_t^{T} = P^t p_0^{T} = \sum_{i=1}^{n} c_i \lambda_i^t w_i
+    = \frac{1}{n} \mathbf{1} + \sum_{i=2}^{n} c_i \lambda_i^t w_i
+    \longrightarrow \frac{1}{n} \mathbf{1},\]
+the uniform distribution, because $\abs{\lambda_i} < 1$ for $i \geq 2$ by Steps 1 and 2 of the proof.
+
+\paragraph{The triangle again.} The triangle is $2$-regular with $P = \frac{1}{2}(J - I)$, where $J$ is
+the $3 \times 3$ matrix with all entries $1$. We have $J \mathbf{1} = 3 \cdot \mathbf{1}$, and $Jx = 0$ for
+every $x$ whose entries sum to $0$, for example $x = (1, -1, 0)^{T}$ and $x = (1, 1, -2)^{T}$. So
+$P \mathbf{1} = \mathbf{1}$ and $Px = -\frac{1}{2} x$ for these two vectors: the eigenvalues of $P$ are
+$1, -\sfrac{1}{2}, -\sfrac{1}{2}$, and $\rho = \sfrac{1}{2}$. For the start $p_0 = (1, 0, 0)$ we have
+$p_0^{T} = \frac{1}{3} \mathbf{1} + y$ with $y = \left(\sfrac{2}{3}, -\sfrac{1}{3}, -\sfrac{1}{3}\right)^{T}$,
+whose entries sum to $0$, so
+\[p_t^{T} = P^t p_0^{T} = \frac{1}{3} \mathbf{1} + \left(-\frac{1}{2}\right)^{t} y,\]
+which is exactly the closed form of \cref{lem:triangle-0908}.
+
+\paragraph{Remark.} The theorem is a special case of the convergence theorem for finite Markov chains
+that are irreducible and aperiodic; see Levin, Peres and Wilmer, \emph{Markov Chains and Mixing Times},
+Chapter~4. A random walk on a graph is irreducible exactly when the graph is connected, and for a
+connected graph it is aperiodic exactly when the graph is not bipartite.
+
+\subsection{Both Conditions Are Necessary}
+
+The two graphs of \cref{fig:counter-0910} show that neither condition of \cref{thm:convergence-0910}
+can be dropped.
 
 \begin{figure}[ht]
     \centering
@@ -327,3 +518,12 @@ $p_t \to \pi$ forces $\pi' = \pi$. The triangle is connected and not bipartite (
 The second example shows what goes wrong in every bipartite graph: if all edges go between two sides
 $L$ and $R$, then a walk started at a vertex of $L$ is in $L$ at all even times and in $R$ at all odd
 times, so the probability $\sum_{v \in L} p_t^v$ of the side $L$ alternates between $1$ and $0$.
+
+In terms of the eigenvalues, the two examples are exactly the two ways in which the proof in
+\cref{sec:eigen-0910} can fail. If $G$ is bipartite with sides $L$ and $R$, let $x_u = 1$ for $u \in L$
+and $x_u = -1$ for $u \in R$. All neighbours of a vertex are on the other side, so by
+\cref{eq:average-0910} we have $Px = -x$: the number $-1$ is an eigenvalue, and its powers $(-1)^t$ do
+not tend to $0$. For the single edge, $x = (1, -1)^{T}$. If $G$ is not connected, let $x_u = 1$ for the
+vertices $u$ of one connected component and $x_u = 0$ for all others. All neighbours of a vertex are in
+its own component, so $Px = x$, although $x$ is not a multiple of $\mathbf{1}$: the eigenvalue $1$ occurs
+more than once, and the limit depends on the start. For the two triangles, $x = (1, 1, 1, 0, 0, 0)^{T}$.

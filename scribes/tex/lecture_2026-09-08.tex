@@ -78,9 +78,21 @@ port a message arrives. The node does not know which node is at the other end of
 port numbering is not under the control of the algorithm (we may think of it as chosen by an
 adversary).
 
+% Pages 1-2, red oval around "anonymous" with an arrow to "No deterministic algorithm". The notes
+% only state the claim; it was left in class as a statement to prove.
+\needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
+\begin{exercise}\label{ex:anonymous-0908}
+    Prove that there is no deterministic algorithm that elects a leader among anonymous nodes in a
+    complete network, no matter how many rounds the algorithm is allowed to run.
+\end{exercise}
+
+The solution is \cref{thm:anonymous-0908}.
+
 \begin{theorem}[No Deterministic Leader Election for Anonymous Nodes]\label{thm:anonymous-0908}
     Let $n \geq 2$. In an anonymous complete network in which all nodes start in the same state, there
-    is no deterministic algorithm that elects a leader for every port numbering.
+    is no deterministic algorithm that elects a leader for every port numbering: for every
+    deterministic algorithm there is a port numbering for which, after every number of rounds, the
+    number of leaders is either $0$ or $n$.
 \end{theorem}
 
 \begin{proof}
@@ -102,9 +114,10 @@ adversary).
     is deterministic, so they compute the same new state and send the same messages on the same
     ports. This proves the claim.
 
-    Whether a node declares itself the leader is a function of its state. Therefore, at every time,
-    either all $n \geq 2$ nodes are leaders or no node is a leader, and there is never exactly one
-    leader.
+    Whether a node declares itself the leader is a function of its state. Therefore, at the end of
+    every round $t$, either all $n \geq 2$ nodes are leaders or no node is a leader, and there is
+    never exactly one leader. In particular, the algorithm cannot have elected a leader after $T$
+    rounds for any finite $T$: its round complexity on this port numbering is not finite.
 \end{proof}
 
 A randomized algorithm can break this symmetry: if every node picks an id uniformly at random in
@@ -436,7 +449,9 @@ $\left(\frac{1}{2}, \frac{1}{4}, \frac{1}{4}\right)$, in agreement with the exam
 The next lecture writes \cref{eq:walkstep-0908} as a multiplication by a matrix, shows in
 general that $p_t$ stays a probability vector (\cref{thm:probvec-0910}), and finds the distribution
 that the walk does not change: it is proportional to the degrees (\cref{thm:stationary-0910}), which
-for the triangle is the uniform distribution found here.
+for the triangle is the uniform distribution found here. It also proves that the walk on every
+connected, non-bipartite graph converges to that distribution (\cref{thm:convergence-0910}); the
+factor $-\sfrac{1}{2}$ above reappears there as an eigenvalue of the transition matrix.
 
 \section{The Law of Large Numbers}
 
