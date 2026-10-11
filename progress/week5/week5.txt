@@ -1,0 +1,2 @@
+We covered quantum circuits, the deutsch algorithm and the deutsch-josza algorithm - week 5
+  content 9/22 and 24
