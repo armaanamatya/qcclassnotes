@@ -3,32 +3,25 @@ a random walk by its transition matrix $P$, show that the distribution of the to
 $p_{t+1} = p_t P$, find the stationary distribution $\pi = \pi P$, and prove by an analysis of the
 eigenvalues of $P$ that the walk on a connected, non-bipartite graph converges to it.
 
-\paragraph{Law of large numbers.}
+\paragraph{Law of large numbers.} The average of independent, identically distributed (i.i.d.)
+samples approaches the expectation.
 
-Let $X_1, X_2, \dots, X_n$ be independent, identically distributed (i.i.d.) random variables, each
-distributed as a random variable $X$ with finite expectation $\expectation{X}$. The law of large numbers says that the average of the samples approaches
-the expectation.
-
-\begin{theorem}[Law of Large Numbers, as Stated in Class]\label{thm:slln-0910}
+\begin{theorem}[Strong Law of Large Numbers]\label{thm:slln-0910}
     Let $X_1, X_2, \dots$ be i.i.d.\ random variables distributed as $X$, where $\expectation{X}$ is
     finite. Then, with probability $1$,
     \[\lim_{n \to \infty} \frac{\sum_{i=1}^{n} X_i}{n} = \expectation{X}.\]
 \end{theorem}
 
-\paragraph{Remark.} There are two laws of large numbers, and they differ in the kind of convergence.
-The statement above, convergence with probability $1$, is the \emph{strong} law; we do not prove it
-here. The \emph{weak} law is convergence in probability, which is implied by convergence with
-probability $1$. The weak law is the one that we proved from Chebyshev's inequality in
-\cref{thm:wlln-0908}, under the additional assumption that $\variance{X}$ is finite. In the notes the
-heading is ``weak law'' and the statement written under it is the strong one.
+We do not prove the strong law. It implies the \emph{weak} law (convergence in probability), which
+we proved in \cref{thm:wlln-0908} assuming that $\variance{X}$ is finite.
 
 \section{Random Walks on Graphs}
 
-As in the last lecture, a \emph{random walk} on a finite undirected graph $G = (V, E)$ moves a token in
-every step from its current vertex $u$ to a uniformly random neighbour of $u$. We take
-$V = \set{1, \dots, n}$, write $m = \abs{E}$ for the number of edges, $u \sim v$ if $\set{u,v} \in E$, and
-$\deg(u)$ (or $d_u$) for the number of neighbours of $u$, and we assume throughout that $G$ has no
-isolated vertices. Let $X_t$ be the vertex of the token at time $t = 0, 1, 2, \dots$.
+We continue with the random walk of the last lecture on a finite undirected graph $G = (V, E)$
+without isolated vertices; the walker is now called the token. We take $V = \set{1, \dots, n}$ and
+write $m = \abs{E}$ for the number of edges, $u \sim v$ if $\set{u,v} \in E$, $\deg(u)$ (or $d_u$)
+for the number of neighbours of $u$, and $X_t$ for the vertex of the token at time
+$t = 0, 1, 2, \dots$.
 
 \begin{definition}[Distribution at Time $t$, Transition Matrix]\label{def:walk-0910}
     The \textbf{distribution at time $t$} is the row vector
@@ -48,14 +41,9 @@ with these two properties is a (time-homogeneous) \emph{Markov chain}.
 
 \subsection{The Triangle}
 
-Consider the triangle on the vertices $1, 2, 3$ with the token starting at vertex $1$
-(the right half of \cref{fig:walks-0908}). Every vertex has degree $2$, so the token moves to each of the two other
-vertices with probability $\sfrac{1}{2}$ and
-\[P = \begin{pmatrix}
-        0            & \sfrac{1}{2} & \sfrac{1}{2} \\
-        \sfrac{1}{2} & 0            & \sfrac{1}{2} \\
-        \sfrac{1}{2} & \sfrac{1}{2} & 0
-    \end{pmatrix}.\]
+In the triangle on the vertices $1, 2, 3$ (the right half of \cref{fig:walks-0908}) every vertex has
+degree $2$, so $P$ is the $3 \times 3$ matrix with $0$ on the diagonal and $\sfrac{1}{2}$ in every
+other entry.
 
 \subsection{The Evolution \texorpdfstring{$p_{t+1} = p_t P$}{p(t+1) = p(t) P}}
 
@@ -67,28 +55,17 @@ vertices with probability $\sfrac{1}{2}$ and
 \begin{proof}
     Fix a vertex $v$. The events $\set{X_t = u}$, $u \in V$, are disjoint and one of them occurs, so
     \[p_{t+1}^v = \prob{X_{t+1} = v} = \sum_{u \in V} \prob{X_t = u \text{ and } X_{t+1} = v}
-        = \sum_{u \in V} p_t^u P_{uv} = (p_t P)_v.\]
-    Here $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ by the definition of $P_{uv}$ as a
-    conditional probability when $p_t^u > 0$, and both sides are $0$ when $p_t^u = 0$. The last expression
-    is the $\nth{v}$ entry of the product of the row vector $p_t$ with the matrix $P$.
-    This holds for every $v$, so $p_{t+1} = p_t P$. The formula $p_t = p_0 P^t$ follows by induction on $t$:
-    it is true for $t = 0$ since $P^0 = I$, and if $p_t = p_0 P^t$ then $p_{t+1} = p_t P = p_0 P^{t+1}$.
+        = \sum_{u \in V} p_t^u P_{uv} = (p_t P)_v,\]
+    where $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ by the definition of $P_{uv}$ as a
+    conditional probability when $p_t^u > 0$, and both sides are $0$ when $p_t^u = 0$. Hence
+    $p_{t+1} = p_t P$, and $p_t = p_0 P^t$ follows by induction on $t$ (with $P^0 = I$).
 \end{proof}
 
-For the triangle we can verify this directly. Since $p_0 = (1,0,0)$, the product $p_0 P$ is the first row
-of $P$, and
-\begin{align*}
-    p_1 & = p_0 P = \left(0, \sfrac{1}{2}, \sfrac{1}{2}\right),                                                 \\
-    p_2 & = p_1 P = p_0 P^2
-    = \tfrac{1}{2}\left(\sfrac{1}{2}, 0, \sfrac{1}{2}\right) + \tfrac{1}{2}\left(\sfrac{1}{2}, \sfrac{1}{2}, 0\right)
-    = \left(\sfrac{1}{2}, \sfrac{1}{4}, \sfrac{1}{4}\right),
-\end{align*}
-which are the vectors computed in the last lecture. The closed form of $p_t$ for all $t$ is \cref{lem:triangle-0908}.
+Entry by entry, $p_{t+1} = p_t P$ is \cref{eq:walkstep-0908}. For the triangle with $p_0 = (1,0,0)$,
+the vectors $p_1 = p_0 P$ and $p_2 = p_0 P^2$ and the closed form of $p_t$ are in
+\cref{lem:triangle-0908} and the example before it.
 
 \subsection{Row Stochastic Matrices}
-
-Every row of the triangle's matrix $P$ has nonnegative entries that sum to $1$; in other words, the $L_1$
-norm of every row is $1$.
 
 \begin{definition}[Probability Vector, Row Stochastic Matrix]\label{def:stochastic-0910}
     A vector $p = (p^1, \dots, p^n)$ is a \textbf{probability vector} if $p^u \geq 0$ for all $u$ and
@@ -97,11 +74,9 @@ norm of every row is $1$.
     \[P_{uv} \geq 0 \text{ for all } u, v, \qquad \text{and} \qquad \sum_{v=1}^{n} P_{uv} = 1 \text{ for all } u.\]
 \end{definition}
 
-The transition matrix of a random walk on any graph is row stochastic: its entries are $0$ or
-$\sfrac{1}{\deg(u)}$, and row $u$ has exactly $\deg(u)$ entries equal to $\sfrac{1}{\deg(u)}$. The
-nonnegativity is part of the definition and is needed below.
+The transition matrix of a random walk on any graph is row stochastic: row $u$ has $\deg(u)$ entries
+equal to $\sfrac{1}{\deg(u)}$, and its other entries are $0$.
 
-% Page 2, bottom, standalone line: "Show that p_{t+1} is a probability vector, assume p_t is."
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
 \begin{exercise}\label{ex:probvec-0910}
     Show that $p_{t+1}$ is a probability vector, assuming that $p_t$ is.
@@ -116,55 +91,27 @@ The solution is \cref{thm:probvec-0910}.
 \end{theorem}
 
 \begin{proof}
-    Let $q = pP$, so that $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$.
-
-    \emph{Nonnegativity.} Every term $p^u P_{uv}$ is a product of two nonnegative numbers, since $p^u \geq 0$
-    ($p$ is a probability vector) and $P_{uv} \geq 0$ ($P$ is row stochastic). A sum of nonnegative numbers is
-    nonnegative, so $q^v \geq 0$ for every $v$.
-
-    \emph{The entries sum to $1$.} We have
-    \[\sum_{v=1}^{n} q^v = \sum_{v=1}^{n} \sum_{u=1}^{n} p^u P_{uv}
-        = \sum_{u=1}^{n} \sum_{v=1}^{n} p^u P_{uv}
-        = \sum_{u=1}^{n} p^u \left(\sum_{v=1}^{n} P_{uv}\right)
-        = \sum_{u=1}^{n} p^u \cdot 1 = 1.\]
-    The second equality exchanges the order of two finite sums (both sides add up the same $n^2$
-    numbers $p^u P_{uv}$), the fourth uses that row $u$ of $P$ sums to $1$, and the last that the entries
-    of $p$ sum to $1$. Hence $q = pP$ is a probability vector.
-
-    \emph{All times.} We prove by induction on $t$ that $p_t$ is a probability vector. For $t = 0$ this is
-    the assumption on $p_0$. If $p_t$ is a probability vector, then by the first part (with $p = p_t$) so is
-    $p_t P = p_{t+1}$, which is exactly the statement of \cref{ex:probvec-0910}.
+    Let $q = pP$, so that $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$. Every term is a product of
+    two nonnegative numbers, since $p$ is a probability vector and $P$ is row stochastic, so
+    $q^v \geq 0$. Exchanging the two finite sums, and using that every row of $P$ and the entries of
+    $p$ sum to $1$,
+    $\sum_{v} q^v = \sum_{v} \sum_{u} p^u P_{uv} = \sum_{u} p^u \left(\sum_{v} P_{uv}\right)
+        = \sum_{u} p^u = 1$.
+    Hence $pP$ is a probability vector. By induction on $t$, every $p_t$ is a probability vector:
+    $p_0$ is one by assumption, and if $p_t$ is one, then so is $p_t P = p_{t+1}$, which is the
+    statement of \cref{ex:probvec-0910}.
 \end{proof}
-
-Both halves of ``row stochastic'' are used: the nonnegativity of the entries of $P$ gives $p_{t+1}^v \geq 0$,
-and the unit row sums give $\sum_v p_{t+1}^v = 1$.
 
 \subsection{The Transition Matrix of a General Graph}
 
-Let $A$ be the \emph{adjacency matrix} of $G$, i.e., $A_{uv} = 1$ if $u \sim v$ and $A_{uv} = 0$ otherwise,
-and let $D$ be the diagonal matrix of the degrees. Then
-\[D = \begin{pmatrix}
-        d_1 &        &     \\
-            & \ddots &     \\
-            &        & d_n
-    \end{pmatrix},
-    \qquad
-    D^{-1} = \begin{pmatrix}
-        \sfrac{1}{d_1} &        &                \\
-                       & \ddots &                \\
-                       &        & \sfrac{1}{d_n}
-    \end{pmatrix},
-    \qquad
-    P = D^{-1} A.\]
-Indeed, multiplying $A$ from the left by the diagonal matrix $D^{-1}$ multiplies row $u$ of $A$ by
+Let $A$ be the \emph{adjacency matrix} of $G$, i.e., $A_{uv} = 1$ if $u \sim v$ and $A_{uv} = 0$
+otherwise, and let $D$ be the diagonal matrix with diagonal entries $d_1, \dots, d_n$. Its inverse
+$D^{-1}$, the diagonal matrix with entries $\sfrac{1}{d_1}, \dots, \sfrac{1}{d_n}$, exists because
+there are no isolated vertices. Multiplying $A$ from the left by $D^{-1}$ multiplies row $u$ of $A$ by
 $\sfrac{1}{d_u}$, so $(D^{-1} A)_{uv} = \sfrac{A_{uv}}{\deg(u)}$, which is $P_{uv}$ of
-\cref{def:walk-0910}. The inverse $D^{-1}$ exists because there are no isolated vertices. (The diagonal
-matrix drawn in the notes next to $D^{-1}$ shows the entries $d_1, \dots, d_n$, i.e., $D$ itself.)
-
-If $G$ is \emph{$d$-regular}, i.e., every vertex has the same degree $d$, then $D = d I$ and the formula
-becomes
-\[P = \frac{A}{d}.\]
-This is the regular case only; the triangle is $2$-regular, and its $P$ above is $\sfrac{A}{2}$.
+\cref{def:walk-0910}, i.e., $P = D^{-1} A$.
+If $G$ is \emph{$d$-regular}, i.e., every vertex has the same degree $d$, then $D = d I$ and
+$P = \sfrac{A}{d}$. The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
 
 \section{Stationary Distribution}
 
@@ -175,35 +122,12 @@ This is the regular case only; the triangle is $2$-regular, and its $P$ above is
     i.e., $\pi$ is a left eigenvector of $P$ with eigenvalue $1$.
 \end{definition}
 
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[scale=0.82]
-        \node[point] (u) at (0,0) {};
-        \node[point] (v) at (2,1.3) {};
-        \node[point] (w1) at (-1.4,-1.2) {};
-        \node[point] (w2) at (1.4,-1.2) {};
-        \draw (u) -- (v);
-        \draw (u) -- (w1);
-        \draw (u) -- (w2);
-        \node[left=3pt] at (u) {$u$};
-        \node[above=3pt] at (v) {$v$};
-        \node[right] at (1.3,0.45) {\small $P_{vu} = \sfrac{1}{\deg(v)}$};
-    \end{tikzpicture}
-    \caption{A vertex $u$ and its neighbours. Each neighbour $v$ contributes $\sfrac{\pi_v}{\deg(v)}$ to
-        $(\pi P)_u$.}
-    \label{fig:star-0910}
-\end{figure}
-
-By \cref{lem:evolution-0910}, if $p_t = \pi$ then $p_{t+1} = \pi P = \pi$: a walk whose distribution is
-$\pi$ keeps the distribution $\pi$ forever. To find $\pi$ we write out the $\nth{u}$ entry of $\pi P$.
-Only the neighbours $v$ of $u$ have $P_{vu} \neq 0$, and for them $P_{vu} = \sfrac{1}{\deg(v)}$
-(\cref{fig:star-0910}), so
+By \cref{lem:evolution-0910}, if $p_t = \pi$ then $p_{t+1} = \pi P = \pi$. Only the neighbours $v$
+of $u$ have $P_{vu} \neq 0$, and for them $P_{vu} = \sfrac{1}{\deg(v)}$, so (as in
+\cref{eq:walkstep-0908})
 \begin{equation}\label{eq:piP-0910}
     (\pi P)_u = \sum_{v \in V} \pi_v P_{vu} = \sum_{v \sim u} \frac{\pi_v}{\deg(v)}.
 \end{equation}
-(The notes stop at $(\pi P)_u = \sum_{v \sim u} \pi_v$, in which the factor $\sfrac{1}{\deg(v)}$ is
-missing.) In words, the probability of being at $u$ after one step is collected from the neighbours of
-$u$, and a neighbour $v$ sends to $u$ a $\sfrac{1}{\deg(v)}$ fraction of its own probability.
 
 \begin{theorem}[Stationary Distribution of a Random Walk on a Graph]\label{thm:stationary-0910}
     Let $G$ be a graph with $m$ edges and no isolated vertices. Then
@@ -212,35 +136,25 @@ $u$, and a neighbour $v$ sends to $u$ a $\sfrac{1}{\deg(v)}$ fraction of its own
 \end{theorem}
 
 \begin{proof}
-    \emph{$\pi$ is a probability vector.} Since there are no isolated vertices and $V$ is not empty, we
-    have $m \geq 1$, so $\pi$ is well defined, and $\pi_v \geq 0$. Every edge $\set{u,v}$ is counted exactly
+    \emph{$\pi$ is a probability vector.} Since there are no isolated vertices and $V$ is not empty,
+    $m \geq 1$, so $\pi$ is well defined, and $\pi_v \geq 0$. Every edge $\set{u,v}$ is counted exactly
     twice in $\sum_{v \in V} \deg(v)$, once in $\deg(u)$ and once in $\deg(v)$, so
-    $\sum_{v \in V} \deg(v) = 2m$ (the handshake lemma). Hence $\sum_{v \in V} \pi_v = \sfrac{2m}{2m} = 1$.
+    $\sum_{v \in V} \deg(v) = 2m$ (the handshake lemma) and $\sum_{v \in V} \pi_v = 1$.
 
-    \emph{$\pi P = \pi$.} For every vertex $u$, by \cref{eq:piP-0910},
-    \[(\pi P)_u = \sum_{v \sim u} \frac{\pi_v}{\deg(v)}
-        = \sum_{v \sim u} \frac{\deg(v)}{2m} \cdot \frac{1}{\deg(v)}
-        = \sum_{v \sim u} \frac{1}{2m}
-        = \frac{\deg(u)}{2m} = \pi_u,\]
-    where we used $\deg(v) \geq 1$ to cancel, and that the sum has one term for each of the $\deg(u)$
-    neighbours of $u$.
+    \emph{$\pi P = \pi$.} For every vertex $u$, by \cref{eq:piP-0910} and $\deg(v) \geq 1$,
+    $(\pi P)_u = \sum_{v \sim u} \frac{\deg(v)}{2m} \cdot \frac{1}{\deg(v)} = \sum_{v \sim u} \frac{1}{2m}
+        = \frac{\deg(u)}{2m} = \pi_u$,
+    since the sum has one term for each of the $\deg(u)$ neighbours of $u$.
 \end{proof}
 
-For a $d$-regular graph on $n$ vertices we have $2m = nd$, so $\pi_v = \sfrac{d}{nd} = \sfrac{1}{n}$: the
-stationary distribution is uniform. For the triangle ($m = 3$, all degrees $2$) it is
-$\pi = \left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$, which is the limit of the closed form of
-\cref{lem:triangle-0908} as $t \to \infty$.
+For a $d$-regular graph on $n$ vertices, $2m = nd$, so $\pi_v = \sfrac{1}{n}$ and the stationary
+distribution is uniform. For the triangle it is
+$\pi = \left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$, the limit in \cref{lem:triangle-0908}.
 
 \section{Convergence to the Stationary Distribution}
 
-The reason to study $\pi$ is that, as $t \to \infty$, the distribution $p_t$ of the walk approaches it:
-$p_t \to \pi$. Here convergence of vectors is entry by entry. Two conditions on the graph were given in
-class: (1) the graph should be connected, and (2) it should be non-bipartite. These are the conditions
-for the walk to converge to one and the same limit from every start; a stationary distribution itself
-exists for every graph without isolated vertices, by \cref{thm:stationary-0910}.
+Convergence of vectors is entry by entry.
 
-% Pages 3-4: "As t -> oo, p_t -> pi" with the two conditions (connected, non-bipartite). Assigned in
-% class: prove the convergence by eigenvalue analysis.
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
 \begin{exercise}\label{ex:convergence-0910}
     Let $G$ be connected and non-bipartite. Prove, by analysing the eigenvalues of the transition
@@ -259,35 +173,26 @@ The solution is \cref{thm:convergence-0910}, which is proved in \cref{sec:eigen-
 
 \subsection{Proof by Eigenvalue Analysis}\label{sec:eigen-0910}
 
-The idea is to write $P^t$ in terms of the eigenvalues of $P$. The eigenvalue $1$ gives the limit $\pi$,
-and every other eigenvalue $\lambda$ has $\abs{\lambda} < 1$, so its contribution $\lambda^t$ dies out.
-Connectedness is what makes the eigenvalue $1$ occur only once, and non-bipartiteness is what excludes
-the eigenvalue $-1$, whose powers $(-1)^t$ would not die out.
+Here $p_t$ and $\pi$ are row vectors as before, $x$, $w$ and $z$ are real column vectors with entries
+$x_u$ ($u \in V$), and $\mathbf{1}$ is the column vector with all entries $1$. A nonzero column
+vector $x$ is an \emph{eigenvector} of a matrix $M$ with \emph{eigenvalue} $\lambda$ if $Mx = \lambda x$.
 
-In this subsection $p_t$ and $\pi$ are row vectors as before, while $x$, $w$ and $z$ denote real
-column vectors with entries $x_u$ ($u \in V$), and $\mathbf{1}$ is the column vector with all entries $1$.
-A nonzero column vector $x$ is an \emph{eigenvector} of a matrix $M$ with \emph{eigenvalue} $\lambda$ if
-$Mx = \lambda x$.
-
-\paragraph{A symmetric matrix with the same eigenvalues.} The adjacency matrix $A$ is symmetric, but
-$P = D^{-1} A$ is symmetric only if all degrees are equal. Let $D^{1/2}$ be the diagonal matrix with
-entries $\sqrt{d_1}, \dots, \sqrt{d_n}$ and $D^{-1/2}$ its inverse, and put
-\[N = D^{-1/2} A D^{-1/2}, \qquad \text{i.e.,} \qquad N_{uv} = \frac{A_{uv}}{\sqrt{d_u d_v}}.\]
-Since $A_{uv} = A_{vu}$, the matrix $N$ is symmetric. Moreover,
-\[D^{-1/2} N D^{1/2} = D^{-1/2} D^{-1/2} A D^{-1/2} D^{1/2} = D^{-1} A = P,\]
-and in the product of $t$
-copies of $D^{-1/2} N D^{1/2}$ every inner pair $D^{1/2} D^{-1/2}$ cancels, so
+\paragraph{A symmetric matrix with the same eigenvalues.} The matrix $P = D^{-1} A$ is symmetric only
+if all degrees are equal. Let $D^{1/2}$ be the diagonal matrix with entries
+$\sqrt{d_1}, \dots, \sqrt{d_n}$ and $D^{-1/2}$ its inverse, and put $N = D^{-1/2} A D^{-1/2}$, i.e.,
+$N_{uv} = \sfrac{A_{uv}}{\sqrt{d_u d_v}}$, which is symmetric because $A$ is. Then
+$D^{-1/2} N D^{1/2} = D^{-1} A D^{-1/2} D^{1/2} = P$, and in
+the product of $t$ copies of $D^{-1/2} N D^{1/2}$ every inner pair $D^{1/2} D^{-1/2}$ cancels, so
 \begin{equation}\label{eq:similar-0910}
     P = D^{-1/2} N D^{1/2}, \qquad P^t = D^{-1/2} N^t D^{1/2} \quad \text{for all } t \geq 0.
 \end{equation}
-Eigenvectors of $N$ give eigenvectors of $P$ with the same eigenvalue: if $Nw = \lambda w$ and
-$w \neq 0$, then $x = D^{-1/2} w \neq 0$ and
+If $Nw = \lambda w$ and $w \neq 0$, then $x = D^{-1/2} w \neq 0$ is an eigenvector of $P$ with the
+same eigenvalue:
 \begin{equation}\label{eq:transfer-0910}
     P x = D^{-1/2} N D^{1/2} D^{-1/2} w = D^{-1/2} N w = \lambda D^{-1/2} w = \lambda x.
 \end{equation}
 
-\paragraph{The spectral theorem.} For symmetric matrices we use the following standard theorem of
-linear algebra, without proof.
+\paragraph{The spectral theorem.} We use the following theorem of linear algebra without proof.
 
 \begin{theorem}[Spectral Theorem for Real Symmetric Matrices]\label{thm:spectral-0910}
     Let $N$ be a real symmetric $n \times n$ matrix. Then there are real numbers
@@ -296,12 +201,11 @@ linear algebra, without proof.
     $\mathbb{R}^n$: $w_i^{T} w_i = 1$, and $w_i^{T} w_j = 0$ for $i \neq j$.
 \end{theorem}
 
-Let $x$ be a real column vector. Since $w_1, \dots, w_n$ is a basis, $x = \sum_{i} c_i w_i$ for unique
-numbers $c_i$, and multiplying from the left by $w_j^{T}$ gives $c_j = w_j^{T} x$. Applying $N$ to this
-expansion $t$ times multiplies the $\nth{i}$ term by $\lambda_i^t$, so
-\[N^t x = \sum_{i=1}^{n} \lambda_i^t \left(w_i^{T} x\right) w_i
-    = \left(\sum_{i=1}^{n} \lambda_i^t\, w_i w_i^{T}\right) x.\]
-This holds for every $x$, so
+Every real column vector $x$ is $\sum_{i} c_i w_i$ for unique numbers $c_i$, and multiplying from the
+left by $w_j^{T}$ gives $c_j = w_j^{T} x$. Applying $N$ to this expansion $t$ times multiplies the
+$\nth{i}$ term by $\lambda_i^t$, so
+$N^t x = \sum_{i} \lambda_i^t \left(w_i^{T} x\right) w_i = \left(\sum_{i} \lambda_i^t\, w_i w_i^{T}\right) x$
+for every $x$, i.e.,
 \begin{equation}\label{eq:powers-0910}
     N^t = \sum_{i=1}^{n} \lambda_i^t\, w_i w_i^{T} \qquad \text{for all } t \geq 0,
 \end{equation}
@@ -329,29 +233,26 @@ of $x$ over the neighbours of $u$:
 
     \emph{Part 1.} Let $u$ be a vertex with $\abs{x_u} = M$. By \cref{eq:average-0910} and the triangle
     inequality,
-    \[\abs{\lambda} M = \abs{\lambda x_u} = \abs{(Px)_u}
-        \leq \frac{1}{\deg(u)} \sum_{v \sim u} \abs{x_v} \leq \frac{1}{\deg(u)} \cdot \deg(u) \cdot M = M.\]
-    Dividing by $M > 0$ gives $\abs{\lambda} \leq 1$.
+    $\abs{\lambda} M = \abs{\lambda x_u} = \abs{(Px)_u}
+        \leq \frac{1}{\deg(u)} \sum_{v \sim u} \abs{x_v} \leq M$,
+    and dividing by $M > 0$ gives $\abs{\lambda} \leq 1$.
 
-    \emph{Part 2.} Let $\lambda = 1$, let $K = \max_u x_u$, and let $S = \set{u \suchthat x_u = K}$, which
-    is not empty. Let $u \in S$. By \cref{eq:average-0910}, $K = x_u = (Px)_u$ is the average of the
-    numbers $x_v$ over the neighbours $v$ of $u$. Each of these numbers is at most $K$, and if one of
-    them were smaller than $K$ the average would be smaller than $K$. So $x_v = K$ for every neighbour
-    $v$ of $u$: every neighbour of a vertex of $S$ is in $S$. Since $G$ is connected, every vertex can
-    be reached from a vertex of $S$ along a path, so $S = V$ and $x = K \mathbf{1}$. Finally $K \neq 0$
-    because $x \neq 0$.
+    \emph{Part 2.} Let $\lambda = 1$, $K = \max_u x_u$, and $S = \set{u \suchthat x_u = K} \neq \emptyset$.
+    For $u \in S$, by \cref{eq:average-0910}, $K = x_u = (Px)_u$ is the average of the numbers
+    $x_v \leq K$ over the neighbours $v$ of $u$; if one of them were smaller than $K$, the average
+    would be smaller than $K$. So every neighbour of a vertex of $S$ is in $S$. Since $G$ is
+    connected, every vertex is reached from $S$ along a path, so $S = V$ and $x = K \mathbf{1}$, with
+    $K \neq 0$ because $x \neq 0$.
 
-    \emph{Part 3.} Let $\lambda = -1$, and let
-    \[S_+ = \set{u \suchthat x_u = M}, \qquad S_- = \set{u \suchthat x_u = -M}.\]
-    These two sets are disjoint because $M > 0$, and at least one of them is not empty. Let $u \in S_+$.
-    By \cref{eq:average-0910}, the average of $x_v$ over the neighbours $v$ of $u$ is
-    $(Px)_u = -x_u = -M$. Each $x_v$ is at least $-M$, so, as in Part 2, all of them are equal to
-    $-M$: every neighbour of a vertex of $S_+$ is in $S_-$. In the same way, if $u \in S_-$ then the
-    average of $x_v$ over the neighbours of $u$ is $-x_u = M$, each $x_v$ is at most $M$, and so every
-    neighbour of a vertex of $S_-$ is in $S_+$. Hence every neighbour of a vertex of $S_+ \cup S_-$ is
-    again in $S_+ \cup S_-$, and since $G$ is connected, $S_+ \cup S_- = V$. So every vertex is in
-    exactly one of $S_+$ and $S_-$, and every edge joins a vertex of $S_+$ to a vertex of $S_-$. This
-    is a bipartition of $G$.
+    \emph{Part 3.} Let $\lambda = -1$, $S_+ = \set{u \suchthat x_u = M}$ and
+    $S_- = \set{u \suchthat x_u = -M}$. These sets are disjoint because $M > 0$, and at least one of
+    them is not empty. For $u \in S_+$, by \cref{eq:average-0910}, the average of $x_v$ over the
+    neighbours $v$ of $u$ is $(Px)_u = -x_u = -M$, and each $x_v \geq -M$, so, as in Part 2, all of
+    them equal $-M$: every neighbour of a vertex of $S_+$ is in $S_-$. In the same way (the average is
+    $M$ and each $x_v \leq M$), every neighbour of a vertex of $S_-$ is in $S_+$. Hence
+    $S_+ \cup S_-$ contains all neighbours of its vertices, and since $G$ is connected,
+    $S_+ \cup S_- = V$. So every vertex is in exactly one of $S_+$ and $S_-$, and every edge joins
+    $S_+$ to $S_-$: a bipartition of $G$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:convergence-0910}]
@@ -364,21 +265,17 @@ of $x$ over the neighbours of $u$:
     \emph{Step 1: the eigenvalue $1$ occurs exactly once.} Let $z = D^{1/2} \mathbf{1}$, the column
     vector with entries $\sqrt{d_u}$. The $\nth{u}$ entry of $A \mathbf{1}$ is the number of neighbours of
     $u$, so $A \mathbf{1} = D \mathbf{1}$ and
-    \[N z = D^{-1/2} A D^{-1/2} D^{1/2} \mathbf{1} = D^{-1/2} A \mathbf{1} = D^{-1/2} D \mathbf{1} = D^{1/2} \mathbf{1} = z.\]
-    So $z$ is an eigenvector of $N$ with eigenvalue $1$, and
-    $z^{T} z = \sum_{u} d_u = 2m$ by the handshake lemma.
-
-    At least one $\lambda_i$ equals $1$: write $z = \sum_i c_i w_i$. Then
-    $\sum_i c_i w_i = z = Nz = \sum_i c_i \lambda_i w_i$, and the coefficients with respect to a basis are
-    unique, so $c_i = c_i \lambda_i$ for all $i$. Since $z \neq 0$, some $c_i$ is not $0$, and for this
-    $i$ we get $\lambda_i = 1$.
-
-    If $\lambda_i = 1$, then by part 2 of \cref{lem:eigen-0910} we have $D^{-1/2} w_i = c \mathbf{1}$ for
-    some $c \neq 0$, i.e., $w_i = c D^{1/2} \mathbf{1} = c z$. Hence at most one $\lambda_i$ equals $1$: if
-    $\lambda_i = \lambda_j = 1$ with $i \neq j$, then $w_i = c z$ and $w_j = c' z$ with $c, c' \neq 0$,
-    and $w_i^{T} w_j = c c' \cdot 2m \neq 0$, which contradicts the orthogonality. We number the
-    eigenvalues so that $\lambda_1 = 1$. Then $w_1 = c z$ with $1 = w_1^{T} w_1 = c^2 \cdot 2m$, and
-    therefore
+    \[N z = D^{-1/2} A D^{-1/2} D^{1/2} \mathbf{1} = D^{-1/2} A \mathbf{1} = D^{-1/2} D \mathbf{1} = z,
+        \qquad z^{T} z = \sum_{u} d_u = 2m\]
+    by the handshake lemma. \emph{At least one $\lambda_i$ equals $1$:} write $z = \sum_i c_i w_i$.
+    Then $\sum_i c_i w_i = z = Nz = \sum_i c_i \lambda_i w_i$, and coefficients with respect to a basis
+    are unique, so $c_i = c_i \lambda_i$ for all $i$. Since $z \neq 0$, some $c_i \neq 0$, and for this
+    $i$ we get $\lambda_i = 1$. \emph{At most one:} if $\lambda_i = 1$, then by part 2 of
+    \cref{lem:eigen-0910}, $D^{-1/2} w_i = c \mathbf{1}$ for some $c \neq 0$, i.e., $w_i = c z$. So if
+    $\lambda_i = \lambda_j = 1$ with $i \neq j$, then $w_i = c z$ and $w_j = c' z$ with
+    $c, c' \neq 0$, and $w_i^{T} w_j = c c' \cdot 2m \neq 0$, which contradicts the orthogonality.
+    We number the eigenvalues so that $\lambda_1 = 1$. Then $w_1 = c z$ with
+    $1 = w_1^{T} w_1 = c^2 \cdot 2m$, and therefore
     \begin{equation}\label{eq:first-0910}
         w_1 w_1^{T} = c^2 z z^{T} = \frac{1}{2m} z z^{T}.
     \end{equation}
@@ -386,40 +283,36 @@ of $x$ over the neighbours of $u$:
     \emph{Step 2: all other eigenvalues are smaller than $1$ in absolute value.} Let $i \geq 2$. Then
     $\abs{\lambda_i} \leq 1$ by part 1 of \cref{lem:eigen-0910}, $\lambda_i \neq 1$ by Step 1, and
     $\lambda_i \neq -1$ by part 3, because $G$ is not bipartite. Hence
-    \[\rho := \max_{2 \leq i \leq n} \abs{\lambda_i} < 1.\]
+    $\rho := \max_{2 \leq i \leq n} \abs{\lambda_i} < 1$.
 
     \emph{Step 3: the limit of $N^t$.} By \cref{eq:powers-0910,eq:first-0910},
     \[N^t = \frac{1}{2m} z z^{T} + E_t, \qquad \text{where } E_t = \sum_{i=2}^{n} \lambda_i^t\, w_i w_i^{T}.\]
-    Every entry of a vector of length $1$ is at most $1$ in absolute value, so every entry of
-    $w_i w_i^{T}$ is at most $1$ in absolute value, and therefore
-    \[\abs{(E_t)_{uv}} \leq \sum_{i=2}^{n} \abs{\lambda_i}^t \leq (n-1) \rho^t \qquad \text{for all } u, v.\]
+    Every entry of a vector of length $1$, and hence of $w_i w_i^{T}$, is at most $1$ in absolute
+    value, so $\abs{(E_t)_{uv}} \leq \sum_{i=2}^{n} \abs{\lambda_i}^t \leq (n-1) \rho^t$ for all $u, v$.
 
     \emph{Step 4: the limit of $p_t$.} By \cref{lem:evolution-0910} and \cref{eq:similar-0910},
     \[p_t = p_0 P^t = p_0 D^{-1/2} N^t D^{1/2}
         = \frac{1}{2m}\, p_0 D^{-1/2} z z^{T} D^{1/2} + p_0 D^{-1/2} E_t D^{1/2}.\]
-    In the first term, $D^{-1/2} z = \mathbf{1}$, and $p_0 \mathbf{1} = \sum_u p_0^u = 1$ because $p_0$ is a
-    probability vector; and $z^{T} D^{1/2} = \mathbf{1}^{T} D = (d_1, \dots, d_n)$. So the first term is
-    \[\frac{1}{2m} \left(p_0 \mathbf{1}\right) \left(z^{T} D^{1/2}\right) = \frac{1}{2m} (d_1, \dots, d_n) = \pi,\]
-    for every $t$ and every $p_0$. The $\nth{v}$ entry of the second term is
-    $\sum_{u} p_0^u\, d_u^{-1/2}\, (E_t)_{uv}\, d_v^{1/2}$. Since $1 \leq d_u$ and $d_v \leq n$, we have
-    $\sqrt{d_v / d_u} \leq \sqrt{n}$, and with Step 3 and $\sum_u p_0^u = 1$ we obtain
+    In the first term, $D^{-1/2} z = \mathbf{1}$, $p_0 \mathbf{1} = \sum_u p_0^u = 1$ because $p_0$ is a
+    probability vector, and $z^{T} D^{1/2} = \mathbf{1}^{T} D = (d_1, \dots, d_n)$, so the first term is
+    $\frac{1}{2m} (d_1, \dots, d_n) = \pi$ for every $t$ and every $p_0$. The $\nth{v}$ entry of the
+    second term is $\sum_{u} p_0^u\, d_u^{-1/2}\, (E_t)_{uv}\, d_v^{1/2}$. Since $1 \leq d_u$ and
+    $d_v \leq n$, we have $\sqrt{d_v / d_u} \leq \sqrt{n}$, and with Step 3 and $\sum_u p_0^u = 1$,
     \begin{equation}\label{eq:rate-0910}
         \abs{p_t^v - \pi_v} \leq \sum_{u} p_0^u \sqrt{\frac{d_v}{d_u}}\, \abs{(E_t)_{uv}}
         \leq \sqrt{n}\, (n-1)\, \rho^t \leq n^{3/2} \rho^t \qquad \text{for every } v \in V.
     \end{equation}
     Since $0 \leq \rho < 1$, the right-hand side tends to $0$ as $t \to \infty$. Hence $p_t \to \pi$.
 
-    \emph{Uniqueness.} Let $\pi'$ be any stationary distribution, and start the walk with $p_0 = \pi'$.
-    Then $p_t = \pi'$ for all $t$, and $p_t \to \pi$ forces $\pi' = \pi$.
+    \emph{Uniqueness.} If $\pi'$ is any stationary distribution and $p_0 = \pi'$, then $p_t = \pi'$
+    for all $t$, and $p_t \to \pi$ forces $\pi' = \pi$.
 \end{proof}
 
-\paragraph{Both conditions are needed.} Neither condition of \cref{thm:convergence-0910} can be
-dropped. If $G$ is bipartite, the walk need not converge: for a single edge on the vertices $1, 2$ we
-have $P = \left(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\right)$ and $(a, b) P = (b, a)$,
-so from $p_0 = (1, 0)$ the distribution alternates between $(1, 0)$ and $(0, 1)$ forever, although
-$\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$ is stationary. Here $x = (1, -1)^{T}$ satisfies $Px = -x$:
-this is the eigenvalue $-1$ that Step~2 excludes, and its powers $(-1)^t$ do not die out. If $G$ is
-not connected, the limit depends on the start: in two disjoint triangles the token never leaves the
-triangle in which it starts, so by \cref{lem:triangle-0908} the walk converges to the uniform
-distribution on that triangle. Both of these distributions are stationary, so the stationary
-distribution is not unique; here the eigenvalue $1$ occurs twice, which Step~1 excludes.
+\paragraph{Both conditions are needed.} If $G$ is bipartite, the walk need not converge: for a
+single edge on the vertices $1, 2$, $(a, b) P = (b, a)$, so from $p_0 = (1, 0)$ the distribution
+alternates between $(1, 0)$ and $(0, 1)$, although $\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$ is
+stationary. Here $x = (1, -1)^{T}$ satisfies $Px = -x$, the eigenvalue $-1$ that Step~2 excludes. If
+$G$ is not connected, the limit depends on the start: in two disjoint triangles the token never
+leaves its triangle, so by \cref{lem:triangle-0908} the walk converges to the uniform distribution
+on that triangle. Both of these distributions are stationary, so the stationary distribution is not
+unique; the eigenvalue $1$ occurs twice, which Step~1 excludes.

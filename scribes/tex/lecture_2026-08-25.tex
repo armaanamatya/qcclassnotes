@@ -5,13 +5,8 @@ probability that we need for the rest of the course.
 
 \section{Efficient Algorithms and Finding Prime Numbers}
 
-Classical computing was deterministic until relatively recently, when randomness was introduced
-into algorithms. The next step, and the subject of this course, is quantum computing.
-
 Consider the problem of deciding whether a given number $n$ is prime. The input is the binary
-representation of $n$, so the \emph{input size} is the number of bits
-\[N = \log_2 n,\]
-and not $n$ itself.
+representation of $n$, so the \emph{input size} is the number of bits $N = \log_2 n$.
 
 \begin{definition}[Efficient Algorithm]
     An algorithm is \textbf{efficient} if it runs in time polynomial in the input size, i.e., in time
@@ -19,23 +14,19 @@ and not $n$ itself.
     $\bigO{(\log_2 n)^k}$.
 \end{definition}
 
-The trivial algorithm, trial division by all numbers up to $\sqrt{n}$, takes
-$\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time, which is exponential in the input size. For a long time no
-efficient algorithm was known. A deterministic polynomial-time algorithm was eventually found
-(running in time $\tilde{\mathcal{O}}(N^{12})$, later improved to $\tilde{\mathcal{O}}(N^{6})$),
-but it is not used in practice, both because it is not particularly fast and because there is a
-better alternative.
+Trial division by all numbers up to $\sqrt{n}$ takes $\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time,
+which is exponential in the input size. A deterministic polynomial-time algorithm exists
+(time $\tilde{\mathcal{O}}(N^{12})$, later improved to $\tilde{\mathcal{O}}(N^{6})$),
+but it is not used in practice.
 
 \subsection{Randomized Algorithms}
 
-The algorithm used in practice is \emph{randomized}: the Miller--Rabin test decides primality with
-high probability in $\bigO{N^3}$ time. The idea is that if $n$ is composite, then at least
+The algorithm used in practice is \emph{randomized}. The Miller--Rabin test decides primality with
+high probability in $\bigO{N^3}$ time. If $n$ is composite, then at least
 $\sfrac{3}{4}$ of the numbers in $\set{2, \dots, n-2}$ are \emph{witnesses} of the fact that $n$ is
-composite, while a prime has no witness. Sampling one random number therefore detects a composite
-$n$ with probability at least $\sfrac{3}{4}$, and after $k$ independent samples a composite $n$ goes
-undetected with probability at most $\left(\sfrac{1}{4}\right)^k$. If the test says ``composite'' it
-is always right; if it says ``prime'' it is wrong with probability at most $\left(\sfrac{1}{4}\right)^k$,
-which can be made as small as we like by increasing $k$.
+composite, while a prime has no witness. So after $k$ independent samples a composite $n$ goes
+undetected with probability at most $\left(\sfrac{1}{4}\right)^k$: the answer ``composite'' is always
+right, and the answer ``prime'' is wrong with probability at most $\left(\sfrac{1}{4}\right)^k$.
 
 \section{Random Sampling}
 
@@ -44,11 +35,10 @@ All that a randomized algorithm needs is the ability to \emph{sample}. We assume
 
 \subsection{Sampling a Random Element of an Array}
 
-Consider an array with $n$ slots (\cref{fig:coinflips-0825}) and assume for simplicity that $n$ is a
-power of $2$. Every index is a bit string of $\log_2 n = \log n$ bits, so we can sample a uniformly
-random element by flipping one coin for each bit of the index. This takes $\bigO{\log n}$ time, and
-every index $i$ is obtained with probability
-\[\prob{\text{index $i$ is chosen}} = \left(\frac{1}{2}\right)^{\log n} = \frac{1}{2^{\log n}} = \frac{1}{n}.\]
+Consider an array with $n$ slots (\cref{fig:coinflips-0825}), $n$ a power of $2$. Every index is a
+bit string of $\log_2 n = \log n$ bits, so flipping one coin for each bit samples a uniformly random
+element in $\bigO{\log n}$ time:
+$\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$ for every $i$.
 
 \begin{figure}[ht]
     \centering
@@ -71,111 +61,88 @@ every index $i$ is obtained with probability
         \draw[decorate, decoration={brace, amplitude=5pt}] (2.4,-0.8) -- (6.0,-0.8)
         node[midway, above=6pt] {\small $\log n$ bits per index};
     \end{tikzpicture}
-    \caption{Sampling a random slot of an array with $n$ slots: each of the $\log n$ bits of the
-        index is the result of one coin flip.}
+    \caption{Each of the $\log n$ bits of the index is one coin flip.}
     \label{fig:coinflips-0825}
 \end{figure}
 
-We usually abstract away the $\bigO{\log n}$ and assume that an element can be sampled in constant
-time. This is only justified when the space we sample from has polynomial size (as a function of
-$n$), since then the number of coin flips is $\bigO{\log n}$; for a larger space the sampling time is
-no longer negligible.
+We usually assume that an element can be sampled in constant time. This is only justified when the
+space we sample from has polynomial size in $n$, since then the number of coin flips is
+$\bigO{\log n}$.
 
 \subsection{With and Without Replacement}
 
-Random sampling can be done \emph{with} or \emph{without} replacement. We will almost always analyze
-sampling with replacement, because the analysis without replacement is more complex (the samples
-are no longer independent).
+Random sampling can be done \emph{with} or \emph{without} replacement. We almost always analyze
+sampling with replacement, since without replacement the samples are no longer independent.
 
-Suppose that we are looking for one particular element of the array. For every sample,
-\[\prob{\text{element} = \text{sample}} = \frac{1}{n}.\]
-If we keep sampling (with replacement) until the element is found, then the expected number of
-samples, i.e., the number of steps of the algorithm, is
-\[\expectation{\text{samples}} = \frac{1}{\prob{\text{element} = \text{sample}}} = n.\]
-The probability of \emph{not} finding the element is computed directly: a sample misses it with
-probability $1 - \frac{1}{n}$, and since the samples are independent,
+Suppose that we are looking for one particular element of the array. Every sample hits it with
+probability $\sfrac{1}{n}$, so sampling (with replacement) until it is found takes
+$\expectation{\text{samples}} = \frac{1}{\sfrac{1}{n}} = n$ samples in expectation, and since the
+samples are independent,
 \[\prob{\text{not found after $k$ samples}} = \left(1 - \frac{1}{n}\right)^k,
     \qquad
     \prob{\text{found within $k$ samples}} = 1 - \left(1 - \frac{1}{n}\right)^k.\]
 
 \section{Factoring}
 
-Factoring is the second motivating problem: given $n = pq$ with $p, q$ prime, find $p$ and $q$.
-\begin{itemize}
-    \item Factoring is an \emph{encryption primitive}: the security of widely used encryption schemes
-          rests on it being hard. If factoring can be solved quickly, then the encryption is broken.
-    \item No polynomial-time (in $N = \log n$) classical algorithm is known.
-    \item There is a quantum algorithm that runs in polynomial time, \emph{Shor's factoring
-              algorithm} (time $\bigO{N^3}$).
-    \item There is \emph{no} known quantum algorithm that solves \nptime-complete problems in polynomial
-          time.
-\end{itemize}
+Given $n = pq$ with $p, q$ prime, find $p$ and $q$. Factoring is an \emph{encryption primitive}: if
+it can be solved quickly, then encryption based on it is broken. No polynomial-time (in
+$N = \log n$) classical algorithm is known, but \emph{Shor's factoring algorithm} is a quantum
+algorithm that runs in polynomial time $\bigO{N^3}$. There is \emph{no} known quantum algorithm that
+solves \nptime-complete problems in polynomial time.
 
-Recall that \nptime{} is the class of problems whose solutions are easy to verify (in polynomial
-time), and that the \nptime-complete problems are the \nptime{} problems to which every \nptime{}
-problem reduces (equivalently, the problems that are reducible to 3-SAT and vice versa). Whether
-$\textsc{P} = \nptime$, i.e., whether \nptime-complete problems can be solved in polynomial time, is
-a famous open problem. A quantum computer can simulate a classical one with polynomial overhead, so
-if $\textsc{P} = \nptime$ then quantum computers also solve \nptime-complete problems in polynomial
-time; conversely, if one could show that quantum computers cannot solve \nptime-complete problems in
-polynomial time, then $\textsc{P} \neq \nptime$.
+Recall that \nptime{} is the class of problems whose solutions can be verified in polynomial time,
+and that the \nptime-complete problems are the \nptime{} problems to which every \nptime{} problem
+reduces (equivalently, the problems that are reducible to 3-SAT and vice versa). Whether
+$\textsc{P} = \nptime$ is open. A quantum computer can simulate a classical one with polynomial
+overhead, so if quantum computers cannot solve \nptime-complete problems in polynomial time, then
+$\textsc{P} \neq \nptime$.
 
 \section{Search}
 
-The third problem, which we will study in detail, is \emph{search}: we are given an (unsorted) array
-$A$ with $n$ slots, which can only be accessed through \emph{queries} (``what is $A[i]$?''), and we
-want to find the index of a given element $x$. If the array were sorted, binary search would take
-$\bigO{\log n}$ queries; since it is not, linear search makes $\bigO{n}$ queries. Can we do better?
+We are given an (unsorted) array $A$ with $n$ slots, which can only be accessed through
+\emph{queries} (``what is $A[i]$?''), and we want to find the index of a given element $x$. A
+sorted array allows binary search with $\bigO{\log n}$ queries. Linear search makes $\bigO{n}$
+queries.
 
 \subsection{Lower Bound for Deterministic Algorithms}
 
-An upper bound of $\bigO{f(n)}$ queries only needs one algorithm; a lower bound of $\bigOm{f(n)}$
-has to hold for \emph{all} algorithms. The standard tool for this is an \emph{adversary argument}:
-given any algorithm, the adversary constructs an input on which the algorithm performs badly.
+An upper bound needs one algorithm, but a lower bound of $\bigOm{f(n)}$ has to hold for \emph{all}
+algorithms. We use an \emph{adversary argument}: given any algorithm, the adversary constructs an
+input on which the algorithm performs badly.
 
 \begin{theorem}[Lower Bound for Deterministic Search]\label{thm:detsearch-0825}
     Every deterministic algorithm for search makes at least $n - 1$ queries in the worst case.
 \end{theorem}
 
 \begin{proof}
-    Fix a deterministic algorithm. The adversary does not commit to the input in advance; instead it
-    answers the queries of the algorithm as they come. Whenever the algorithm queries a slot $i$, the
-    adversary answers that $A[i] \neq x$ (and fills $A[i]$ with some other value).
-
-    Since the algorithm is deterministic, its $\nth{k}$ query is determined by the answers to the
-    first $k-1$ queries, so this defines one input for the algorithm. Suppose that the algorithm
-    stops after $k \leq n - 2$ queries and outputs an index $j$. At least $n - k \geq 2$ slots have
-    not been queried, so the adversary can place $x$ in an unqueried slot different from $j$. The
-    resulting array is consistent with all the answers that were given, and the algorithm is wrong on
-    it. Hence a correct algorithm makes at least $n - 1$ queries.
+    Fix a deterministic algorithm. The adversary does not fix the input in advance: whenever the
+    algorithm queries a slot $i$, it answers that $A[i] \neq x$ (and fills $A[i]$ with some other
+    value). Since the algorithm is deterministic, its $\nth{k}$ query is determined by the answers
+    to the first $k-1$ queries, so this defines one run of the algorithm. Suppose that it stops
+    after $k \leq n - 2$ queries and outputs an index $j$. At least $n - k \geq 2$ slots have not
+    been queried, so the adversary can place $x$ in an unqueried slot different from $j$. The
+    resulting array is consistent with all the answers given, and the algorithm is wrong on it. So a correct
+    algorithm makes at least $n - 1$ queries.
 \end{proof}
 
-After $n - 1$ queries that were all answered ``no'', only one slot is left and the algorithm knows
-that $x$ is there without querying it, so the bound $n - 1$ is tight.
+The bound is tight: after $n - 1$ queries that were all answered ``no'', only one slot is left and
+$x$ must be there.
 
 \subsection{Randomized and Quantum Algorithms}
 
-\begin{itemize}
-    \item The adversary argument breaks down for \emph{randomized} algorithms: the queries are no
-          longer determined by the previous answers, so the adversary cannot predict them. Nevertheless,
-          randomized search needs $\bigOm{n}$ expected queries. The proof uses \emph{Yao's min-max
-              principle}, which is a good general tool for proving lower bounds for randomized algorithms
-          (next lecture).
-    \item Grover's quantum algorithm solves search with $\bigO{\sqrt{n}}$ queries (later in the
-          course).
-\end{itemize}
+The adversary argument breaks down for \emph{randomized} algorithms, because the queries are no
+longer determined by the previous answers. Still, randomized search needs $\bigOm{n}$ expected
+queries, by \emph{Yao's min-max principle} (next lecture). Grover's quantum algorithm solves search
+with $\bigO{\sqrt{n}}$ queries (later in the course).
 
-To show a \emph{quantum advantage} (often called quantum supremacy in class) for a problem, we have to
-show that the problem needs $\bigOm{f(n)}$ queries classically but only $\littleO{f(n)}$ queries
-quantumly. Since randomized algorithms are the strongest classical algorithms, this means that we
-need lower bounds for \emph{randomized} algorithms, not only for deterministic ones. This is why
-lower bounds for randomized algorithms play a bigger role in this course than lower bounds for
-deterministic algorithms.
+To show a \emph{quantum advantage} (also called quantum supremacy) for a problem, we have to
+show that it needs $\bigOm{f(n)}$ queries classically but only $\littleO{f(n)}$ queries
+quantumly. Randomized algorithms are the strongest classical algorithms, so we
+need lower bounds for \emph{randomized} algorithms.
 
 \section{Probability}
 
-We review the basic notions of (discrete) probability (\cref{fig:probability-0825}). A
-\textbf{sample space} $S$ is a finite set of \emph{simple events}, $\abs{S} = n$. A
+A \textbf{sample space} $S$ is a finite set of \emph{simple events}, $\abs{S} = n$. A
 \textbf{probability function} $\Pr \colon S \to [0,1] \subseteq \mathbb{R}$ assigns a probability to every
 simple event. An \textbf{event} is a subset $A \subseteq S$, with probability
 $\prob{A} = \sum_{a \in A} \prob{a}$. The probability function satisfies the \emph{axioms}
@@ -185,43 +152,5 @@ $A_1, \dots, A_n$ (i.e., $A_i \cap A_j = \emptyset$ for all $i \neq j$). A \text
 function $X \colon S \to V$ from the sample space to a set of values $V$ (usually $V \subseteq \mathbb{R}$),
 and for a value $r \in V$, $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}$.
 
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[scale=0.82]
-        % the three sets
-        \draw (0,0) ellipse (0.8 and 1.1);
-        \draw (4,0) ellipse (0.8 and 1.1);
-        \draw (8,0) ellipse (0.8 and 1.1);
-        \node[above] at (0,1.1) {$V$};
-        \node[above] at (4,1.1) {$S$};
-        \node[above] at (8,1.1) {$[0,1] \subseteq \mathbb{R}$};
-        % simple events
-        \foreach \y/\i in {0.6/1, 0/2, -0.6/3} {
-                \node[point] (s\i) at (4,\y) {};
-            }
-        % values of X and probabilities
-        \node[point] (v1) at (0,0.5) {};
-        \node[point] (v2) at (0,-0.4) {};
-        \node[point] (r1) at (8,0.6) {};
-        \node[point] (r2) at (8,0) {};
-        \node[point] (r3) at (8,-0.6) {};
-        % random variable X: S -> V
-        \draw[->] (s1) -- (v1);
-        \draw[->] (s2) -- (v1);
-        \draw[->] (s3) -- (v2);
-        % probability function: S -> [0,1]
-        \draw[->] (s1) -- (r1);
-        \draw[->] (s2) -- (r2);
-        \draw[->] (s3) -- (r3);
-        \node at (2,1.0) {$X$};
-        \node at (6,1.0) {$\Pr(\cdot)$};
-    \end{tikzpicture}
-    \caption{A sample space $S$ of simple events. The probability function $\Pr(\cdot)$ maps every
-        simple event to a number in $[0,1]$, and a random variable $X$ maps every simple event to a
-        value in $V$.}
-    \label{fig:probability-0825}
-\end{figure}
-
-For example, in random sampling the sample space $S$ is the set of the $n$ possible outcomes of the
-$\log n$ coin flips, and the random variable $X$ is the index that is sampled. Every $s \in S$ has
-$\prob{s} = \sfrac{1}{n}$, and $\prob{X = i} = \sfrac{1}{n}$ for every index $i$.
+For example, in random sampling $S$ is the set of the $n$ outcomes of the $\log n$ coin flips, each
+with $\prob{s} = \sfrac{1}{n}$, and $X$ is the sampled index, with $\prob{X = i} = \sfrac{1}{n}$.

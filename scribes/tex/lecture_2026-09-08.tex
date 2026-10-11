@@ -5,16 +5,12 @@ walks on undirected graphs, and we prove the weak law of large numbers with Cheb
 
 \section{Distributed Computing in a Complete Network}
 
-The network is a \emph{complete graph} $G$ on $n$ nodes (\cref{fig:network-0908}): every pair of nodes
-is joined by a bidirectional edge, so there are $\binom{n}{2} = \frac{n(n-1)}{2}$ edges in total and
-every node has $n - 1$ incident edges. The nodes are computers, and an edge is a communication link
-on which a message can be sent in either direction.
-
-The network is \emph{synchronous}: all nodes share a clock, and the computation proceeds in
-\emph{rounds} (also called steps). In one round, every node
-\[\text{receives} \longrightarrow \text{computes} \longrightarrow \text{sends},\]
-i.e., it receives the messages that were sent to it in the previous round, does an arbitrary local
-computation, and sends messages on some of its edges.
+The network is a \emph{complete graph} $G$ on $n$ nodes (\cref{fig:network-0908}). Every pair of nodes
+is joined by a bidirectional communication link, so there are $\binom{n}{2} = \frac{n(n-1)}{2}$ edges
+and every node has $n - 1$ incident edges. The network is \emph{synchronous}: all nodes share a clock,
+and the computation proceeds in \emph{rounds}. In one round, every node receives the messages sent
+to it in the previous round, does a local computation, and sends messages on some of its edges
+(receives $\to$ computes $\to$ sends).
 
 \begin{figure}[ht]
     \centering
@@ -45,8 +41,8 @@ computation, and sends messages on some of its edges.
             \node at (3.2,2.4) {\small referees};
         \end{scope}
     \end{tikzpicture}
-    \caption{Left: the complete network on $n$ nodes. Right: two candidates $u$ and $v$ send their ids
-        to their referees; the common referee $r$ sees both ids and declares the smaller one the winner.}
+    \caption{Left: the complete network on $n$ nodes. Right: candidates $u$ and $v$ with a common
+        referee $r$.}
     \label{fig:network-0908}
 \end{figure}
 
@@ -57,29 +53,19 @@ computation, and sends messages on some of its edges.
     in the state \emph{leader}, and all other nodes must be in the state \emph{non-leader}.
 \end{problem}
 
-There are two goals.
-\begin{itemize}
-    \item Finish fast: minimize the number of rounds.
-    \item Less communication: minimize the total number of messages sent.
-\end{itemize}
-The nodes are either \emph{labelled}, i.e., every node has a unique id, or \emph{anonymous}, i.e., the
-nodes have no ids and cannot be told apart.
+The goals are to minimize the number of rounds and the total number of messages sent. The nodes are
+either \emph{labelled}, i.e., every node has a unique id, or \emph{anonymous}, i.e., the nodes have
+no ids and cannot be told apart.
 
 \paragraph{The trivial algorithm.} With unique ids, every node sends its id to all other nodes in the
-first round, and the node with the minimum id becomes the leader. Every node learns all $n$ ids, so
-exactly one node sees that its own id is the minimum. Messages are sent in $1$ round only (the ids
-are received and compared at the start of round $2$), so this takes $\bigO{1}$ rounds, and each of
-the $n$ nodes sends $n - 1$ messages, so the total number of messages is $n(n-1) = \bigTh{n^2}$: two on every edge.
+first round, and the node with the minimum id becomes the leader. This takes $\bigO{1}$ rounds and
+$n(n-1) = \bigTh{n^2}$ messages.
 
-\paragraph{Anonymous nodes.} For anonymous nodes there is no deterministic algorithm. To state this
-precisely we have to say how a node addresses its edges: it has $n - 1$ \emph{ports}, numbered
-$1, \dots, n-1$, one per incident edge, and it can send a message on a given port and sees on which
-port a message arrives. The node does not know which node is at the other end of a port, and the
-port numbering is not under the control of the algorithm (we may think of it as chosen by an
-adversary).
+\paragraph{Anonymous nodes.} A node addresses its edges by $n - 1$ \emph{ports}, numbered
+$1, \dots, n-1$, one per incident edge. It can send a message on a given port and sees on which port
+a message arrives, but it does not know which node is at the other end of a port, and the port
+numbering is chosen by an adversary.
 
-% Pages 1-2, red oval around "anonymous" with an arrow to "No deterministic algorithm". The notes
-% only state the claim; it was left in class as a statement to prove.
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
 \begin{exercise}\label{ex:anonymous-0908}
     Prove that there is no deterministic algorithm that elects a leader among anonymous nodes in a
@@ -96,48 +82,41 @@ The solution is \cref{thm:anonymous-0908}.
 \end{theorem}
 
 \begin{proof}
-    Fix a deterministic algorithm. We choose the following symmetric port numbering. Identify the
-    nodes with $\mathbb{Z}_n = \set{0, 1, \dots, n-1}$, with addition modulo $n$, and let port $j$ of
-    node $i$ lead to node $i + j$, for $j = 1, \dots, n-1$. This is a valid port numbering: the nodes
-    $i + 1, \dots, i + (n-1)$ are exactly the $n - 1$ nodes other than $i$. The edge between $i$ and
-    $i + j$ is port $j$ at $i$ and port $n - j$ at $i + j$, since $(i + j) + (n - j) = i$ in
-    $\mathbb{Z}_n$. Hence a message that some node sends on port $j$ arrives at its destination on
-    port $n - j$.
+    Fix a deterministic algorithm. Identify the nodes with $\mathbb{Z}_n = \set{0, 1, \dots, n-1}$
+    (addition modulo $n$), and let port $j$ of node $i$ lead to node $i + j$, for $j = 1, \dots, n-1$.
+    This is a valid port numbering, since $i + 1, \dots, i + (n-1)$ are exactly the nodes other than
+    $i$. The edge between $i$ and $i + j$ is port $j$ at $i$ and port $n - j$ at $i + j$, since
+    $(i + j) + (n - j) = i$ in $\mathbb{Z}_n$, so a message sent on port $j$ arrives on port $n - j$.
 
     We show by induction on $t$ that at the end of round $t$ all nodes are in the same state, and
-    that in round $t$ all nodes send the same message on port $j$, for every $j$ (where ``no message''
+    that in round $t$ all nodes send the same message $m_j$ on port $j$, for every $j$ (``no message''
     counts as a message). For $t = 0$ all nodes are in the same initial state, and nothing has been
-    sent. Assume that the claim holds for round $t - 1$, and let $m_j$ be the message that every node
-    sent on port $j$ in round $t - 1$. In round $t$, node $i$ receives on port $q$ the message that
-    node $i + q$ sent on its port $n - q$, which is $m_{n-q}$. This does not depend on $i$, so all
-    nodes receive the same messages on the same ports. They were in the same state, and the algorithm
-    is deterministic, so they compute the same new state and send the same messages on the same
-    ports. This proves the claim.
+    sent. If the claim holds for round $t - 1$, then in round $t$ node $i$ receives on port $q$ the
+    message that node $i + q$ sent on its port $n - q$, which is the common message $m_{n-q}$ of
+    round $t - 1$ and does not depend on $i$. So all nodes are in the same state and receive the
+    same messages on the same ports, and since the algorithm is deterministic, they compute the same
+    new state and send the same messages on the same ports.
 
     Whether a node declares itself the leader is a function of its state. Therefore, at the end of
-    every round $t$, either all $n \geq 2$ nodes are leaders or no node is a leader, and there is
-    never exactly one leader. In particular, the algorithm cannot have elected a leader after $T$
-    rounds for any finite $T$: its round complexity on this port numbering is not finite.
+    every round, either all $n \geq 2$ nodes are leaders or no node is, and there is never exactly
+    one leader.
 \end{proof}
 
-A randomized algorithm can break this symmetry: if every node picks an id uniformly at random in
-$\set{1, \dots, n^4}$, then two given nodes pick the same id with probability $\sfrac{1}{n^4}$, so by
-the union bound over the $\binom{n}{2} \leq \sfrac{n^2}{2}$ pairs all ids are different with probability
-at least $1 - \frac{1}{2n^2}$. From now on we assume that the nodes are non-anonymous and have unique
-ids.
+A randomized algorithm can break this symmetry. If every node picks an id uniformly at random in
+$\set{1, \dots, n^4}$, then two given nodes pick the same id with probability $\sfrac{1}{n^4}$, and
+by the union bound over the $\binom{n}{2} \leq \sfrac{n^2}{2}$ pairs, all ids are different with
+probability at least $1 - \frac{1}{2n^2}$. From now on we assume that the nodes have unique ids.
 
-\paragraph{Complexity classes.} The same three kinds of algorithms (deterministic, randomized,
-quantum) appear in the complexity classes
-\[\mathrm{P} \subseteq \mathrm{BPP} \subseteq \mathrm{BQP},\]
-where $\mathrm{P}$ is deterministic polynomial time, $\mathrm{BPP}$ is bounded-error probabilistic
-polynomial time, and $\mathrm{BQP}$ is bounded-error quantum polynomial time. The first inclusion
-holds because a deterministic algorithm is a randomized algorithm that ignores its coins; the second
-is recorded without proof.
+\paragraph{Complexity classes.} Deterministic, bounded-error probabilistic and bounded-error quantum
+polynomial time satisfy $\mathrm{P} \subseteq \mathrm{BPP} \subseteq \mathrm{BQP}$. The first
+inclusion holds because a deterministic algorithm is a randomized algorithm that ignores its coins.
+We do not prove the second.
 
 \subsection{Known Bounds}
 
-For leader election in a complete network of $n$ nodes with unique ids, the following bounds were
-listed in class.
+For leader election in a complete network of $n$ nodes with unique ids, the following bounds are
+known ($\widetilde{O}$ and $\widetilde{\Omega}$ hide factors polynomial in $\log n$). We prove only
+the first and the third row.
 \begin{center}
     \begin{tabular}{lll}
         Messages                                           & Rounds            & Algorithm                \\
@@ -149,18 +128,12 @@ listed in class.
         $\widetilde{O}(n^{\sfrac{1}{3}})$                  &                   & quantum                  \\
     \end{tabular}
 \end{center}
-Here $\widetilde{O}$ and $\widetilde{\Omega}$ hide factors that are polynomial in $\log n$. The first
-row is the trivial algorithm above, and the third row is the algorithm of the next section. The other
-rows are recorded as stated, without proof. In particular, by the fourth row the randomized algorithm
-is optimal among classical algorithms up to logarithmic factors, and by the fifth a quantum algorithm
-gets below this classical lower bound.
 
 \section{A Randomized Algorithm for Leader Election}
 
-Throughout, $\log$ is the natural logarithm, and
-\[p = \frac{2 \log n}{n}, \qquad k = \left\lceil \sqrt{n \log n} \right\rceil.\]
-We have $p \leq 1$ and $k \leq n$ for every $n \geq 1$, since $2 \log n \leq n$. The algorithm has
-four steps.
+Throughout, $\log$ is the natural logarithm, $p = \frac{2 \log n}{n}$ and
+$k = \left\lceil \sqrt{n \log n} \right\rceil$. We have $p \leq 1$ and $k \leq n$ for every
+$n \geq 1$, since $2 \log n \leq n$. The algorithm has four steps.
 \begin{enumerate}
     \item \textbf{Subsample candidates.} Every node becomes a \emph{candidate} with probability $p$,
           independently of all other nodes.
@@ -173,19 +146,17 @@ four steps.
           referees. All other nodes are non-leaders.
 \end{enumerate}
 
-\paragraph{The model for the random choices.} We fix the following precise model, which the analysis
-below uses. Every node $u$ draws a coin $C_u \in \set{0,1}$ with $\prob{C_u = 1} = p$ ($u$ is a
-candidate if $C_u = 1$) and a \emph{referee set} $R_u$, which is a uniformly random set of $k$
-distinct nodes among all $n$ nodes. All the $C_u$ and all the $R_u$ are mutually independent. Only
-candidates use their referee sets. A candidate may pick itself as a referee; then it plays the role
-of this referee itself, and no message is needed.
+\paragraph{The model for the random choices.} Every node $u$ draws a coin $C_u \in \set{0,1}$ with
+$\prob{C_u = 1} = p$ ($u$ is a candidate if $C_u = 1$) and a \emph{referee set} $R_u$, which is a
+uniformly random set of $k$ distinct nodes among all $n$ nodes. All the $C_u$ and all the $R_u$ are
+mutually independent. Only candidates use their referee sets. A candidate may pick itself as a
+referee; then it plays the role of this referee itself, and no message is needed.
 
 \subsection{The Number of Candidates}
 
 Let $X = \sum_{u} C_u$ be the number of candidates. By linearity of expectation,
-\[\expectation{X} = \frac{2 \log n}{n} \cdot n = 2 \log n.\]
+$\expectation{X} = np = 2 \log n$.
 
-% Notes p.6: "Atleast 1 leader <- Show".
 \begin{exercise}\label{ex:atleast-0908}
     Show that, with high probability, there is at least $1$ leader.
 \end{exercise}
@@ -200,44 +171,24 @@ The solution is \cref{thm:leader-atleast-0908}.
 \end{theorem}
 
 \begin{proof}
-    Only candidates become leaders, so if $X = 0$ there is no leader. Conversely, assume $X \geq 1$,
-    and let $w$ be the candidate with the minimum id among all candidates (it is unique, since the
-    ids are unique). Let $r$ be any referee of $w$. The ids that $r$ receives are ids of candidates,
-    so all of them are at least the id of $w$, and the id of $w$ is one of them. Hence $r$ declares
-    $w$ the winner. This holds for every referee of $w$, so $w$ is a leader.
-
-    It remains to bound $\prob{X = 0}$. The coins are independent, so, using $1 - x \leq e^{-x}$,
-    \[\prob{X = 0} = \left(1 - \frac{2 \log n}{n}\right)^{n}
-        \leq e^{-\frac{2 \log n}{n} \cdot n} = e^{-2 \log n} = \frac{1}{n^2}.\]
-    Here we used $0 \leq 1 - \frac{2 \log n}{n}$, so that taking the $\nth{n}$ power preserves the
-    inequality.
+    Only candidates become leaders, so if $X = 0$ there is no leader. Conversely, if $X \geq 1$, let
+    $w$ be the candidate with the minimum id (unique, since the ids are unique). Every referee $r$
+    of $w$ receives only ids of candidates, all at least the id of $w$, and the id of $w$ is one of
+    them, so $r$ declares $w$ the winner. Hence $w$ is a leader. The coins are independent, so,
+    using $0 \leq 1 - p$ and $1 - x \leq e^{-x}$,
+    $\prob{X = 0} = (1 - p)^{n} \leq e^{-pn} = e^{-2 \log n} = \sfrac{1}{n^2}$.
 \end{proof}
-
-\paragraph{Remark (the Chernoff computation).} In class, $\prob{X < 1}$ was bounded ``from Chernoff
-bounds'', with $(1 - \delta) \cdot 2 \log n = 1$, i.e., $\delta = 1 - \frac{1}{2 \log n}$. The lower tail
-of \cref{thm:chernoff-0901} is an inequality with a factor $\sfrac{1}{2}$ in the exponent, and with
-$\mu = 2 \log n$ it gives
-\[\prob{X < 1} \leq e^{-\frac{\mu \delta^2}{2}}
-    = e^{-\log n \left(1 - \frac{1}{2 \log n}\right)^2}
-    = \frac{e}{n} \cdot e^{-\frac{1}{4 \log n}}
-    \leq \frac{e}{n}\]
-for $n \geq 2$. So the lower tail bound in this form only gives $\bigO{\sfrac{1}{n}}$ here; the value $\sfrac{1}{n^2}$
-recorded in class is the one that the direct computation above gives.
 
 \subsection{At Most One Leader}
 
-% Notes p.6: "Almost 1 leader <- Show" (i.e., at most 1 leader), followed by the computation
-% (1 - sqrt(n log n)/n)^{sqrt(n log n)} <= ... = 1/n on pp.6-7.
 \begin{exercise}\label{ex:atmost-0908}
     Show that, with probability tending to $1$, there is at most $1$ leader.
 \end{exercise}
 
-We prove this in \cref{thm:leader-atmost-0908}, using \cref{lem:badpair-0908,lem:disjoint-0908}.
-In the notes this is written ``almost $1$ leader''; we read it as ``at most $1$ leader''. Read
-literally, as ``almost surely exactly $1$ leader'', it is \cref{thm:leader-0908} below.
-
-Call a pair of different nodes $\set{u,v}$ a \emph{bad pair} if both are candidates and they have
-no common referee, i.e., $C_u = C_v = 1$ and $R_u \cap R_v = \emptyset$.
+The solution is \cref{thm:leader-atmost-0908}, which uses \cref{lem:badpair-0908,lem:disjoint-0908};
+``exactly $1$ leader'' is \cref{thm:leader-0908}. Call a pair of different nodes $\set{u,v}$ a
+\emph{bad pair} if both are candidates and they have no common referee, i.e., $C_u = C_v = 1$ and
+$R_u \cap R_v = \emptyset$.
 
 \begin{lemma}[Two Leaders Form a Bad Pair]\label{lem:badpair-0908}
     If two candidates have a common referee, then at most one of them is a leader. Consequently, if
@@ -245,10 +196,10 @@ no common referee, i.e., $C_u = C_v = 1$ and $R_u \cap R_v = \emptyset$.
 \end{lemma}
 
 \begin{proof}
-    Let $u \neq v$ be candidates with a common referee $r$, and assume that the id of $u$ is smaller
-    than the id of $v$ (\cref{fig:network-0908}). The referee $r$ receives both ids (if $r$ is $u$ or $v$ itself, it knows its own id), so the minimum
-    id that it receives is at most the id of $u$, which is smaller than the id of $v$. Hence $r$ does
-    not declare $v$ the winner, and $v$ is not a leader. Consequently, two different leaders are two
+    Let $u \neq v$ be candidates with a common referee $r$, where the id of $u$ is smaller than the
+    id of $v$ (\cref{fig:network-0908}). The referee $r$ receives both ids (if $r$ is $u$ or $v$
+    itself, it knows its own id), so the minimum id that it receives is at most the id of $u$. Hence
+    $r$ does not declare $v$ the winner, and $v$ is not a leader. So two different leaders are two
     candidates without a common referee, i.e., a bad pair.
 \end{proof}
 
@@ -259,28 +210,20 @@ no common referee, i.e., $C_u = C_v = 1$ and $R_u \cap R_v = \emptyset$.
 \end{lemma}
 
 \begin{proof}
-    Condition on $R_u = S$, where $S$ is any set of $k$ nodes. Since $R_v$ is independent of $R_u$,
-    it is still a uniformly random set of $k$ nodes. If $2k > n$, two sets of $k$ nodes cannot be
-    disjoint, the probability is $0$, and there is nothing to show. So let $2k \leq n$. We draw the
-    $k$ nodes of $R_v$ one after the other, each uniformly among the nodes not drawn yet. Assume
-    that the first $i$ nodes drawn are outside $S$. Then $n - i$ nodes are left, and $k$ of them
-    are in $S$, so the next node is outside $S$ with probability $\frac{n - k - i}{n - i}$. Hence
+    Condition on $R_u = S$, where $S$ is any set of $k$ nodes; by independence, $R_v$ is still a
+    uniformly random set of $k$ nodes. If $2k > n$, two sets of $k$ nodes cannot be disjoint and the
+    probability is $0$. So let $2k \leq n$, and draw the $k$ nodes of $R_v$ one after the other, each
+    uniformly among the nodes not drawn yet. If the first $i$ nodes drawn are outside $S$, then
+    $n - i$ nodes are left and $k$ of them are in $S$, so the next node is outside $S$ with
+    probability $\frac{n - k - i}{n - i}$. Hence
     \[\prob{R_v \cap S = \emptyset}
-        = \prod_{i=0}^{k-1} \frac{n - k - i}{n - i}
         = \prod_{i=0}^{k-1} \left(1 - \frac{k}{n - i}\right)
-        \leq \left(1 - \frac{k}{n}\right)^{k},\]
-    because every factor satisfies $0 \leq 1 - \frac{k}{n-i} \leq 1 - \frac{k}{n}$ (the first
-    inequality holds since $i \leq k - 1$ and $2k \leq n$ give $n - i \geq k$). This bound does not
-    depend on $S$, so it also holds without conditioning. Finally, $1 - x \leq e^{-x}$ and
-    $k^2 \geq n \log n$ give
-    \[\left(1 - \frac{k}{n}\right)^{k} \leq e^{-\frac{k}{n} \cdot k} = e^{-\sfrac{k^2}{n}}
-        \leq e^{-\frac{n \log n}{n}} = e^{-\log n} = \frac{1}{n}.\qedhere\]
+        \leq \left(1 - \frac{k}{n}\right)^{k}
+        \leq e^{-\sfrac{k^2}{n}} \leq e^{-\log n} = \frac{1}{n},\]
+    because every factor satisfies $0 \leq 1 - \frac{k}{n-i} \leq 1 - \frac{k}{n}$ (as $i \leq k - 1$
+    and $2k \leq n$ give $n - i \geq k$), and by $1 - x \leq e^{-x}$ and $k^2 \geq n \log n$. The
+    bound does not depend on $S$, so it also holds without conditioning.
 \end{proof}
-
-With $k = \sqrt{n \log n}$, the last display is the computation from class. In the notes its left-hand
-side is labelled as the probability of at most one leader; the quantity that it bounds is the
-probability that one given pair of candidates has no common referee. The number of pairs of candidates
-is random, so we finish with an expectation over all pairs of nodes.
 
 \begin{theorem}[At Most One Leader]\label{thm:leader-atmost-0908}
     \[\prob{\text{more than $1$ leader}} \leq \frac{2 \log^2 n}{n}.\]
@@ -288,19 +231,14 @@ is random, so we finish with an expectation over all pairs of nodes.
 
 \begin{proof}
     Let $B$ be the number of bad pairs. For a fixed pair $\set{u,v}$, the coins $C_u$, $C_v$ and the
-    pair of sets $(R_u, R_v)$ are independent, so by \cref{lem:disjoint-0908}
-    \[\prob{\set{u,v} \text{ is a bad pair}}
-        = \prob{C_u = 1} \cdot \prob{C_v = 1} \cdot \prob{R_u \cap R_v = \emptyset}
-        \leq p^2 \cdot \frac{1}{n}.\]
-    By linearity of expectation over the $\binom{n}{2}$ pairs of nodes,
-    \[\expectation{B} \leq \binom{n}{2} \frac{p^2}{n}
-        = \frac{n(n-1)}{2} \cdot \frac{4 \log^2 n}{n^2} \cdot \frac{1}{n}
-        = \frac{2 (n-1) \log^2 n}{n^2}
-        \leq \frac{2 \log^2 n}{n}.\]
+    pair of sets $(R_u, R_v)$ are independent, so by \cref{lem:disjoint-0908} the pair is bad with
+    probability $p^2 \cdot \prob{R_u \cap R_v = \emptyset} \leq \sfrac{p^2}{n}$. By linearity of
+    expectation over the $\binom{n}{2}$ pairs,
+    $\expectation{B} \leq \binom{n}{2} \frac{p^2}{n} = \frac{n(n-1)}{2} \cdot \frac{4 \log^2 n}{n^3}
+        \leq \frac{2 \log^2 n}{n}$.
     If there is more than one leader, then $B \geq 1$ by \cref{lem:badpair-0908}. Since $B \geq 0$,
     Markov's inequality (\cref{thm:markov}) with $b = 1$ gives
-    \[\prob{\text{more than $1$ leader}} \leq \prob{B \geq 1} \leq \expectation{B}
-        \leq \frac{2 \log^2 n}{n}.\qedhere\]
+    $\prob{\text{more than $1$ leader}} \leq \prob{B \geq 1} \leq \expectation{B}$.
 \end{proof}
 
 \begin{theorem}[Exactly One Leader]\label{thm:leader-0908}
@@ -314,15 +252,6 @@ is random, so we finish with an expectation over all pairs of nodes.
     $\frac{1}{n^2} + \frac{2 \log^2 n}{n}$.
 \end{proof}
 
-\paragraph{Remark (the failure probability).} The bound $\frac{2 \log^2 n}{n}$ tends to $0$, but it is
-not of the form $\sfrac{1}{n^c}$ with $c \geq 1$. This is easy to repair: let every candidate contact
-$k' = \left\lceil 2\sqrt{n \log n} \right\rceil$ referees instead of $k$ (for $n \geq 9$ we have
-$4 \log n \leq n$ and hence $k' \leq n$). The proof of \cref{lem:disjoint-0908} goes through with
-$k'$ in place of $k$ and gives $e^{-\sfrac{k'^2}{n}} \leq e^{-4 \log n} = \sfrac{1}{n^4}$, so that
-$\expectation{B} \leq \binom{n}{2} \frac{p^2}{n^4} \leq \frac{2 \log^2 n}{n^4}$. With $k'$ referees the
-algorithm therefore fails with probability at most $\frac{1}{n^2} + \frac{2 \log^2 n}{n^4} \leq \frac{2}{n^2}$
-(using $2 \log^2 n \leq n^2$), and the number of messages only doubles.
-
 \subsection{Messages and Rounds}
 
 \begin{theorem}[Complexity of the Algorithm]\label{thm:complexity-0908}
@@ -333,20 +262,16 @@ algorithm therefore fails with probability at most $\frac{1}{n^2} + \frac{2 \log
 \end{theorem}
 
 \begin{proof}
-    \emph{Rounds.} In round $1$ every node draws its coin and its referee set, and, if it is a
-    candidate, sends its id to its referees. In round $2$ the referees receive the ids, compute the
-    minimum, and send the replies. In round $3$ the candidates receive the replies and decide; no
-    message is sent.
+    \emph{Rounds.} In round $1$ every node draws its coin and its referee set, and the candidates
+    send their ids. In round $2$ the referees receive the ids and reply with the minimum. In round
+    $3$ the candidates receive the replies and decide; no message is sent.
 
     \emph{Messages.} Every candidate sends at most $k$ messages and gets at most $k$ replies, so the
-    number of messages is at most $2kX$. Its expectation is at most
-    $2k \expectation{X} = 4 k \log n$, and since $k \leq \sqrt{n \log n} + 1$, this is
-    $\bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$.
-
-    For the second statement, $X$ is a sum of independent indicator random variables with mean
-    $\mu = 2 \log n$, so \cref{thm:chernoff-0901} with $R = 12 \log n = 6\mu$ gives
-    \[\prob{X \geq 12 \log n} \leq 2^{-12 \log n} = e^{-12 \log 2 \cdot \log n}
-        = n^{-12 \log 2} \leq \frac{1}{n^8},\]
+    number of messages is at most $2kX$, with expectation at most $2k \expectation{X} = 4 k \log n$,
+    which is $\bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$ since $k \leq \sqrt{n \log n} + 1$. Moreover,
+    $X$ is a sum of independent indicator random variables with mean $\mu = 2 \log n$, so
+    \cref{thm:chernoff-0901} with $R = 12 \log n = 6\mu$ gives
+    $\prob{X \geq 12 \log n} \leq 2^{-12 \log n} = n^{-12 \log 2} \leq \sfrac{1}{n^8}$,
     since $12 \log 2 \geq 8.3$. If $X < 12 \log n$, the number of messages is at most
     $2kX \leq 24 k \log n$.
 \end{proof}
@@ -361,8 +286,7 @@ algorithm therefore fails with probability at most $\frac{1}{n^2} + \frac{2 \log
 \end{definition}
 
 We describe the walk by the row vector $p_t = (p_t^1, \dots, p_t^n)$, where $p_t^i$ is the probability
-that the walker is at node $i$ after $t$ steps (this $p_t$ is not related to the candidate
-probability $p$ of the last section). Since the walker is at exactly one node, the entries
+that the walker is at node $i$ after $t$ steps. The walker is at one node, so the entries
 of $p_t$ sum to $1$. If the walker is at node $j$ after $t$ steps, it moves to a given neighbour $i$
 of $j$ with probability $\frac{1}{\deg(j)}$, so by the law of total probability
 \begin{equation}\label{eq:walkstep-0908}
@@ -390,31 +314,19 @@ of $j$ with probability $\frac{1}{\deg(j)}$, so by the law of total probability
             \draw (c1) -- (c2) -- (c3) -- (c1);
         \end{scope}
     \end{tikzpicture}
-    \caption{Left: a graph with $6$ nodes and $10$ edges. Right: the triangle. In both examples the
-        walk starts at node $1$.}
+    \caption{Left: a graph with $6$ nodes and $10$ edges. Right: the triangle.}
     \label{fig:walks-0908}
 \end{figure}
 
 \begin{example}
-    In the graph on the left of \cref{fig:walks-0908}, let the walker start at node $1$, so that
-    \[p_0 = (1, 0, 0, 0, 0, 0).\]
-    Node $1$ has the $4$ neighbours $2$, $3$, $5$, $6$, each of which is chosen with probability
-    $\sfrac{1}{4}$, so
-    \[p_1 = \left(0, \tfrac{1}{4}, \tfrac{1}{4}, 0, \tfrac{1}{4}, \tfrac{1}{4}\right).\]
+    In the graph on the left of \cref{fig:walks-0908}, a walker that starts at node $1$ has
+    $p_0 = (1, 0, 0, 0, 0, 0)$ and, since node $1$ has the $4$ neighbours $2$, $3$, $5$, $6$,
+    $p_1 = \left(0, \tfrac{1}{4}, \tfrac{1}{4}, 0, \tfrac{1}{4}, \tfrac{1}{4}\right)$. In the triangle
+    on the right every node has degree $2$, and starting at node~$1$, by \cref{eq:walkstep-0908},
+    $p_0 = (1, 0, 0)$, $p_1 = \left(0, \tfrac{1}{2}, \tfrac{1}{2}\right)$ and
+    $p_2 = \left(\tfrac{1}{2}, \tfrac{1}{4}, \tfrac{1}{4}\right)$.
 \end{example}
 
-\begin{example}
-    In the triangle on the right of \cref{fig:walks-0908}, every node has degree $2$. Starting at
-    node~$1$,
-    \[p_0 = (1, 0, 0), \qquad
-        p_1 = \left(0, \tfrac{1}{2}, \tfrac{1}{2}\right), \qquad
-        p_2 = \left(\tfrac{1}{2}, \tfrac{1}{4}, \tfrac{1}{4}\right), \qquad
-        p_t = \left(p_t^1, p_t^2, p_t^3\right).\]
-    For instance, by \cref{eq:walkstep-0908}, $p_2^1 = \frac{1}{2} p_1^2 + \frac{1}{2} p_1^3 = \frac{1}{2}$
-    and $p_2^2 = \frac{1}{2} p_1^1 + \frac{1}{2} p_1^3 = \frac{1}{4}$.
-\end{example}
-
-% Notes pp.8-9: the triangle example ends with "p_t = (p_t^1, p_t^2, p_t^3)" and nothing after it.
 \begin{exercise}\label{ex:triangle-0908}
     Compute $p_t = \left(p_t^1, p_t^2, p_t^3\right)$ for all $t \geq 0$ for the random walk on the
     triangle that starts at node $1$.
@@ -433,35 +345,20 @@ The solution is \cref{lem:triangle-0908}.
 \begin{proof}
     Let $i$ be any of the three nodes, and let $j$ and $l$ be the other two. Both are neighbours of
     $i$ and have degree $2$, so by \cref{eq:walkstep-0908}, and since $p_t^i + p_t^j + p_t^l = 1$,
-    \[p_{t+1}^i = \frac{p_t^j + p_t^l}{2} = \frac{1 - p_t^i}{2},
-        \qquad\text{and hence}\qquad
-        p_{t+1}^i - \frac{1}{3} = \frac{1 - p_t^i}{2} - \frac{1}{3}
-        = -\frac{1}{2} \left(p_t^i - \frac{1}{3}\right).\]
-    So the difference $p_t^i - \sfrac{1}{3}$ is multiplied by $-\sfrac{1}{2}$ in every step, and
-    by induction on $t$
-    \[p_t^i = \frac{1}{3} + \left(p_0^i - \frac{1}{3}\right) \left(-\frac{1}{2}\right)^{t}.\]
-    With $p_0^1 = 1$ and $p_0^2 = p_0^3 = 0$ this gives the two formulas. Since
-    $\left(-\frac{1}{2}\right)^{t} \to 0$, every entry converges to $\sfrac{1}{3}$.
+    $p_{t+1}^i = \frac{1}{2} \left(p_t^j + p_t^l\right) = \frac{1}{2} \left(1 - p_t^i\right)$, and hence
+    $p_{t+1}^i - \frac{1}{3} = -\frac{1}{2} \left(p_t^i - \frac{1}{3}\right)$.
+    By induction on $t$, $p_t^i = \frac{1}{3} + \left(p_0^i - \frac{1}{3}\right) \left(-\frac{1}{2}\right)^{t}$.
+    With $p_0^1 = 1$ and $p_0^2 = p_0^3 = 0$ this gives the two formulas, and
+    $\left(-\frac{1}{2}\right)^{t} \to 0$ gives the limit.
 \end{proof}
-
-For $t = 0, 1, 2$ the formulas give $(1, 0, 0)$, $\left(0, \frac{1}{2}, \frac{1}{2}\right)$ and
-$\left(\frac{1}{2}, \frac{1}{4}, \frac{1}{4}\right)$, in agreement with the example.
-The next lecture writes \cref{eq:walkstep-0908} as a multiplication by a matrix, shows in
-general that $p_t$ stays a probability vector (\cref{thm:probvec-0910}), and finds the distribution
-that the walk does not change: it is proportional to the degrees (\cref{thm:stationary-0910}), which
-for the triangle is the uniform distribution found here. It also proves that the walk on every
-connected, non-bipartite graph converges to that distribution (\cref{thm:convergence-0910}).
 
 \section{The Law of Large Numbers}
 
-% Notes p.9: "Show 'law of large numbers' with Chebyshev inequality."
 \begin{exercise}\label{ex:wlln-0908}
     Show the ``law of large numbers'' with Chebyshev's inequality.
 \end{exercise}
 
-The law of large numbers says that the average of many independent samples of a random variable is
-close to its expectation. The version that follows from Chebyshev's inequality is the \emph{weak} law,
-\cref{thm:wlln-0908}.
+The solution is \cref{thm:wlln-0908}, the \emph{weak} law of large numbers.
 
 \begin{theorem}[Weak Law of Large Numbers]\label{thm:wlln-0908}
     Let $X_1, X_2, \dots$ be pairwise independent random variables with the same expectation
@@ -473,25 +370,20 @@ close to its expectation. The version that follows from Chebyshev's inequality i
 \end{theorem}
 
 \begin{proof}
-    By linearity of expectation,
-    \[\expectation{\overline{X}_n} = \frac{1}{n} \sum_{i=1}^{n} \expectation{X_i} = \frac{n \mu}{n} = \mu.\]
-    For the variance, write $Y_i = X_i - \mu$, so that $\expectation{Y_i} = 0$,
-    $\expectation{Y_i^2} = \sigma^2$, and $\overline{X}_n - \mu = \frac{1}{n} \sum_{i=1}^{n} Y_i$.
-    Expanding the square as in the proof of \cref{lem:pairwise-0903},
+    By linearity of expectation, $\expectation{\overline{X}_n} = \frac{1}{n} \sum_{i} \expectation{X_i} = \mu$.
+    Write $Y_i = X_i - \mu$, so that $\expectation{Y_i} = 0$, $\expectation{Y_i^2} = \sigma^2$, and
+    $\overline{X}_n - \mu = \frac{1}{n} \sum_{i} Y_i$. For $i \neq j$, $Y_i$ and $Y_j$ are independent,
+    so $\expectation{Y_i Y_j} = \expectation{Y_i} \expectation{Y_j} = 0$, and expanding the square as
+    in the proof of \cref{lem:pairwise-0903},
     \[\variance{\overline{X}_n}
         = \expectation{\Big(\frac{1}{n} \sum_{i=1}^{n} Y_i\Big)^2}
         = \frac{1}{n^2} \sum_{i=1}^{n} \expectation{Y_i^2}
-        + \frac{1}{n^2} \sum_{i \neq j} \expectation{Y_i Y_j}.\]
-    For $i \neq j$, the variables $Y_i$ and $Y_j$ are independent, so
-    $\expectation{Y_i Y_j} = \expectation{Y_i} \expectation{Y_j} = 0$, and the second sum vanishes. Hence
-    \[\variance{\overline{X}_n} = \frac{1}{n^2} \cdot n \sigma^2 = \frac{\sigma^2}{n}.\]
-    Chebyshev's inequality (\cref{thm:chebyshev}), applied to the random variable $\overline{X}_n$
-    with $a = \eps$, now gives
-    \[\prob{\abs{\overline{X}_n - \mu} \geq \eps}
-        = \prob{\abs{\overline{X}_n - \expectation{\overline{X}_n}} \geq \eps}
-        \leq \frac{\variance{\overline{X}_n}}{\eps^2} = \frac{\sigma^2}{n \eps^2},\]
-    which tends to $0$ as $n \to \infty$ for every fixed $\eps > 0$.
+        + \frac{1}{n^2} \sum_{i \neq j} \expectation{Y_i Y_j}
+        = \frac{\sigma^2}{n}.\]
+    Chebyshev's inequality (\cref{thm:chebyshev}) for $\overline{X}_n$ with $a = \eps$ gives
+    $\prob{\abs{\overline{X}_n - \mu} \geq \eps} \leq \sfrac{\variance{\overline{X}_n}}{\eps^2}
+        = \sfrac{\sigma^2}{(n \eps^2)}$, which tends to $0$ as $n \to \infty$.
 \end{proof}
 
 The statement that $\prob{\abs{\overline{X}_n - \mu} \geq \eps} \to 0$ for every $\eps > 0$ is called
-\emph{convergence in probability} of $\overline{X}_n$ to $\mu$, and this is what ``weak'' refers to.
+\emph{convergence in probability} of $\overline{X}_n$ to $\mu$.

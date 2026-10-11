@@ -1,25 +1,19 @@
 In this lecture, we study \emph{Grover's search algorithm}, which finds a solution of an unstructured
 search problem over $N = 2^n$ inputs with $\bigO{\sqrt{N}}$ quantum queries, whereas every classical
-algorithm needs $\bigOm{N}$ queries. We first run the algorithm by hand on two qubits, then write it
-for $n$ qubits using two operators, the \emph{phase flip} $Z_f$ and the \emph{diffusion operator} $D$,
-and finally analyze it exactly: every Grover iteration is a rotation by a fixed angle $2\theta$ in a
-two-dimensional plane, which tells us precisely how many iterations to make.
+algorithm needs $\bigOm{N}$ queries. Every Grover iteration is a rotation by the angle $2\theta$ in a
+two-dimensional plane, which gives the number of iterations.
 
 \begin{problem}[Unstructured Search]
     Given $f \colon \set{0,1}^n \to \set{0,1}$ as a black box, find an $x$ with $f(x) = 1$.
 \end{problem}
 
-Think of $f$ as a Boolean formula and of $x$ as an assignment: $f(x) = 1$ means that $x$ satisfies the
-formula. In \emph{unique satisfiability} we are promised that there is exactly one $x$ with $f(x) = 1$.
-More generally, let
+Think of $f$ as a Boolean formula and of $x$ as an assignment; in \emph{unique satisfiability} we are
+promised that there is exactly one $x$ with $f(x) = 1$. Let
 \[a = \abs{\set{x \suchthat f(x) = 1}}, \qquad b = \abs{\set{x \suchthat f(x) \neq 1}} = N - a\]
 be the numbers of solutions and of non-solutions, where $N = 2^n$. The search is \emph{unstructured}:
-we know nothing about $f$ except what the queries tell us, so classically the best we can do is to try
-inputs one by one. For $a = 1$ every classical algorithm, deterministic or randomized, needs
-$\bigOm{N}$ queries (lectures of September~1 and~3: random sampling needs $N$ expected queries, and
-$\bigOm{N}$ queries are necessary). Grover's algorithm needs only $\bigO{\sqrt{N}}$ queries, and more
-generally $\bigO{\sqrt{N/a}}$. (It is known, but not shown in this course, that $\bigOm{\sqrt{N}}$ queries
-are necessary for every quantum algorithm, so Grover's algorithm is optimal.)
+we know nothing about $f$ except what the queries tell us. For $a = 1$ every classical algorithm,
+deterministic or randomized, needs $\bigOm{N}$ queries (lectures of September~1 and~3). Grover's
+algorithm needs $\bigO{\sqrt{N}}$ queries, and $\bigO{\sqrt{N/a}}$ for $a$ solutions.
 
 \section{Grover's Algorithm on Two Qubits}
 
@@ -28,31 +22,29 @@ qubits as its vector of four amplitudes $(a_{00}, a_{01}, a_{10}, a_{11})$. The 
 steps (\cref{fig:grover4-1006}).
 
 \begin{enumerate}
-    \item \emph{Put the register in the uniform superposition with Hadamard gates:}
-          \[H^{\otimes 2} \ket{00} = \frac{1}{2}\left(\ket{00} + \ket{01} + \ket{10} + \ket{11}\right)
-              = \left(\tfrac{1}{2}, \tfrac{1}{2}, \tfrac{1}{2}, \tfrac{1}{2}\right).\]
-    \item \emph{Phase flip.} Recreate $f$ as a quantum circuit, the query
-          $U_f \colon \ket{x}\ket{c} \mapsto \ket{x}\ket{c \oplus f(x)}$. With the target qubit in
-          $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$ this is the phase flip of the lecture of September~24,
-          \[U_f \colon \ket{x} \longmapsto (-1)^{f(x)} \ket{x},\]
-          which flips the sign of the amplitude of every solution. One query gives
-          \[\left(\tfrac{1}{2}, \tfrac{1}{2}, -\tfrac{1}{2}, \tfrac{1}{2}\right).\]
+    \item \emph{Uniform superposition with Hadamard gates:}
+          $H^{\otimes 2} \ket{00} = \frac{1}{2}\left(\ket{00} + \ket{01} + \ket{10} + \ket{11}\right)
+              = \left(\tfrac{1}{2}, \tfrac{1}{2}, \tfrac{1}{2}, \tfrac{1}{2}\right)$.
+    \item \emph{Phase flip.} The query $U_f \colon \ket{x}\ket{c} \mapsto \ket{x}\ket{c \oplus f(x)}$
+          with the target qubit in $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$ is the phase flip of the
+          lecture of September~24, $U_f \colon \ket{x} \mapsto (-1)^{f(x)} \ket{x}$, which flips the
+          sign of the amplitude of every solution. One query gives
+          $\left(\tfrac{1}{2}, \tfrac{1}{2}, -\tfrac{1}{2}, \tfrac{1}{2}\right)$.
     \item \emph{Grover diffusion operator.} Let $\mu = \frac{1}{N} \sum_{x} a_x$ be the mean of the
           amplitudes. The diffusion operator $D$ reflects every amplitude about the mean
           (\emph{inversion about the mean}):
           \[D \colon a_x \longmapsto 2\mu - a_x \qquad \text{for every } x.\]
-          Here $\mu = \frac{1}{4}\left(\frac{1}{2} + \frac{1}{2} - \frac{1}{2} + \frac{1}{2}\right) = \frac{1}{4}$,
-          so the three non-solutions become $2 \cdot \frac{1}{4} - \frac{1}{2} = 0$ and the solution
-          becomes $2 \cdot \frac{1}{4} + \frac{1}{2} = 1$:
-          \[\left(\tfrac{1}{2}, \tfrac{1}{2}, -\tfrac{1}{2}, \tfrac{1}{2}\right) \longmapsto (0, 0, 1, 0) = \ket{10}.\]
-          Measuring now gives the solution $x^* = 10$ with probability $1$, after a single query.
-    \item In general, \emph{repeat steps 2 and 3} $k$ times, where $k$ is about $\sqrt{N}$ (we compute
-          the exact $k$ in \cref{sec:grover-analysis-1006}); for $N = 4$ one iteration is enough.
+          Here $\mu = \frac{1}{4}$, so the three non-solutions become $2 \cdot \frac{1}{4} - \frac{1}{2} = 0$
+          and the solution becomes $2 \cdot \frac{1}{4} + \frac{1}{2} = 1$: the state is
+          $(0, 0, 1, 0) = \ket{10}$, and measuring gives $x^* = 10$ with probability $1$ after a
+          single query.
+    \item In general, \emph{repeat steps 2 and 3} $k$ times, where $k$ is about $\sqrt{N}$
+          (\cref{sec:grover-analysis-1006}). For $N = 4$ one iteration is enough.
 \end{enumerate}
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}[every node/.style={font=\small}, xscale=0.82, yscale=0.62]
+    \begin{tikzpicture}[every node/.style={font=\small}, xscale=0.75, yscale=0.5]
         % panel 1
         \begin{scope}
             \draw[->] (-0.3,0) -- (4.3,0);
@@ -85,42 +77,29 @@ steps (\cref{fig:grover4-1006}).
             \node at (2,2.9) {after the diffusion};
         \end{scope}
     \end{tikzpicture}
-    \caption{Grover's algorithm for $N = 4$ with the solution $x^* = 10$: the amplitudes after the
-        Hadamard gates, after the phase flip (the mean drops to $\sfrac{1}{4}$), and after the inversion
-        about the mean. One iteration moves all the amplitude onto the solution.}
+    \caption{The amplitudes for $N = 4$ and $x^* = 10$ after the Hadamard gates, after the phase flip,
+        and after the inversion about the mean $\mu$.}
     \label{fig:grover4-1006}
 \end{figure}
 
-The idea behind steps 2 and 3: the phase flip makes the solution's amplitude negative, which lowers the
-mean a little; the inversion about the mean then pushes the solution's amplitude up above the mean by
-the amount it was below, while all the other amplitudes shrink a little. Each iteration transfers
-amplitude from the non-solutions to the solution.
-
 \section{Grover's Algorithm on \texorpdfstring{$n$}{n} Qubits}
 
-For $n$ qubits and a unique solution $x^*$ the same steps apply to the vector $(a_x)_{x \in \set{0,1}^n}$
-of the $N$ amplitudes. After the Hadamard gates every amplitude is $\sfrac{1}{\sqrt{N}}$, and the phase
-flip makes the amplitude of $x^*$ equal to $-\sfrac{1}{\sqrt{N}}$. The mean is then
-\[\mu = \frac{1}{N}\left(\frac{N-1}{\sqrt{N}} - \frac{1}{\sqrt{N}}\right) = \frac{N-2}{N\sqrt{N}} \approx \frac{1}{\sqrt{N}},\]
-so the diffusion operator maps the amplitude of $x^*$ to $2\mu + \sfrac{1}{\sqrt{N}} \approx \sfrac{3}{\sqrt{N}}$
-and every other amplitude to $2\mu - \sfrac{1}{\sqrt{N}} \approx \sfrac{1}{\sqrt{N}}$. The next iteration
-takes $x^*$ to $-\sfrac{3}{\sqrt{N}}$ and then to about $\sfrac{5}{\sqrt{N}}$, the one after to about
-$\sfrac{7}{\sqrt{N}}$, and so on: as long as the solution's amplitude is small, the mean stays close to
-$\sfrac{1}{\sqrt{N}}$ and each iteration adds about $\sfrac{2}{\sqrt{N}}$ to it, so after about $\sqrt{N}$
-iterations the amplitude of $x^*$ is a constant and a measurement finds $x^*$ with constant probability.
-The exact analysis in \cref{sec:grover-analysis-1006} confirms this and gives the right number of
-iterations.
+For $n$ qubits and a unique solution $x^*$ the same steps apply to the $N$ amplitudes. After the
+Hadamard gates every amplitude is $\sfrac{1}{\sqrt{N}}$, and the phase flip makes the amplitude of
+$x^*$ equal to $-\sfrac{1}{\sqrt{N}}$, so the mean is
+$\mu = \sfrac{(N-2)}{(N\sqrt{N})} \approx \sfrac{1}{\sqrt{N}}$ and the diffusion operator maps the
+amplitude of $x^*$ to $2\mu + \sfrac{1}{\sqrt{N}} \approx \sfrac{3}{\sqrt{N}}$. As long as this
+amplitude is small, the mean stays close to $\sfrac{1}{\sqrt{N}}$ and each iteration adds about
+$\sfrac{2}{\sqrt{N}}$ to it, so after about $\sqrt{N}$ iterations it is a constant and a measurement
+finds $x^*$ with constant probability.
 
 \subsection{The Operators \texorpdfstring{$Z_f$}{Zf}, \texorpdfstring{$Z_0$}{Z0} and \texorpdfstring{$D$}{D}}
 
-We now write the two steps of a Grover iteration as unitary operators on $n$ qubits.
-
 \paragraph{The phase flip $Z_f$.} The phase flip
 \[Z_f \colon \ket{x} \longmapsto (-1)^{f(x)} \ket{x}\]
-is implemented by the query $U_f$ with an extra qubit in the state $\ket{1}$ passed through a Hadamard
-gate (\cref{fig:zf-1006}): the extra qubit is in $H\ket{1} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$ when
-$U_f$ is applied, so $U_f$ multiplies $\ket{x}$ by $(-1)^{f(x)}$ and leaves the extra qubit unchanged, and
-the second Hadamard gate returns the extra qubit to $\ket{1}$. One application of $Z_f$ is one query.
+is implemented by one query $U_f$ with an extra qubit in $H\ket{1} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$
+(\cref{fig:zf-1006}): $U_f$ multiplies $\ket{x}$ by $(-1)^{f(x)}$ and leaves the extra qubit
+unchanged, and a second Hadamard gate returns it to $\ket{1}$.
 
 \begin{figure}[ht]
     \centering
@@ -140,22 +119,18 @@ the second Hadamard gate returns the extra qubit to $\ket{1}$. One application o
         node[midway, right=6pt] {$(-1)^{f(x)} \ket{x}$};
         \node[right] at (6.3,-0.25) {$\ket{1}$};
     \end{tikzpicture}
-    \caption{The phase flip $Z_f$: one query $U_f$ with the extra qubit in $H\ket{1}$ flips the sign of
-        every solution $\ket{x}$. The extra qubit comes back to $\ket{1}$ and can be reused.}
+    \caption{The phase flip $Z_f$, implemented with one query $U_f$.}
     \label{fig:zf-1006}
 \end{figure}
 
 \paragraph{The phase flip $Z_0$ about $0^n$.} Let $f_0 \colon \set{0,1}^n \to \set{0,1}$ be the function
-with $f_0(x) = 1$ exactly for $x = 0^n$, i.e., $f_0(x) = \bar{x}_1 \wedge \bar{x}_2 \wedge \dots \wedge \bar{x}_n$
+with $f_0(x) = 1$ only for $x = 0^n$, i.e., $f_0(x) = \bar{x}_1 \wedge \bar{x}_2 \wedge \dots \wedge \bar{x}_n$
 where $\bar{x}_i = \neg x_i$. Its phase flip is
 \[Z_0 \colon \ket{x} \longmapsto \begin{cases} -\ket{x} & \text{if } x = 0^n, \\ \ket{x} & \text{otherwise}, \end{cases}
     \qquad \text{i.e.,} \qquad Z_0 = I - 2 \ket{0^n}\bra{0^n}.\]
-As a matrix, $\ket{0^n}\bra{0^n}$ is the $N \times N$ matrix with a single $1$ in the top left corner, so
-\[Z_0 = \begin{pmatrix} 1 & 0 & \cdots & 0 \\ 0 & 1 & & \\ \vdots & & \ddots & \\ 0 & & & 1 \end{pmatrix}
-    - 2 \begin{pmatrix} 1 \\ 0 \\ \vdots \\ 0 \end{pmatrix} \begin{pmatrix} 1 & 0 & \cdots & 0 \end{pmatrix}
-    = \begin{pmatrix} -1 & 0 & \cdots & 0 \\ 0 & 1 & & \\ \vdots & & \ddots & \\ 0 & & & 1 \end{pmatrix}.\]
-$Z_0$ is implemented exactly like $Z_f$, with the circuit for $f_0$ in place of the black box: the
-reversible gate $\ket{x}\ket{c} \mapsto \ket{x}\ket{c \oplus (\bar{x}_1 \wedge \dots \wedge \bar{x}_n)}$
+As a matrix, $Z_0$ is the $N \times N$ diagonal matrix with $-1$ in the top left corner and $1$
+elsewhere on the diagonal. It is implemented like $Z_f$, with the circuit for $f_0$ in place of the
+black box: the reversible gate $\ket{x}\ket{c} \mapsto \ket{x}\ket{c \oplus (\bar{x}_1 \wedge \dots \wedge \bar{x}_n)}$
 (a Toffoli gate with $n$ negated controls) and an extra qubit in $H\ket{1}$. It makes no query to $f$.
 
 \paragraph{The diffusion operator $D$.} Let $\ket{h} = H^{\otimes n}\ket{0^n} = \frac{1}{\sqrt{N}} \sum_{x} \ket{x}$
@@ -169,31 +144,20 @@ be the uniform superposition. The diffusion operator is
 \end{lemma}
 
 \begin{proof}
-    Since $H^\dagger = H$ and $H^2 = I$, we have $H^{\otimes n} H^{\otimes n} = I$, and
-    $\left(H^{\otimes n}\ket{0^n}\right)^\dagger = \bra{0^n} H^{\otimes n}$, i.e., $\bra{0^n} H^{\otimes n} = \bra{h}$.
-    Therefore
-    \begin{align*}
-        D & = -H^{\otimes n} \left(I - 2\ket{0^n}\bra{0^n}\right) H^{\otimes n}
-        = -\left(H^{\otimes n} I H^{\otimes n} - 2 H^{\otimes n}\ket{0^n}\bra{0^n}H^{\otimes n}\right) \\
-          & = -\left(I - 2\ket{h}\bra{h}\right) = 2\ket{h}\bra{h} - I.
-    \end{align*}
-    For the second claim, $\braket{h}{\psi} = \frac{1}{\sqrt{N}} \sum_x a_x = \sqrt{N}\mu$ for
-    $\ket{\psi} = \sum_x a_x \ket{x}$, so
-    \[2\ket{h}\braket{h}{\psi} = 2\sqrt{N}\mu \ket{h} = 2\mu \sum_{x} \ket{x},
-        \qquad \text{and} \qquad
-        D\ket{\psi} = 2\mu \sum_{x} \ket{x} - \sum_{x} a_x \ket{x} = \sum_{x} (2\mu - a_x) \ket{x}. \qedhere\]
+    Since $H^\dagger = H$ and $H^2 = I$, we have $H^{\otimes n} H^{\otimes n} = I$ and
+    $\bra{0^n} H^{\otimes n} = \left(H^{\otimes n}\ket{0^n}\right)^\dagger = \bra{h}$, so
+    \[D = -H^{\otimes n} \left(I - 2\ket{0^n}\bra{0^n}\right) H^{\otimes n}
+        = -\left(I - 2\ket{h}\bra{h}\right) = 2\ket{h}\bra{h} - I.\]
+    For $\ket{\psi} = \sum_x a_x \ket{x}$ we have $\braket{h}{\psi} = \frac{1}{\sqrt{N}} \sum_x a_x = \sqrt{N}\mu$, so
+    \[D\ket{\psi} = 2\sqrt{N}\mu \ket{h} - \ket{\psi} = 2\mu \sum_{x} \ket{x} - \sum_{x} a_x \ket{x} = \sum_{x} (2\mu - a_x) \ket{x}. \qedhere\]
 \end{proof}
 
-So $D$ is exactly the inversion about the mean of step~3, and it costs no query. (The notes write
-$D = I - 2\ket{h}\bra{h}$, which is $-D$; the overall sign of $D$ only multiplies the state after $k$
-iterations by $(-1)^k$, a global phase that changes no measurement probability. We keep the sign that
-makes $D$ the inversion about the mean.)
+So $D$ is the inversion about the mean of step~3, and it makes no query.
 
 \paragraph{The Grover iteration.} One iteration of steps 2 and 3 is the operator
-\[G = D Z_f = -H^{\otimes n} Z_0 H^{\otimes n} Z_f,\]
-and Grover's algorithm is: prepare $\ket{h} = H^{\otimes n}\ket{0^n}$, apply $G$ $k$ times, measure
-(\cref{fig:grover-circuit-1006}). It makes $k$ queries, one per iteration; the Hadamard gates and $Z_0$
-make no query.
+\[G = D Z_f = -H^{\otimes n} Z_0 H^{\otimes n} Z_f.\]
+Grover's algorithm prepares $\ket{h} = H^{\otimes n}\ket{0^n}$, applies $G$ $k$ times and measures
+(\cref{fig:grover-circuit-1006}). It makes $k$ queries, one per iteration.
 
 \begin{figure}[ht]
     \centering
@@ -218,14 +182,12 @@ make no query.
 
 \section{Analysis: A Rotation in Two Dimensions}\label{sec:grover-analysis-1006}
 
-The exact analysis works for any number $a$ of solutions, $1 \leq a \leq N - 1$; let $b = N - a$. The key
-observation is that the whole computation takes place in a two-dimensional plane: one dimension for the
-solutions and one for the non-solutions. Let
+Let $f$ have $a$ solutions, $1 \leq a \leq N - 1$, and let $b = N - a$. The whole computation takes
+place in a two-dimensional plane. Let
 \[\ket{A} = \frac{1}{\sqrt{a}} \sum_{\substack{x \in \set{0,1}^n \\ f(x) = 1}} \ket{x},
     \qquad
     \ket{B} = \frac{1}{\sqrt{b}} \sum_{\substack{x \in \set{0,1}^n \\ f(x) = 0}} \ket{x}\]
-be the uniform superpositions of the solutions and of the non-solutions. They are unit vectors (each
-has $a$, resp.\ $b$, amplitudes equal to $\sfrac{1}{\sqrt{a}}$, resp.\ $\sfrac{1}{\sqrt{b}}$) and they are
+be the uniform superpositions of the solutions and of the non-solutions. They are unit vectors and
 orthogonal (no basis state appears in both). The initial state is
 \begin{equation}\label{eq:h-AB-1006}
     \ket{h} = \frac{1}{\sqrt{N}} \sum_{x \in \set{0,1}^n} \ket{x}
@@ -235,8 +197,8 @@ orthogonal (no basis state appears in both). The initial state is
 Since $\frac{a}{N} + \frac{b}{N} = 1$, there is a unique angle $\theta \in (0, \sfrac{\pi}{2})$ with
 \[\sin\theta = \sqrt{\frac{a}{N}}, \qquad \cos\theta = \sqrt{\frac{b}{N}},
     \qquad \text{so that} \qquad \ket{h} = \sin\theta \ket{A} + \cos\theta \ket{B}.\]
-For a unique solution, $\sin\theta = \sfrac{1}{\sqrt{N}}$, so $\theta \approx \sfrac{1}{\sqrt{N}}$ is a
-small angle: $\ket{h}$ is almost $\ket{B}$ (\cref{fig:rotation-1006}).
+For a unique solution, $\sin\theta = \sfrac{1}{\sqrt{N}}$, so $\theta \approx \sfrac{1}{\sqrt{N}}$ and
+$\ket{h}$ is almost $\ket{B}$ (\cref{fig:rotation-1006}).
 
 \begin{lemma}[One Grover Iteration]\label{lem:giter-1006}
     \begin{align*}
@@ -251,50 +213,31 @@ small angle: $\ket{h}$ is almost $\ket{B}$ (\cref{fig:rotation-1006}).
     The phase flip $Z_f$ negates every solution and fixes every non-solution, so $Z_f\ket{A} = -\ket{A}$
     and $Z_f\ket{B} = \ket{B}$. By \cref{eq:h-AB-1006} and orthonormality,
     $\braket{h}{A} = \sqrt{a/N}$ and $\braket{h}{B} = \sqrt{b/N}$. With $D = 2\ket{h}\bra{h} - I$
-    (\cref{lem:diffusion-1006}),
+    (\cref{lem:diffusion-1006}), substituting \cref{eq:h-AB-1006} for $\ket{h}$ in the last step of
+    each line,
     \begin{align*}
-        G\ket{A} = D Z_f \ket{A} = -D\ket{A}
-         & = -\left(2\ket{h}\braket{h}{A} - \ket{A}\right)
-        = \ket{A} - 2\sqrt{\frac{a}{N}} \ket{h}                                                               \\
-         & = \ket{A} - 2\sqrt{\frac{a}{N}} \left(\sqrt{\frac{a}{N}} \ket{A} + \sqrt{\frac{b}{N}} \ket{B}\right) \\
-         & = \ket{A} - 2\left(\frac{a}{N}\ket{A} + \frac{\sqrt{ab}}{N}\ket{B}\right)
-        = \left(1 - \frac{2a}{N}\right)\ket{A} - \frac{2\sqrt{ab}}{N}\ket{B},
-    \end{align*}
-    and, by the same computation except that $Z_f$ leaves $\ket{B}$ unchanged, so that the leading minus
-    sign of $-D$ is not there,
-    \begin{align*}
-        G\ket{B} = D Z_f \ket{B} = D\ket{B}
-         & = 2\ket{h}\braket{h}{B} - \ket{B}
-        = 2\sqrt{\frac{b}{N}} \left(\sqrt{\frac{a}{N}} \ket{A} + \sqrt{\frac{b}{N}} \ket{B}\right) - \ket{B} \\
-         & = \frac{2\sqrt{ab}}{N}\ket{A} + \frac{2b}{N}\ket{B} - \ket{B}
+        G\ket{A} = -D\ket{A} & = \ket{A} - 2\ket{h}\braket{h}{A} = \ket{A} - 2\sqrt{\frac{a}{N}} \ket{h}
+        = \left(1 - \frac{2a}{N}\right)\ket{A} - \frac{2\sqrt{ab}}{N}\ket{B}, \\
+        G\ket{B} = D\ket{B}  & = 2\ket{h}\braket{h}{B} - \ket{B} = 2\sqrt{\frac{b}{N}} \ket{h} - \ket{B}
         = \frac{2\sqrt{ab}}{N}\ket{A} - \left(1 - \frac{2b}{N}\right)\ket{B}.
     \end{align*}
-    For the trigonometric form use $\sin^2\theta = \sfrac{a}{N}$, $\cos^2\theta = \sfrac{b}{N}$ and the
-    double angle formulas:
-    \begin{align*}
-        \cos 2\theta & = 1 - 2\sin^2\theta = 1 - \frac{2a}{N},
-        \qquad
-        \cos 2\theta = 2\cos^2\theta - 1 = \frac{2b}{N} - 1 = -\left(1 - \frac{2b}{N}\right), \\
-        \sin 2\theta & = 2\sin\theta\cos\theta = \frac{2\sqrt{ab}}{N}. \qedhere
-    \end{align*}
+    The trigonometric form follows from $\sin^2\theta = \sfrac{a}{N}$, $\cos^2\theta = \sfrac{b}{N}$ and
+    the double angle formulas: $\cos 2\theta = 1 - 2\sin^2\theta = 1 - \sfrac{2a}{N}$,
+    $\cos 2\theta = 2\cos^2\theta - 1 = -\left(1 - \sfrac{2b}{N}\right)$ and
+    $\sin 2\theta = 2\sin\theta\cos\theta = \sfrac{2\sqrt{ab}}{N}$.
 \end{proof}
 
-(The $\ket{B}$ term of $G\ket{A}$ is negative; on the board it was written with a $+$ sign in a few
-places, but the line before it, $\ket{A} - 2(\dots)$, and the matrix written in class both have the
-minus sign.) Since $a + b = N$, both $1 - \sfrac{2a}{N}$ and $\sfrac{2b}{N} - 1$ equal $\sfrac{(b - a)}{N}$. So, writing a
+Since $a + b = N$, both $1 - \sfrac{2a}{N}$ and $\sfrac{2b}{N} - 1$ equal $\sfrac{(b - a)}{N}$. We write a
 state $\beta\ket{B} + \alpha\ket{A}$ of the plane as the column vector $(\beta, \alpha)^{T}$ in the basis
-$(\ket{B}, \ket{A})$, the lemma says that $G$ acts as the $2 \times 2$ matrix
+$(\ket{B}, \ket{A})$. Then $G$ acts as the $2 \times 2$ matrix
 \begin{equation}\label{eq:gmatrix-1006}
     G = \begin{pmatrix} \dfrac{b - a}{N} & -\dfrac{2\sqrt{ab}}{N} \\[2ex] \dfrac{2\sqrt{ab}}{N} & \dfrac{b - a}{N} \end{pmatrix}
     = \begin{pmatrix} \cos 2\theta & -\sin 2\theta \\ \sin 2\theta & \cos 2\theta \end{pmatrix},
 \end{equation}
 whose columns are the coordinates of $G\ket{B}$ and $G\ket{A}$. The matrix on the right is the rotation
 matrix $R_{\phi} = \left(\begin{smallmatrix} \cos\phi & -\sin\phi \\ \sin\phi & \cos\phi \end{smallmatrix}\right)$
-with $\phi = 2\theta$: one Grover iteration \emph{rotates} the plane by the angle $2\theta$, from
-$\ket{B}$ towards $\ket{A}$. (Geometrically, $Z_f$ is the reflection about the line of $\ket{B}$ and $D$
-is the reflection about the line of $\ket{h}$; two reflections about lines at angle $\theta$ compose to a
-rotation by $2\theta$.) In class the computation of $G\ket{h}$ was started and the rotation matrix was
-written down, but the computation was not finished; we complete it here.
+with $\phi = 2\theta$. So one Grover iteration \emph{rotates} the plane by the angle $2\theta$, from
+$\ket{B}$ towards $\ket{A}$.
 
 \begin{exercise}\label{ex:grover-rotation-1006}
     Compute $G\ket{h} = \sqrt{\sfrac{a}{N}}\, G\ket{A} + \sqrt{\sfrac{b}{N}}\, G\ket{B}$ and, more generally,
@@ -305,31 +248,21 @@ written down, but the computation was not finished; we complete it here.
     \emph{The matrix is a rotation.} By \cref{lem:giter-1006} and $\sfrac{(b-a)}{N} = 1 - \sfrac{2a}{N} = \sfrac{2b}{N} - 1$,
     the two columns of the matrix in \cref{eq:gmatrix-1006} are the coordinates of
     $G\ket{B} = \cos 2\theta \ket{B} + \sin 2\theta \ket{A}$ and $G\ket{A} = -\sin 2\theta \ket{B} + \cos 2\theta \ket{A}$,
-    which are exactly the columns of $R_{2\theta}$. (It is $R_{2\theta}$, not $R_{\theta}$: the entries
-    are $\cos 2\theta = 1 - 2\sin^2\theta$ and $\sin 2\theta = 2\sin\theta\cos\theta$, not $\cos\theta$
-    and $\sin\theta$.) As a check, the columns are unit vectors and orthogonal:
-    $\left(\sfrac{(b-a)}{N}\right)^2 + \left(\sfrac{2\sqrt{ab}}{N}\right)^2 = \sfrac{(b^2 - 2ab + a^2 + 4ab)}{N^2} = \sfrac{(a+b)^2}{N^2} = 1$.
-
-    \emph{One iteration.} By the trigonometric form of \cref{lem:giter-1006} and the addition formulas,
-    \[G\ket{h} = \sin\theta\, (\cos 2\theta \ket{A} - \sin 2\theta \ket{B}) + \cos\theta\, (\sin 2\theta \ket{A} + \cos 2\theta \ket{B})
-        = \sin 3\theta \ket{A} + \cos 3\theta \ket{B}.\]
-    (In the $a, b$ form started in class, the coefficient of $\ket{A}$ is
-    $\sqrt{\sfrac{a}{N}}\,(1 - \sfrac{2a}{N}) + \sqrt{\sfrac{b}{N}} \cdot \sfrac{2\sqrt{ab}}{N}
-        = \sqrt{\sfrac{a}{N}} \cdot \sfrac{(3b - a)}{N} = \sin\theta \left(3\cos^2\theta - \sin^2\theta\right) = \sin 3\theta$
-    by the triple angle formula $\sin 3\theta = 3\sin\theta - 4\sin^3\theta$.)
+    which are the columns of $R_{2\theta}$ (not $R_\theta$).
 
     \emph{$k$ iterations.} We claim that for every $k \geq 0$,
     \[G^k \ket{h} = \sin\left((2k+1)\theta\right) \ket{A} + \cos\left((2k+1)\theta\right) \ket{B}.\]
     This holds for $k = 0$ by \cref{eq:h-AB-1006}. If it holds for $k$, then by \cref{lem:giter-1006}
-    and the addition formulas, with $\phi = (2k+1)\theta$,
+    and the addition formulas for $\sin(\phi + 2\theta)$ and $\cos(\phi + 2\theta)$, with
+    $\phi = (2k+1)\theta$,
     \begin{align*}
         G^{k+1}\ket{h}
          & = \sin\phi \left(\cos 2\theta \ket{A} - \sin 2\theta \ket{B}\right) + \cos\phi \left(\sin 2\theta \ket{A} + \cos 2\theta \ket{B}\right) \\
-         & = \left(\sin\phi\cos 2\theta + \cos\phi\sin 2\theta\right)\ket{A} + \left(\cos\phi\cos 2\theta - \sin\phi\sin 2\theta\right)\ket{B}      \\
-         & = \sin(\phi + 2\theta)\ket{A} + \cos(\phi + 2\theta)\ket{B} = \sin\left((2k+3)\theta\right)\ket{A} + \cos\left((2k+3)\theta\right)\ket{B},
+         & = \sin(\phi + 2\theta)\ket{A} + \cos(\phi + 2\theta)\ket{B},
     \end{align*}
-    which is the claim for $k + 1$. So after $k$ iterations the state makes the angle $(2k+1)\theta$ with
-    $\ket{B}$: it starts at $\theta$ and every iteration adds $2\theta$ (\cref{fig:rotation-1006}).
+    which is the claim for $k + 1$, as $\phi + 2\theta = (2k+3)\theta$. In particular
+    $G\ket{h} = \sin 3\theta \ket{A} + \cos 3\theta \ket{B}$: the state starts at the angle $\theta$
+    from $\ket{B}$ and every iteration adds $2\theta$ (\cref{fig:rotation-1006}).
 \end{wsolution}
 
 \begin{figure}[ht]
@@ -346,21 +279,17 @@ written down, but the computation was not finished; we complete it here.
         \draw (48:2.9) arc (48:80:2.9) node[midway, above right] {$2\theta$};
         \draw[dashed] (3.8,0) arc (0:115:3.8);
     \end{tikzpicture}
-    \caption{Grover's algorithm in the plane spanned by $\ket{A}$ and $\ket{B}$. The initial state
-        $\ket{h}$ makes the small angle $\theta$ with $\ket{B}$, and every iteration rotates the state by
-        $2\theta$ towards $\ket{A}$: after $k$ iterations the angle is $(2k+1)\theta$. Here $\theta = 16^\circ$,
-        so $k = \floor{\sfrac{\pi}{4\theta}} = 2$ iterations are best (angle $80^\circ$, success probability
-        $\sin^2 80^\circ \approx 0.97$), and a third one (dashed, angle $112^\circ$) overshoots past
-        $\ket{A}$ and lowers the probability to $\sin^2 112^\circ \approx 0.86$.}
+    \caption{Grover's algorithm in the plane spanned by $\ket{A}$ and $\ket{B}$ for
+        $\theta = 16^\circ$: every iteration rotates the state by $2\theta$, and the third iteration
+        (dashed) overshoots.}
     \label{fig:rotation-1006}
 \end{figure}
 
 \subsection{How Many Iterations}
 
-Measuring the state $G^k\ket{h} = \sin((2k+1)\theta)\ket{A} + \cos((2k+1)\theta)\ket{B}$ in the
-computational basis gives a solution with probability $\sin^2((2k+1)\theta)$: the amplitude of each of
-the $a$ solutions is $\sin((2k+1)\theta) / \sqrt{a}$, and these $a$ squared amplitudes add up to
-$\sin^2((2k+1)\theta)$. We want $(2k+1)\theta$ to be as close to $\sfrac{\pi}{2}$ as possible.
+Measuring $G^k\ket{h} = \sin((2k+1)\theta)\ket{A} + \cos((2k+1)\theta)\ket{B}$ gives a solution with
+probability $\sin^2((2k+1)\theta)$: each of the $a$ solutions has amplitude
+$\sin((2k+1)\theta) / \sqrt{a}$. We want $(2k+1)\theta$ to be as close to $\sfrac{\pi}{2}$ as possible.
 
 \begin{theorem}[Grover's Algorithm]\label{thm:grover-1006}
     Let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$, let $\theta \in (0, \sfrac{\pi}{2})$ with
@@ -371,29 +300,18 @@ $\sin^2((2k+1)\theta)$. We want $(2k+1)\theta$ to be as close to $\sfrac{\pi}{2}
 \end{theorem}
 
 \begin{proof}
-    By the definition of $k$, $\sfrac{\pi}{4\theta} - 1 < k \leq \sfrac{\pi}{4\theta}$, so multiplying by
-    $2\theta$ and adding $\theta$,
-    \[\frac{\pi}{2} - \theta < (2k+1)\theta \leq \frac{\pi}{2} + \theta.\]
-    The sine is increasing on $[0, \sfrac{\pi}{2}]$ and decreasing on $[\sfrac{\pi}{2}, \pi]$, so on the
-    interval $[\sfrac{\pi}{2} - \theta, \sfrac{\pi}{2} + \theta] \subseteq [0, \pi]$ it is at least its
-    value at the endpoints, $\sin(\sfrac{\pi}{2} \pm \theta) = \cos\theta$. Hence the success probability
-    is
-    \[\sin^2\left((2k+1)\theta\right) \geq \cos^2\theta = 1 - \sin^2\theta = 1 - \frac{a}{N} \geq \frac{1}{2}.\]
-    For the number of queries, $\theta \geq \sin\theta = \sqrt{\sfrac{a}{N}}$ (as $\sin\theta \leq \theta$
-    for $\theta \geq 0$), so $k \leq \sfrac{\pi}{4\theta} \leq \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$. For $a = 1$,
-    $\sin\theta = \sfrac{1}{\sqrt{N}}$, so $\theta \approx \sfrac{1}{\sqrt{N}}$ and $k \approx \frac{\pi}{4}\sqrt{N}$.
+    By the definition of $k$, $\sfrac{\pi}{4\theta} - 1 < k \leq \sfrac{\pi}{4\theta}$, so
+    $\frac{\pi}{2} - \theta < (2k+1)\theta \leq \frac{\pi}{2} + \theta$. The sine is increasing on
+    $[0, \sfrac{\pi}{2}]$ and decreasing on $[\sfrac{\pi}{2}, \pi]$, so on the interval
+    $[\sfrac{\pi}{2} - \theta, \sfrac{\pi}{2} + \theta] \subseteq [0, \pi]$ it is at least its value at
+    the endpoints, $\sin(\sfrac{\pi}{2} \pm \theta) = \cos\theta$. Hence the success probability is
+    \[\sin^2\left((2k+1)\theta\right) \geq \cos^2\theta = 1 - \frac{a}{N} \geq \frac{1}{2}.\]
+    Since $\theta \geq \sin\theta = \sqrt{\sfrac{a}{N}}$, the number of queries is
+    $k \leq \sfrac{\pi}{4\theta} \leq \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$. For $a = 1$,
+    $\theta \approx \sin\theta = \sfrac{1}{\sqrt{N}}$ and $k \approx \frac{\pi}{4}\sqrt{N}$.
 \end{proof}
 
-This is the precise form of ``repeat $\sqrt{N}$ times'': the number of iterations is
-$\bigTh{\sqrt{N}}$ for a unique solution and $\bigTh{\sqrt{N/a}}$ for $a$ solutions, and the success
-probability is a constant close to $1$. The analysis also explains the two-qubit example: for $N = 4$
-and $a = 1$, $\sin\theta = \sfrac{1}{2}$, so $\theta = \sfrac{\pi}{6}$ and $k = \floor{\sfrac{3}{2}} = 1$
-iteration gives the angle $3\theta = \sfrac{\pi}{2}$, i.e., the state $\ket{A} = \ket{x^*}$ exactly and
-success probability $\sin^2(\sfrac{\pi}{2}) = 1$, as computed in \cref{fig:grover4-1006}.
-
-\paragraph{Do not overshoot.} Unlike a classical search, more iterations do not help: the state keeps
-rotating, and after $k$ iterations with $(2k+1)\theta > \sfrac{\pi}{2}$ the success probability
-$\sin^2((2k+1)\theta)$ decreases again (the dashed vector in \cref{fig:rotation-1006}). After about
-$\sfrac{\pi}{2\theta}$ iterations the state is back near $\ket{B}$. So the number of iterations has to be
-chosen from $a$ and $N$; this is why the algorithm needs to know (or to estimate) the number of
-solutions.
+\paragraph{Do not overshoot.} More iterations do not help: once $(2k+1)\theta > \sfrac{\pi}{2}$ the
+success probability $\sin^2((2k+1)\theta)$ decreases again (the dashed vector in
+\cref{fig:rotation-1006}), and after about $\sfrac{\pi}{2\theta}$ iterations the state is back near
+$\ket{B}$. So the number of iterations has to be chosen from $a$ and $N$.
