@@ -19,7 +19,7 @@ Random sampling \emph{with replacement} queries in every step a slot chosen unif
 query succeeds with probability $\sfrac{1}{n}$, and the number of queries until the first success is a
 \emph{geometric} random variable with parameter $\sfrac{1}{n}$. Hence
 \[\expectation{\text{queries until find}} = n,\]
-which proves the claim of the last lecture. Stopped after a fixed number of queries, random sampling is
+as stated in the last lecture. Stopped after a fixed number of queries, random sampling is
 a Monte Carlo algorithm, since it can fail to find the slot; run until the slot is found, it is a Las
 Vegas algorithm with $n$ expected queries.
 
@@ -189,7 +189,7 @@ The distribution of $X$ is concentrated around its mean $np$ (\cref{fig:concentr
         \item For $R \geq 6\mu$,
               \[\prob{X \geq R} \leq \frac{1}{2^R}.\]
         \item Lower tail (LI): for $0 < \delta < 1$,
-              \[\prob{X \leq (1-\delta)\mu} \leq e^{-\frac{\mu \delta^2}{2}}.\]
+              \[\prob{X < (1-\delta)\mu} \leq e^{-\frac{\mu \delta^2}{2}}.\]
     \end{itemize}
 \end{theorem}
 
@@ -200,7 +200,7 @@ exercise says that the queries of random sampling are spread evenly over the slo
 accessed about $\log n$ times, up to a constant $c$. We prove this in both directions. First, with
 $3 n \log n$ queries no slot is accessed much \emph{more} than the expected $3 \log n$ times (upper
 tail, $c = 18$). Second, with a constant factor more queries no slot is accessed much \emph{less}
-than expected (lower tail, $c = 12$); we also explain why the lower tail needs the extra queries.
+than expected (lower tail, $c = 6$); we also explain why the lower tail needs the extra queries.
 As before, $\log$ is the natural logarithm.
 
 Fix a slot $i$ and suppose that random sampling makes $T$ queries. Let
@@ -232,21 +232,28 @@ independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, exactly as in
 
 \begin{lemma}[Lower Tail: No Slot Is Accessed Too Rarely]\label{lem:maxload-lower-0901}
     If random sampling makes $24 n \log n$ queries, then
-    \[\prob{\text{some slot is accessed} \leq 12 \log n \text{ times}} \leq \frac{1}{n^2}.\]
+    \[\prob{\text{some slot is accessed} < 12 \log n \text{ times}} \leq \frac{1}{n^2}.\]
+    In particular, for $n \geq 2$,
+    $\prob{\text{some slot is accessed} \leq 6 \log n \text{ times}} \leq \sfrac{1}{n^2}$, which is
+    \cref{ex:maxload-0901} with $c = 6$.
 \end{lemma}
 
 \begin{proof}
     Fix a slot $i$. Now $T = 24 n \log n$, so $\mu = 24 \log n$. Take $\delta = \sfrac{1}{2}$ in the
     lower tail bound of \cref{thm:chernoff-0901}; then $(1 - \delta)\mu = 12 \log n$ and
-    \[\prob{Y_i \leq 12 \log n} = \prob{Y_i \leq (1 - \delta)\mu}
+    \[\prob{Y_i < 12 \log n} = \prob{Y_i < (1 - \delta)\mu}
         \leq e^{-\frac{\mu \delta^2}{2}} = e^{-\frac{24 \log n}{8}} = e^{-3 \log n} = \frac{1}{n^3}.\]
-    Let $D_i$ be the event that slot $i$ is accessed at most $12 \log n$ times. By the union bound,
-    \[\prob{\bigcup_{i=1}^{n} D_i} \leq \sum_{i=1}^{n} \prob{D_i} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}. \qedhere\]
+    Let $D_i$ be the event that slot $i$ is accessed fewer than $12 \log n$ times. By the union bound,
+    \[\prob{\bigcup_{i=1}^{n} D_i} \leq \sum_{i=1}^{n} \prob{D_i} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}.\]
+    The lower tail bound is stated for the strict event $X < (1 - \delta)\mu$, which is why the
+    lemma has ``$<$''. For $n \geq 2$ we have $\log n > 0$, so a slot that is accessed at most
+    $6 \log n$ times is accessed fewer than $12 \log n$ times; the event of the second statement is
+    contained in $\bigcup_i D_i$ and has probability at most $\sfrac{1}{n^2}$ as well.
 \end{proof}
 
 \paragraph{Why the lower tail needs more queries.} With only $T = 3 n \log n$ queries we have
 $\mu = 3 \log n$, and the lower tail bound gives, for every $0 < \delta < 1$,
-\[\prob{Y_i \leq (1 - \delta) \, 3 \log n} \leq e^{-\frac{3 \log n \cdot \delta^2}{2}}
+\[\prob{Y_i < (1 - \delta) \, 3 \log n} \leq e^{-\frac{3 \log n \cdot \delta^2}{2}}
     = \frac{1}{n^{3 \delta^2 / 2}} > \frac{1}{n^{3/2}}.\]
 After the union bound over the $n$ slots this is more than $n^{-1/2}$, which is far from the
 $n^{-2}$ that the exercise asks for. In general, with $T = a \, n \log n$ queries the same computation
@@ -256,7 +263,7 @@ not have this problem because the bound $2^{-R}$ for $R \geq 6\mu$ is much stron
 
 \begin{corollary}[Every Slot Is Accessed $\bigTh{\log n}$ Times]\label{cor:maxload-0901}
     If random sampling makes $24 n \log n$ queries, then with probability at least $1 - \sfrac{2}{n^2}$
-    every slot is accessed more than $12 \log n$ and fewer than $144 \log n$ times.
+    every slot is accessed at least $12 \log n$ and fewer than $144 \log n$ times.
 \end{corollary}
 
 \begin{proof}
