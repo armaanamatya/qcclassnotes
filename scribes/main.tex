@@ -1,5 +1,7 @@
 % My scribes for all the lectures, in one document.
-% Every lecture day has its own file in tex/ and starts with \newlecture{date}{topic}.
+% The lectures are grouped by week (\newweek{number}{dates}); each week has a Tuesday and a
+% Thursday lecture. Every lecture day has its own file in tex/ and starts with
+% \newlecture{weekday, date}{topic}.
 % scribe.sty is an unmodified copy of the course file.
 
 \documentclass[a4paper,11pt,final]{article}
@@ -35,54 +37,72 @@ Professor Gopal Pandurangan\\
 \tableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Lectures, in order. Append new lectures at the end. %%%%%%%%%%%%%%%%%%%%%
+% Lectures by week, in order. Append new weeks and lectures at the end. %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newlecture{August 25, 2026}{Efficient Algorithms, Random Sampling, Lower Bound for
+\newweek{1}{August 24--28, 2026}
+
+\newlecture{Tuesday, August 25, 2026}{Efficient Algorithms, Random Sampling, Lower Bound for
     Deterministic Search, Probability Basics}
 \input{tex/lecture_2026-08-25}
 
-\newlecture{September 1, 2026}{Query Complexity of Search, Coupon Collector Problem,
+\newweek{2}{August 31 -- September 4, 2026}
+
+\newlecture{Tuesday, September 1, 2026}{Query Complexity of Search, Coupon Collector Problem,
     Lower Bound for Randomized Algorithms, Chernoff Bounds}
 \input{tex/lecture_2026-09-01}
 
-\newlecture{September 3, 2026}{Markov, Chebyshev and Chernoff Inequalities, Search,
+\newlecture{Thursday, September 3, 2026}{Markov, Chebyshev and Chernoff Inequalities, Search,
     Birthday Paradox}
 \input{tex/lecture_2026-09-03}
 
-\newlecture{September 8, 2026}{Distributed Computing, Randomized Leader Election in a Complete
+\newweek{3}{September 7--11, 2026}
+
+\newlecture{Tuesday, September 8, 2026}{Distributed Computing, Randomized Leader Election in a Complete
     Network, Random Walks, Law of Large Numbers}
 \input{tex/lecture_2026-09-08}
 
-\newlecture{September 10, 2026}{Law of Large Numbers, Random Walks on Graphs, Transition Matrix,
+\newlecture{Thursday, September 10, 2026}{Law of Large Numbers, Random Walks on Graphs, Transition Matrix,
     Stationary Distribution and Convergence}
 \input{tex/lecture_2026-09-10}
 
-\newlecture{September 15, 2026}{Qubits and Dirac Notation, Unitary Matrices, Quantum Gates and
+\newweek{4}{September 14--18, 2026}
+
+\newlecture{Tuesday, September 15, 2026}{Qubits and Dirac Notation, Unitary Matrices, Quantum Gates and
     Circuits, Tensor Products, Entanglement}
 \input{tex/lecture_2026-09-15}
 
-\newlecture{September 17, 2026}{Linear Algebra Review: Column Space, Rank, Linear Independence,
+\newlecture{Thursday, September 17, 2026}{Linear Algebra Review: Column Space, Rank, Linear Independence,
     Orthogonality}
 \input{tex/lecture_2026-09-17}
 
+\newweek{5}{September 21--25, 2026}
+
 % TODO: September 22, 2026 (quantum circuits) -- no handwritten pages exported yet.
 
-\newlecture{September 24, 2026}{Deutsch's Algorithm, Phase Flip, Walsh--Hadamard Transform,
+\newlecture{Thursday, September 24, 2026}{Deutsch's Algorithm, Phase Flip, Walsh--Hadamard Transform,
     Deutsch--Jozsa Algorithm}
 \input{tex/lecture_2026-09-24}
 
-\newlecture{September 29, 2026}{Walsh--Hadamard Transform Recap, Bernstein--Vazirani Algorithm,
+\newweek{6}{September 28 -- October 2, 2026}
+
+\newlecture{Tuesday, September 29, 2026}{Walsh--Hadamard Transform Recap, Bernstein--Vazirani Algorithm,
     Simon's Algorithm}
 \input{tex/lecture_2026-09-29}
 
-\newlecture{October 1, 2026}{Classical Query Complexity of Simon's Problem, Yao's Minmax
+\newlecture{Thursday, October 1, 2026}{Classical Query Complexity of Simon's Problem, Yao's Minmax
     Principle, Linear Independence in Simon's Algorithm}
 \input{tex/lecture_2026-10-01}
 
-\newlecture{October 6, 2026}{Grover's Search Algorithm, Phase Flip, Diffusion Operator,
+\newweek{7}{October 5--9, 2026}
+
+\newlecture{Tuesday, October 6, 2026}{Grover's Search Algorithm, Phase Flip, Diffusion Operator,
     Rotation Analysis}
 \input{tex/lecture_2026-10-06}
+
+\newlecture{Thursday, October 8, 2026}{Grover's Algorithm as Two Reflections, Number of Iterations,
+    Random Number of Iterations, Quantum Amplitude Amplification}
+\input{tex/lecture_2026-10-08}
 
 % AI use declaration (required by the course if AI tools were used).
 % \clearpage

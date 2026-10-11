@@ -27,7 +27,9 @@ Workflow:
 ## Layout and build
 
 - One file per lecture in `scribes/tex/lecture_YYYY-MM-DD.tex` (copy `lecture_template.tex`),
-  wired into `scribes/main.tex` in chronological order with `\newlecture{date}{topic}`.
+  wired into `scribes/main.tex` in chronological order with `\newlecture{weekday, date}{topic}`.
+- Lectures are grouped by week with `\newweek{number}{dates}` (week 1 is August 24--28, 2026;
+  lectures are on Tuesday and Thursday). The table of contents lists weeks, then lecture days.
 - `scribes/scribe.sty` is the unmodified course style file. Put additions in `scribeextras.sty`.
 - Build from `scribes/` with `pdflatex -interaction=nonstopmode main.tex`, three passes
   (table of contents and cross-references). Commit the rebuilt `main.pdf`.

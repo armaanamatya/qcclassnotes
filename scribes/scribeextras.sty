@@ -7,13 +7,29 @@
 % Typeset TikZ figures inline instead.
 \tikzexternaldisable
 
-% Starts the notes of a new lecture day inside the single scribe document.
-% Usage: \newlecture{September 1, 2026}{Topic of the lecture}
+% The scribe is organized by week, and each week has a Tuesday and a Thursday lecture
+% (the first week of class is August 24--28, 2026).
+%
+% \newweek starts a new week. It adds the week to the table of contents and is printed in the
+% header of the lectures of that week.
+% Usage: \newweek{2}{August 31 -- September 4, 2026}
+\newcommand{\scribe@week}{}
+\newcommand{\newweek}[2]{%
+    \clearpage
+    \phantomsection
+    \gdef\scribe@week{#1 (#2)}%
+    \addcontentsline{toc}{part}{Week #1: #2}%
+}
+
+% Starts the notes of a new lecture day inside the current week.
+% Usage: \newlecture{Tuesday, September 1, 2026}{Topic of the lecture}
 \newcommand{\newlecture}[2]{%
     \clearpage
     \phantomsection
-    \addcontentsline{toc}{part}{Lecture of #1}%
+    \addcontentsline{toc}{lecture}{#1}%
     \hrule
+    \vspace{0.1in}
+    \noindent\textbf{Week:} \scribe@week\par
     \vspace{0.1in}
     \noindent\textbf{Lecture Date:} #1\par
     \vspace{0.1in}
@@ -22,6 +38,21 @@
     \hrule
     \vspace{0.1in}
 }
+
+% Table of contents: weeks are the top level (the `part' entries), the lecture days come below
+% them as bold lines, and the sections of a lecture are indented below their day.
+\newcommand*{\l@lecture}[2]{%
+    \addpenalty{-\@highpenalty}%
+    \vskip 0.8em plus 1pt
+    {\parindent 0pt \rightskip \@pnumwidth \parfillskip -\@pnumwidth
+        \leavevmode\bfseries #1\nobreak\hfil\nobreak\hb@xt@\@pnumwidth{\hss #2}\par}%
+    \nobreak
+}
+\newcommand*{\toclevel@lecture}{0}
+\setlength{\cftsecindent}{1.5em}
+\setlength{\cftsubsecindent}{3.8em}
+\setlength{\cftsubsubsecindent}{7em}
+\setlength{\cftparaindent}{3.8em}
 
 % Exercises given in class (the dashed boxes in my handwritten notes).
 % Reuses the `exercise' environment from scribe.sty and draws a dashed frame
