@@ -3,7 +3,7 @@ a random walk by its transition matrix $P$, show that the distribution of the to
 $p_{t+1} = p_t P$, find the stationary distribution $\pi = \pi P$, and prove by an analysis of the
 eigenvalues of $P$ that the walk on a connected, non-bipartite graph converges to it.
 
-\section{Law of Large Numbers}
+\paragraph{Law of large numbers.}
 
 Let $X_1, X_2, \dots, X_n$ be independent, identically distributed (i.i.d.) random variables, each
 distributed as a random variable $X$ with finite expectation $\expectation{X}$. The law of large numbers says that the average of the samples approaches
@@ -413,117 +413,13 @@ of $x$ over the neighbours of $u$:
     Then $p_t = \pi'$ for all $t$, and $p_t \to \pi$ forces $\pi' = \pi$.
 \end{proof}
 
-\paragraph{The rate of convergence.} \Cref{eq:rate-0910} says more than the theorem: the distance to
-$\pi$ is at most a constant times $\rho^t$, i.e., it decreases geometrically, where $\rho$ is the largest absolute
-value of an eigenvalue of $P$ other than the eigenvalue $1$. The closer $\rho$ is to $1$, the slower the
-walk converges.
-
-\paragraph{The regular case.} If $G$ is $d$-regular, then $D = dI$ and $N = \sfrac{A}{d} = P$: the
-transition matrix itself is symmetric, and no change of matrix is needed. Here $z = \sqrt{d}\, \mathbf{1}$,
-and we may take $w_1 = \sfrac{\mathbf{1}}{\sqrt{n}}$. Writing the starting distribution as a column vector
-$p_0^{T} = \sum_i c_i w_i$, we have $c_1 = w_1^{T} p_0^{T} = \sfrac{1}{\sqrt{n}}$, and since $P^{T} = P$,
-\[p_t^{T} = P^t p_0^{T} = \sum_{i=1}^{n} c_i \lambda_i^t w_i
-    = \frac{1}{n} \mathbf{1} + \sum_{i=2}^{n} c_i \lambda_i^t w_i
-    \longrightarrow \frac{1}{n} \mathbf{1},\]
-the uniform distribution, because $\abs{\lambda_i} < 1$ for $i \geq 2$ by Steps 1 and 2 of the proof.
-
-\paragraph{The triangle again.} The triangle is $2$-regular with $P = \frac{1}{2}(J - I)$, where $J$ is
-the $3 \times 3$ matrix with all entries $1$. We have $J \mathbf{1} = 3 \cdot \mathbf{1}$, and $Jx = 0$ for
-every $x$ whose entries sum to $0$, for example $x = (1, -1, 0)^{T}$ and $x = (1, 1, -2)^{T}$. So
-$P \mathbf{1} = \mathbf{1}$ and $Px = -\frac{1}{2} x$ for these two vectors: the eigenvalues of $P$ are
-$1, -\sfrac{1}{2}, -\sfrac{1}{2}$, and $\rho = \sfrac{1}{2}$. For the start $p_0 = (1, 0, 0)$ we have
-$p_0^{T} = \frac{1}{3} \mathbf{1} + y$ with $y = \left(\sfrac{2}{3}, -\sfrac{1}{3}, -\sfrac{1}{3}\right)^{T}$,
-whose entries sum to $0$, so
-\[p_t^{T} = P^t p_0^{T} = \frac{1}{3} \mathbf{1} + \left(-\frac{1}{2}\right)^{t} y,\]
-which is exactly the closed form of \cref{lem:triangle-0908}.
-
-\paragraph{Remark.} The theorem is a special case of the convergence theorem for finite Markov chains
-that are irreducible and aperiodic; see Levin, Peres and Wilmer, \emph{Markov Chains and Mixing Times},
-Chapter~4. A random walk on a graph is irreducible exactly when the graph is connected, and for a
-connected graph it is aperiodic exactly when the graph is not bipartite.
-
-\subsection{Both Conditions Are Necessary}
-
-The two graphs of \cref{fig:counter-0910} show that neither condition of \cref{thm:convergence-0910}
-can be dropped.
-
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[scale=0.82]
-        % two disjoint triangles
-        \foreach \sh/\la/\lb/\lc in {0/1/2/3, 3.2/4/5/6} {
-                \begin{scope}[xshift=\sh cm]
-                    \node[point] (a) at (0,0) {};
-                    \node[point] (b) at (1,1.4) {};
-                    \node[point] (c) at (2,0) {};
-                    \draw (a) -- (b) -- (c) -- (a);
-                    \node[below=3pt] at (a) {$\la$};
-                    \node[above=3pt] at (b) {$\lb$};
-                    \node[below=3pt] at (c) {$\lc$};
-                \end{scope}
-            }
-        % single edge
-        \node[point] (x) at (8,0.7) {};
-        \node[point] (y) at (10,0.7) {};
-        \draw (x) -- (y);
-        \node[below=3pt] at (x) {$1$};
-        \node[below=3pt] at (y) {$2$};
-    \end{tikzpicture}
-    \caption{Left: two disjoint triangles (not connected). Right: a single edge (bipartite).}
-    \label{fig:counter-0910}
-\end{figure}
-
-\begin{lemma}[Both Conditions Are Necessary]\label{lem:necessary-0910}
-    Neither condition of \cref{thm:convergence-0910} can be dropped.
-    \begin{enumerate}
-        \item (Not connected.) Let $G$ be two disjoint triangles, on the vertices $1, 2, 3$ and
-              $4, 5, 6$. This graph is not bipartite. The walk converges from every starting vertex, but the
-              limit depends on the start, and the stationary distribution is not unique.
-        \item (Bipartite.) Let $G$ be a single edge on the vertices $1, 2$. This graph is connected. The
-              walk started at vertex $1$ does not converge, although $\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$
-              is stationary.
-    \end{enumerate}
-\end{lemma}
-
-\begin{proof}
-    \emph{Part 1.} The graph contains a triangle, which is an odd cycle, so it is not bipartite. There is
-    no edge between $\set{1,2,3}$ and $\set{4,5,6}$, so $P_{uv} = 0$ whenever $u$ and $v$ are in different
-    triangles. Start the token at vertex $1$. Then $p_t^4 = p_t^5 = p_t^6 = 0$ for all $t$, by induction on
-    $t$: it holds for $t = 0$, and if it holds for $t$ then for $v \in \set{4,5,6}$ every term of
-    $p_{t+1}^v = \sum_u p_t^u P_{uv}$ is $0$, because $p_t^u = 0$ for $u \in \set{4,5,6}$ and $P_{uv} = 0$ for
-    $u \in \set{1,2,3}$. So the token stays in the first triangle. Every vertex of that triangle has degree $2$ in
-    $G$, so the rows and columns $1, 2, 3$ of $P$ form exactly the transition matrix of the triangle, and
-    the walk is the random walk on a triangle started at vertex $1$. By \cref{lem:triangle-0908},
-    \[p_t \longrightarrow \left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}, 0, 0, 0\right) =: \pi^{(1)}.\]
-    By the same argument the walk started at vertex $4$ converges to
-    $\pi^{(2)} = \left(0, 0, 0, \sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$, and by symmetry the walk from any
-    other vertex converges to the uniform distribution on its own triangle. Since
-    $\pi^{(1)} \neq \pi^{(2)}$, there is no single limit that is reached from every start. What fails here is
-    the independence of the start, not the convergence.
-
-    Both limits are stationary: $\pi^{(1)}$ is $0$ on the second triangle and uniform on the first, and the
-    uniform distribution is stationary for the triangle, so $\pi^{(1)} P = \pi^{(1)}$; similarly for
-    $\pi^{(2)}$. So the stationary distribution is not unique.
-
-    \emph{Part 2.} A single edge is connected, and it is bipartite with the two sides $\set{1}$ and
-    $\set{2}$. Both degrees are $1$, so
-    \[P = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \qquad (a, b) P = (b, a).\]
-    Starting from $p_0 = (1, 0)$ we get $p_t = (1, 0)$ for even $t$ and $p_t = (0, 1)$ for odd $t$, by
-    induction on $t$. The first entry is the sequence $1, 0, 1, 0, \dots$, which has no limit, so $p_t$ does
-    not converge. On the other hand $\left(\sfrac{1}{2}, \sfrac{1}{2}\right) P = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$,
-    so $\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$ is stationary (it is $\sfrac{\deg(v)}{2m}$ with $m = 1$): a
-    stationary distribution exists, but the walk started at a vertex does not approach it.
-\end{proof}
-
-The second example shows what goes wrong in every bipartite graph: if all edges go between two sides
-$L$ and $R$, then a walk started at a vertex of $L$ is in $L$ at all even times and in $R$ at all odd
-times, so the probability $\sum_{v \in L} p_t^v$ of the side $L$ alternates between $1$ and $0$.
-
-In terms of the eigenvalues, the two examples are exactly the two ways in which the proof in
-\cref{sec:eigen-0910} can fail. If $G$ is bipartite with sides $L$ and $R$, let $x_u = 1$ for $u \in L$
-and $x_u = -1$ for $u \in R$. All neighbours of a vertex are on the other side, so by
-\cref{eq:average-0910} we have $Px = -x$: the number $-1$ is an eigenvalue, and its powers $(-1)^t$ do
-not tend to $0$. For the single edge, $x = (1, -1)^{T}$. If $G$ is not connected, let $x_u = 1$ for the
-vertices $u$ of one connected component and $x_u = 0$ for all others. All neighbours of a vertex are in
-its own component, so $Px = x$, although $x$ is not a multiple of $\mathbf{1}$: the eigenvalue $1$ occurs
-more than once, and the limit depends on the start. For the two triangles, $x = (1, 1, 1, 0, 0, 0)^{T}$.
+\paragraph{Both conditions are needed.} Neither condition of \cref{thm:convergence-0910} can be
+dropped. If $G$ is bipartite, the walk need not converge: for a single edge on the vertices $1, 2$ we
+have $P = \left(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\right)$ and $(a, b) P = (b, a)$,
+so from $p_0 = (1, 0)$ the distribution alternates between $(1, 0)$ and $(0, 1)$ forever, although
+$\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$ is stationary. Here $x = (1, -1)^{T}$ satisfies $Px = -x$:
+this is the eigenvalue $-1$ that Step~2 excludes, and its powers $(-1)^t$ do not die out. If $G$ is
+not connected, the limit depends on the start: in two disjoint triangles the token never leaves the
+triangle in which it starts, so by \cref{lem:triangle-0908} the walk converges to the uniform
+distribution on that triangle. Both of these distributions are stationary, so the stationary
+distribution is not unique; here the eigenvalue $1$ occurs twice, which Step~1 excludes.

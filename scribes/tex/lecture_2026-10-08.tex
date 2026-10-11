@@ -6,9 +6,7 @@ $k = \floor{\frac{\pi}{4}\sqrt{\sfrac{N}{a}}}$. We then show that a \emph{random
 succeeds with constant probability even when the number $a$ of solutions is not known, and we
 generalize Grover's algorithm to \emph{quantum amplitude amplification}.
 
-\section{Recap: Grover's Algorithm}
-
-We keep the notation of the last lecture: $f \colon \set{0,1}^n \to \set{0,1}$ has $a$ solutions
+\paragraph{Recap.} We keep the notation of the last lecture: $f \colon \set{0,1}^n \to \set{0,1}$ has $a$ solutions
 and $b = N - a$ non-solutions, where $N = 2^n$ and $1 \leq a \leq N - 1$; $\ket{A}$ and $\ket{B}$ are the
 uniform superpositions of the solutions and of the non-solutions; $Z_f \ket{x} = (-1)^{f(x)} \ket{x}$ is
 the phase flip (one query) and $Z_0 = I - 2\ket{0^n}\bra{0^n}$, where $\ket{0^n}$ is the column vector
@@ -31,58 +29,23 @@ angle $\alpha$ gives a solution with probability $\sin^2\alpha$.
 
 \section{A Grover Iteration Is Two Reflections}
 
-\subsection{The Phase Flip Is the Reflection About \texorpdfstring{$\ket{B}$}{|B>}}
+The phase flip negates every solution and fixes every non-solution, so $Z_f \ket{A} = -\ket{A}$ and
+$Z_f \ket{B} = \ket{B}$. On the plane spanned by $\ket{A}$ and $\ket{B}$ it therefore agrees with
+$I - 2\ket{A}\bra{A}$, which does the same to these two vectors (on the whole $N$-dimensional space the
+two operators are equal only for a unique solution). Hence, for every angle $\alpha$,
+\[Z_f \left(\sin\alpha \ket{A} + \cos\alpha \ket{B}\right)
+    = \sin\alpha \ket{A} + \cos\alpha \ket{B} - 2\sin\alpha \ket{A}
+    = \sin(-\alpha) \ket{A} + \cos(-\alpha) \ket{B}.\]
+So $Z_f$ keeps the $\ket{B}$ component and negates the $\ket{A}$ component: it is the reflection of the
+plane about the line of $\ket{B}$, and it sends the angle $\alpha$ to $-\alpha$. (On the board this
+computation was later rewritten with $-I + 2\ket{A}\bra{A}$, still under the name $Z_f\ket{\phi}$; that
+is $-Z_f$, which sends the state to $\sin\alpha \ket{A} - \cos\alpha \ket{B}$ and is the reflection
+about the line of $\ket{A}$.)
 
-The phase flip negates every solution and fixes every non-solution, so
-\[Z_f \ket{A} = -\ket{A}, \qquad Z_f \ket{B} = \ket{B}.\]
-The operator $I - 2\ket{A}\bra{A}$ does the same to these two vectors, because
-$\braket{A}{A} = 1$ and $\braket{A}{B} = 0$:
-$(I - 2\ket{A}\bra{A})\ket{A} = \ket{A} - 2\ket{A} = -\ket{A}$ and
-$(I - 2\ket{A}\bra{A})\ket{B} = \ket{B}$. Two linear operators that agree on $\ket{A}$ and $\ket{B}$
-agree on the whole plane, so on the plane
-\[Z_f = I - 2\ket{A}\bra{A}.\]
-(On all of the $N$-dimensional space $Z_f = I - 2\sum_{x \suchthat f(x) = 1} \ket{x}\bra{x}$; this is
-equal to $I - 2\ket{A}\bra{A}$ everywhere only for a unique solution, but only the plane matters to
-us.)
-
-\begin{lemma}[$Z_f$ Reflects About $\ket{B}$]\label{lem:zf-1008}
-    For every angle $\alpha$,
-    \[Z_f \left(\sin\alpha \ket{A} + \cos\alpha \ket{B}\right)
-        = -\sin\alpha \ket{A} + \cos\alpha \ket{B}
-        = \sin(-\alpha) \ket{A} + \cos(-\alpha) \ket{B}.\]
-\end{lemma}
-
-\begin{proof}
-    Let $\ket{\phi} = \sin\alpha \ket{A} + \cos\alpha \ket{B}$. Then
-    $\braket{A}{\phi} = \sin\alpha \braket{A}{A} + \cos\alpha \braket{A}{B} = \sin\alpha$, so
-    \begin{align*}
-        Z_f \ket{\phi} & = \left(I - 2\ket{A}\bra{A}\right)\left(\sin\alpha \ket{A} + \cos\alpha \ket{B}\right)
-        = \sin\alpha \ket{A} + \cos\alpha \ket{B} - 2\sin\alpha \ket{A} \\
-                       & = -\sin\alpha \ket{A} + \cos\alpha \ket{B}
-        = \sin(-\alpha) \ket{A} + \cos(-\alpha) \ket{B},
-    \end{align*}
-    because the sine is an odd function and the cosine is an even function.
-\end{proof}
-
-So $Z_f$ sends the angle $\alpha$ to $-\alpha$: it keeps the $\ket{B}$ component and negates the
-$\ket{A}$ component, which is the reflection of the plane about the line of $\ket{B}$. On the board
-this computation was later rewritten with $-I + 2\ket{A}\bra{A}$ in place of $I - 2\ket{A}\bra{A}$,
-still under the name $Z_f\ket{\phi}$; that is the computation for $-Z_f$, and the lemma above is the
-one for $Z_f$ itself. The operator with the opposite sign, which on the plane is
-\[-Z_f = 2\ket{A}\bra{A} - I, \qquad
-    -Z_f \left(\sin\alpha \ket{A} + \cos\alpha \ket{B}\right) = \sin\alpha \ket{A} - \cos\alpha \ket{B},\]
-keeps the $\ket{A}$ component and negates the $\ket{B}$ component: it is the reflection about the line
-of $\ket{A}$.
-
-\subsection{The Diffusion Operator Is the Reflection About \texorpdfstring{$\ket{h}$}{|h>}}
-
-Let
-\[\ket{h^\perp} = \cos\theta \ket{A} - \sin\theta \ket{B}\]
-be the unit vector of the plane that is orthogonal to $\ket{h}$:
-$\braket{h}{h^\perp} = \sin\theta\cos\theta - \cos\theta\sin\theta = 0$ and
-$\braket{h^\perp}{h^\perp} = \cos^2\theta + \sin^2\theta = 1$. So $\ket{h}$ and $\ket{h^\perp}$ are a
-second orthonormal basis of the plane, turned by the angle $\theta$ against the basis $\ket{B}$,
-$\ket{A}$ (\cref{fig:reflections-1008}).
+For the diffusion operator, let $\ket{h^\perp} = \cos\theta \ket{A} - \sin\theta \ket{B}$. It is the
+unit vector of the plane that is orthogonal to $\ket{h}$, since
+$\braket{h}{h^\perp} = \sin\theta\cos\theta - \cos\theta\sin\theta = 0$, so $\ket{h}$ and
+$\ket{h^\perp}$ are a second orthonormal basis of the plane (\cref{fig:reflections-1008}).
 
 \begin{exercise}\label{ex:diffusion-1008}
     Show that $D = 2\ket{h}\bra{h} - I$, and that for every state
@@ -92,44 +55,31 @@ $\ket{A}$ (\cref{fig:reflections-1008}).
     are already the numbers of solutions and non-solutions.)
 \end{exercise}
 
-\begin{lemma}[$D$ Reflects About $\ket{h}$]\label{lem:d-1008}
-    $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$, hence
-    $D = -H^{\otimes n} Z_0 H^{\otimes n} = 2\ket{h}\bra{h} - I$, and for all numbers $c$ and $d$
-    \[D \left(c \ket{h} + d \ket{h^\perp}\right) = c \ket{h} - d \ket{h^\perp},
-        \qquad
-        H^{\otimes n} Z_0 H^{\otimes n} \left(c \ket{h} + d \ket{h^\perp}\right) = -c \ket{h} + d \ket{h^\perp}.\]
-\end{lemma}
-
-\begin{proof}
+\begin{wsolution}
     $H^{\otimes n}$ is its own inverse and its own conjugate transpose, so
     $H^{\otimes n} I H^{\otimes n} = I$, and $H^{\otimes n}\ket{0^n} = \ket{h}$ gives
     $\bra{0^n} H^{\otimes n} = \bra{h}$. Therefore, as in \cref{lem:diffusion-1006},
     \[H^{\otimes n} Z_0 H^{\otimes n} = H^{\otimes n}\left(I - 2\ket{0^n}\bra{0^n}\right)H^{\otimes n}
-        = I - 2 H^{\otimes n}\ket{0^n}\bra{0^n}H^{\otimes n} = I - 2\ket{h}\bra{h},\]
-    and $D$ is the negative of this operator. Now let $\ket{\phi} = c\ket{h} + d\ket{h^\perp}$. Since
-    $\braket{h}{h} = 1$ and $\braket{h}{h^\perp} = 0$, we have $\braket{h}{\phi} = c$, so
+        = I - 2\ket{h}\bra{h},
+        \qquad D = -H^{\otimes n} Z_0 H^{\otimes n} = 2\ket{h}\bra{h} - I.\]
+    Since $\braket{h}{h} = 1$ and $\braket{h}{h^\perp} = 0$, we have $\braket{h}{\phi} = c$, so
     \[D\ket{\phi} = 2\ket{h}\braket{h}{\phi} - \ket{\phi} = 2c\ket{h} - c\ket{h} - d\ket{h^\perp}
-        = c\ket{h} - d\ket{h^\perp},\]
-    and $H^{\otimes n} Z_0 H^{\otimes n}\ket{\phi} = -D\ket{\phi} = -c\ket{h} + d\ket{h^\perp}$.
-\end{proof}
+        = c\ket{h} - d\ket{h^\perp}.\]
+    So $D$ keeps the $\ket{h}$ component and negates the $\ket{h^\perp}$ component: it is the
+    reflection of the plane about the line of $\ket{h}$.
+\end{wsolution}
 
-So $D$ keeps the $\ket{h}$ component and negates the $\ket{h^\perp}$ component: it is the reflection of
-the plane about the line of $\ket{h}$. Without the minus sign, $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$
-negates the $\ket{h}$ component instead, so it is the reflection about the line of $\ket{h^\perp}$; in
-the form written in the notes,
-\[\left(I - 2\ket{h}\bra{h}\right)\left(\sin\alpha \ket{h} + \cos\alpha \ket{h^\perp}\right)
-    = \sin(-\alpha) \ket{h} + \cos\alpha \ket{h^\perp}.\]
-
-\paragraph{The sign of $G$.} In class $D$ was first written as $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$
-and then corrected to $D = 2\ket{h}\bra{h} - I$, and the Grover iteration was written as
+\paragraph{The sign of $G$.} In class $D$ was first written as
+$H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$, which negates the $\ket{h}$ component instead
+and is the reflection about the line of $\ket{h^\perp}$,
+\[\left(I - 2\ket{h}\bra{h}\right)\left(\sin\alpha \ket{h} + \cos\alpha \ket{h^\perp}\right) = \sin(-\alpha) \ket{h} + \cos\alpha \ket{h^\perp},\]
+and then corrected to $D = 2\ket{h}\bra{h} - I$; the Grover iteration was written as
 $G = H^{\otimes n} Z_0 H^{\otimes n} \left(-Z_f\right)$. This is the same operator as the
 $G = D Z_f$ of the last lecture, because the minus sign can be moved from one factor to the other:
 \[G = \left(-H^{\otimes n} Z_0 H^{\otimes n}\right) Z_f = \left(H^{\otimes n} Z_0 H^{\otimes n}\right)\left(-Z_f\right).\]
 In the first form $G$ is the reflection about $\ket{B}$ followed by the reflection about $\ket{h}$; in
 the second form it is the reflection about $\ket{A}$ followed by the reflection about $\ket{h^\perp}$.
-Both pairs of lines make the angle $\theta$, and both describe the same $G$. (On the board the
-label ``reflection $\ket{B}$'' stayed under the phase flip after the minus sign was moved to it;
-that label belongs to $Z_f$, and the factor $-Z_f$ reflects about $\ket{A}$.)
+Both pairs of lines make the angle $\theta$.
 
 \begin{figure}[ht]
     \centering
@@ -201,7 +151,7 @@ any two orthonormal vectors, so that we can use it again in \cref{sec:ampamp-100
 
 For Grover's algorithm we take $S = Z_f$ (which satisfies $Z_f\ket{A} = -\ket{A}$ and
 $Z_f\ket{B} = \ket{B}$), $\ket{\psi} = \ket{h}$ and $T = D = 2\ket{h}\bra{h} - I$
-(\cref{lem:d-1008}), so that $TS = D Z_f = G$:
+(\cref{ex:diffusion-1008}), so that $TS = D Z_f = G$:
 
 \begin{corollary}[The State After $k$ Iterations]\label{cor:hk-1008}
     Every Grover iteration rotates the plane by $2\theta$ from $\ket{B}$ towards $\ket{A}$, and the
@@ -274,20 +224,14 @@ $k \approx \frac{\pi}{4}\sqrt{N} - \frac{1}{2}$, and we take
 
 In the last lecture (\cref{thm:grover-1006}) we proved this for $k = \floor{\sfrac{\pi}{4\theta}}$,
 which needs the angle $\theta$ itself. The number written in class is slightly different, so it needs
-its own proof. On the board the brackets around $\frac{\pi}{4}\sqrt{\sfrac{N}{a}}$ can also be read as
-rounding up or as rounding to the nearest integer, so the theorem covers these readings too.
+its own proof.
 
 \begin{theorem}[Number of Iterations]\label{thm:iterations-1008}
     Let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$, and let
-    $\kappa = \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$.
-    \begin{enumerate}
-        \item Grover's algorithm with $k = \floor{\kappa}$ iterations makes $k \geq 1$ queries and
-              outputs a solution with probability at least $1 - \sfrac{2a}{N}$. For a unique solution
-              this is $k = \floor{\frac{\pi}{4}\sqrt{N}}$ and probability at least $1 - \sfrac{2}{N}$.
-        \item For every integer $k \geq 0$ with $\abs{k - \kappa} < 1$, in particular for
-              $k = \ceil{\kappa}$ and for $\kappa$ rounded to the nearest integer, the algorithm
-              outputs a solution with probability at least $1 - \sfrac{14a}{N}$.
-    \end{enumerate}
+    $\kappa = \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$. Grover's algorithm with $k = \floor{\kappa}$ iterations
+    makes $k \geq 1$ queries and outputs a solution with probability at least $1 - \sfrac{2a}{N}$. For
+    a unique solution this is $k = \floor{\frac{\pi}{4}\sqrt{N}}$ and probability at least
+    $1 - \sfrac{2}{N}$.
 \end{theorem}
 
 \begin{proof}
@@ -323,30 +267,22 @@ rounding up or as rounding to the nearest integer, so the theorem covers these r
         \qquad \text{and therefore} \qquad
         \frac{1}{2} \leq \kappa - t < \frac{5}{8}.\]
 
-    \emph{Part 1.} For $k = \floor{\kappa}$ we have $-1 < k - \kappa \leq 0$, so
+    \emph{The bound.} For $k = \floor{\kappa}$ we have $-1 < k - \kappa \leq 0$, so
     $k - t = (k - \kappa) + (\kappa - t)$ satisfies $-\frac{1}{2} < k - t < \frac{5}{8}$, i.e.,
     $(k - t)^2 < \sfrac{25}{64}$. By \cref{eq:succ-1008,eq:theta2-1008} the success probability is at
     least
     \[1 - 4 \cdot \frac{25}{64} \cdot \frac{5a}{4N} = 1 - \frac{125}{64} \cdot \frac{a}{N} \geq 1 - \frac{2a}{N}.\]
     Moreover $\kappa \geq \frac{\pi}{4}\sqrt{2} > 1$ because $\sfrac{N}{a} \geq 2$, so $k \geq 1$.
 
-    \emph{Part 2.} If $\abs{k - \kappa} < 1$, then $-\frac{1}{2} < k - t < 1 + \frac{5}{8} = \frac{13}{8}$,
-    i.e., $(k-t)^2 < \sfrac{169}{64}$, and the success probability is at least
-    \[1 - 4 \cdot \frac{169}{64} \cdot \frac{5a}{4N} = 1 - \frac{845}{64} \cdot \frac{a}{N} \geq 1 - \frac{14a}{N}.\]
-    Both $\ceil{\kappa}$ and the nearest integer to $\kappa$ are at distance less than $1$ from
-    $\kappa$.
 \end{proof}
 
-The number $\kappa$ is slightly larger than the
-$\sfrac{\pi}{4\theta}$ of \cref{thm:grover-1006} (by less than $\sfrac{1}{8}$, as the proof shows), so
-the two choices of $k$ are equal or differ by one.
-
-Rounding down is the right reading. Rounding up is as good only while $\sfrac{a}{N}$ is small: the
-bound $1 - \sfrac{14a}{N}$ of part~2 says nothing for $a \geq \sfrac{N}{14}$, and indeed for
-$a = \sfrac{N}{4}$ we have $\theta = \sfrac{\pi}{6}$ and $\kappa = \sfrac{\pi}{2} \approx 1.57$, so that
-$\floor{\kappa} = 1$ iteration gives the angle $3\theta = \sfrac{\pi}{2}$ and success probability $1$
-(this is the two-qubit example of the last lecture), while $\ceil{\kappa} = 2$ iterations overshoot to
-the angle $5\theta = \sfrac{5\pi}{6}$ and success probability $\sin^2(\sfrac{5\pi}{6}) = \sfrac{1}{4}$.
+The number $\kappa$ is slightly larger than the $\sfrac{\pi}{4\theta}$ of \cref{thm:grover-1006} (by
+less than $\sfrac{1}{8}$, as the proof shows), so the two choices of $k$ are equal or differ by one. On
+the board the brackets around $\frac{\pi}{4}\sqrt{\sfrac{N}{a}}$ can also be read as rounding up, but
+rounding down is the right reading: for $a = \sfrac{N}{4}$ we have $\theta = \sfrac{\pi}{6}$ and
+$\kappa = \sfrac{\pi}{2} \approx 1.57$, so $\floor{\kappa} = 1$ iteration gives the angle
+$3\theta = \sfrac{\pi}{2}$ and success probability $1$, while $\ceil{\kappa} = 2$ iterations overshoot
+to the angle $\sfrac{5\pi}{6}$ and success probability $\sfrac{1}{4}$.
 
 \section{A Random Number of Iterations}\label{sec:randomk-1008}
 
@@ -360,27 +296,20 @@ way out is to choose $k$ \emph{at random}.
 \end{exercise}
 
 On the board the set was written as $\set{1, \dots, \sqrt{N}}$ and in the notes as
-$\set{1, \dots, 2\sqrt{N}}$; we prove the statement for both. Since $\sqrt{N}$ need not be an
-integer, the sets are $\set{1, \dots, \floor{\sqrt{N}}}$ and $\set{1, \dots, \floor{2\sqrt{N}}}$. The
-algorithm does not use $a$: for the larger set the theorem holds for every number of solutions, and
-for the smaller set for every number of solutions up to $\sfrac{N}{2}$.
+$\set{1, \dots, 2\sqrt{N}}$. We prove the statement for the set of the notes and say after the proof
+what changes for the smaller set. Since $\sqrt{N}$ need not be an integer, the set is
+$\set{1, \dots, \floor{2\sqrt{N}}}$. The algorithm does not use $a$.
 
 \begin{theorem}[Grover's Algorithm with a Random Number of Iterations]\label{thm:randomk-1008}
-    Let $N = 2^n$ and let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$. Let $K \geq 1$ be an
-    integer, choose $k$ uniformly at random from $\set{1, \dots, K}$, make $k$ Grover iterations on
-    $\ket{h}$ and measure. Then the probability of measuring a solution is
+    Let $N = 2^n$, let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$, and let
+    $K = \floor{2\sqrt{N}}$. Choose $k$ uniformly at random from $\set{1, \dots, K}$, make $k$ Grover
+    iterations on $\ket{h}$ and measure. Then the probability of measuring a solution is
     \begin{equation}\label{eq:avg-1008}
         \prob{\text{success}} = \frac{1}{2} - \frac{\sin\left(4(K+1)\theta\right) - \sin 4\theta}{4K\sin 2\theta}
-        \geq \frac{1}{2} - \frac{1}{4K\sin 2\theta}.
+        \geq \frac{1}{2} - \frac{1}{4K\sin 2\theta} \geq \frac{3}{8}.
     \end{equation}
-    In particular,
-    \[\prob{\text{success}} \geq \frac{1}{4} \quad \text{for } K = \floor{\sqrt{N}},
-        \qquad
-        \prob{\text{success}} \geq \frac{3}{8} \quad \text{for } K = \floor{2\sqrt{N}}.\]
-    In both cases $\sfrac{1}{4} \leq \prob{\text{success}} \leq 1$, i.e., $\prob{\text{success}} = \bigTh{1}$,
-    and the algorithm makes at most $2\sqrt{N} = \bigO{\sqrt{N}}$ queries. Moreover, for
-    $K = \floor{2\sqrt{N}}$ the bound $\prob{\text{success}} \geq \sfrac{1}{4}$ holds for every number of
-    solutions $1 \leq a \leq N - 1$, without the assumption $a \leq \sfrac{N}{2}$.
+    So $\prob{\text{success}} = \bigTh{1}$, and the algorithm makes at most $2\sqrt{N} = \bigO{\sqrt{N}}$
+    queries.
 \end{theorem}
 
 \begin{proof}
@@ -401,58 +330,31 @@ for the smaller set for every number of solutions up to $\sfrac{N}{2}$.
 
     \emph{The lower bound.} $\sin(4(K+1)\theta) \leq 1$, and $\sin 4\theta \geq 0$ because
     $0 < 4\theta \leq \pi$. So the numerator $\sin(4(K+1)\theta) - \sin 4\theta$ is at most $1$, which
-    gives the inequality in \cref{eq:avg-1008}.
+    gives the first inequality in \cref{eq:avg-1008}.
 
-    \emph{The two choices of $K$.} Since $b = N - a \geq \sfrac{N}{2}$,
+    \emph{The value of $K$.} Since $b = N - a \geq \sfrac{N}{2}$,
     \[\sin 2\theta = 2\sin\theta\cos\theta = \frac{2\sqrt{ab}}{N} \geq \frac{2\sqrt{a \cdot \sfrac{N}{2}}}{N} = \sqrt{\frac{2a}{N}}.\]
-    Next, $\floor{\sqrt{N}} \geq \sqrt{\sfrac{N}{2}}$ and $\floor{2\sqrt{N}} \geq \sqrt{2N}$ for
-    $N = 2^n$: if $n$ is even, then $\sqrt{N} = 2^{n/2}$ and $2\sqrt{N}$ are integers and the floors
-    change nothing; if $n$ is odd, then $\sqrt{\sfrac{N}{2}} = 2^{(n-1)/2}$ and $\sqrt{2N} = 2^{(n+1)/2}$
-    are integers with $\sqrt{\sfrac{N}{2}} \leq \sqrt{N}$ and $\sqrt{2N} \leq 2\sqrt{N}$, so they are at
-    most the floors. Therefore
-    \begin{align*}
-        K = \floor{\sqrt{N}}\colon  & \quad K\sin 2\theta \geq \sqrt{\frac{N}{2}} \cdot \sqrt{\frac{2a}{N}} = \sqrt{a} \geq 1,
-                                    &                                                                                         & \prob{\text{success}} \geq \frac{1}{2} - \frac{1}{4} = \frac{1}{4}, \\
-        K = \floor{2\sqrt{N}}\colon & \quad K\sin 2\theta \geq \sqrt{2N} \cdot \sqrt{\frac{2a}{N}} = 2\sqrt{a} \geq 2,
-                                    &                                                                                         & \prob{\text{success}} \geq \frac{1}{2} - \frac{1}{8} = \frac{3}{8}.
-    \end{align*}
-    A probability is at most $1$, so in both cases $\prob{\text{success}} = \bigTh{1}$. The number of
-    queries is $k \leq K \leq 2\sqrt{N}$.
-
-    \emph{Every $a$ for $K = \floor{2\sqrt{N}}$.} Now let $1 \leq a \leq N - 1$ be arbitrary, so
-    $0 < \theta < \sfrac{\pi}{2}$. Then $\sin 2\theta > 0$ still holds, so the equality in
-    \cref{eq:avg-1008} is still true; only the bound on the numerator changes, to
-    $\sin(4(K+1)\theta) - \sin 4\theta \leq 2$. The larger one of $a$ and $b$ is at least
-    $\sfrac{N}{2}$ and the smaller one is at least $1$, so
-    $\sin 2\theta = \sfrac{2\sqrt{ab}}{N} \geq \sfrac{2\sqrt{\sfrac{N}{2}}}{N} = \sqrt{\sfrac{2}{N}}$
-    and $K\sin 2\theta \geq \sqrt{2N} \cdot \sqrt{\sfrac{2}{N}} = 2$. Hence
-    \[\prob{\text{success}} \geq \frac{1}{2} - \frac{2}{4K\sin 2\theta} \geq \frac{1}{2} - \frac{2}{8} = \frac{1}{4}. \qedhere\]
+    Next, $\floor{2\sqrt{N}} \geq \sqrt{2N}$ for $N = 2^n$: if $n$ is even, then $2\sqrt{N}$ is an
+    integer and the floor changes nothing; if $n$ is odd, then $\sqrt{2N} = 2^{(n+1)/2}$ is an integer
+    with $\sqrt{2N} \leq 2\sqrt{N}$, so it is at most the floor. Therefore
+    $K\sin 2\theta \geq \sqrt{2N} \cdot \sqrt{\sfrac{2a}{N}} = 2\sqrt{a} \geq 2$ and
+    $\prob{\text{success}} \geq \frac{1}{2} - \frac{1}{8} = \frac{3}{8}$. A probability is at most $1$,
+    so $\prob{\text{success}} = \bigTh{1}$. The number of queries is $k \leq K \leq 2\sqrt{N}$.
 \end{proof}
 
+For the smaller set $\set{1, \dots, \floor{\sqrt{N}}}$ of the board the same proof works with
+$K = \floor{\sqrt{N}} \geq \sqrt{\sfrac{N}{2}}$ (by the same argument on the parity of $n$): then
+$K \sin 2\theta \geq \sqrt{a} \geq 1$ and $\prob{\text{success}} \geq \frac{1}{2} - \frac{1}{4} = \frac{1}{4}$.
 Intuitively, when $k$ runs over a range in which the angle $(2k+1)\theta$ makes at least a constant
 fraction of a full turn, the average of $\sin^2$ over the range is close to $\sfrac{1}{2}$, whatever
 $\theta$ is. A constant success probability is enough: given the measured $x$ we check $f(x) = 1$ with
-one more query and repeat the whole algorithm if the check fails, so the expected number of
-repetitions is at most $4$.
+one more query and repeat the whole algorithm if the check fails. The assumption
+$a \leq \sfrac{N}{2}$ costs nothing, because for $a > \sfrac{N}{2}$ a uniformly random $x$ is a
+solution with probability more than $\sfrac{1}{2}$.
 
-For the set $\set{1, \dots, \floor{2\sqrt{N}}}$ of the notes the theorem needs no assumption on $a$. For
-the smaller set $\set{1, \dots, \floor{\sqrt{N}}}$ of the board it assumes $a \leq \sfrac{N}{2}$, and an
-algorithm that does not know $a$ cannot check this; one more classical query removes the assumption.
-If more than half of the inputs are solutions ($a > \sfrac{N}{2}$), a uniformly random $x$ is a
-solution with probability more than $\sfrac{1}{2}$. So each round first tests one uniformly random
-$x$ with one classical query and, if it is not a solution, runs the algorithm of
-\cref{thm:randomk-1008}. A round then succeeds with probability at least $\sfrac{1}{4}$ for every
-$1 \leq a \leq N$ (more than $\sfrac{1}{2}$ from the classical sample if $a > \sfrac{N}{2}$, and at
-least $\sfrac{1}{4}$ from the theorem otherwise) and makes at most $2\sqrt{N} + 2$ queries, including
-the final check.
-
-\paragraph{The number $k$ must be random.} The statement cannot mean that every fixed
-$k \in \set{1, \dots, 2\sqrt{N}}$ works: some fixed values of $k$ fail. Let $a = 1$, so that $\sin\theta = \sfrac{1}{\sqrt{N}}$. For $k = 1$
-the success probability is $\sin^2 3\theta \leq 9\theta^2 < \sfrac{12}{N}$ by \cref{eq:theta2-1008},
-which tends to $0$; this $k$ lies in both sets. And if $k$ is the integer nearest to $\frac{\pi}{2\theta} - \frac{1}{2}$, then
-$k \leq \frac{\pi}{2\theta} \leq \frac{\pi}{2\sin\theta} = \frac{\pi}{2}\sqrt{N} < 2\sqrt{N}$ and
-$\abs{(2k+1)\theta - \pi} \leq \theta$, so the state has rotated half a turn, back to the line of
-$\ket{B}$, and the success probability is at most $\sin^2\theta = \sfrac{1}{N}$.
+The number $k$ has to be random: the statement cannot mean that every fixed $k$ in the set works. For
+$a = 1$ and $k = 1$ the success probability is $\sin^2 3\theta \leq 9\theta^2 < \sfrac{12}{N}$ by
+\cref{eq:theta2-1008}, which tends to $0$.
 
 \section{Quantum Amplitude Amplification}\label{sec:ampamp-1008}
 

@@ -124,7 +124,7 @@ gives back $\ket{a}$.
     $\ket{1}$, which is why the second measurement in \cref{fig:deutsch-0924} always gives $1$.)
 \end{proof}
 
-\section{Phase Flip}
+\section{Phase Flip and the \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
 The computation above shows a general trick. If the second (target) qubit of $U_f$ is in the state
 $\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then for every input $x$
@@ -138,7 +138,7 @@ instead of the original form $U_f \colon \ket{a}\ket{b} \mapsto \ket{a}\ket{b \o
 linearity, $U_f$ maps a superposition $\sum_x \alpha_x \ket{x}$ to $\sum_x \alpha_x (-1)^{f(x)} \ket{x}$:
 one query flips the sign of every $\ket{x}$ with $f(x) = 1$ at once.
 
-\section{The \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
+\subsection{The \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
 To generalize Deutsch's algorithm to $n$ bits we need the Hadamard gate applied to each of $n$ qubits.
 Start with $n = 2$ and let $\ket{x} = \ket{x_1 x_2} = \ket{x_1}\ket{x_2}$. Using

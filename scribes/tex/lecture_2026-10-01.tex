@@ -88,12 +88,9 @@ that randomness cannot do much better than this.
     some input. Hence every such algorithm needs $\bigOm{\sqrt{N}} = \bigOm{\sqrt{2^n}}$ queries.
 \end{theorem}
 
-The proof uses Yao's minmax principle from the lecture of September~1: to lower bound randomized
-algorithms on their worst input, it is enough to pick a \emph{distribution} $\mu$ on the inputs and
-to lower bound the error of every \emph{deterministic} algorithm on an input drawn from $\mu$. On
-September~1 the principle was stated for the expected number of queries of Las Vegas algorithms; here
-we need the version for the error probability of algorithms with a fixed number of queries, and only its
-easy direction, which is an averaging argument:
+The proof uses Yao's minmax principle from the lecture of September~1, in the version for the error
+probability of algorithms with a fixed number of queries, and only its easy direction, which is an
+averaging argument:
 
 \begin{lemma}[Yao's Minmax Principle, Easy Direction]\label{lem:yao-1001}
     Let $\mu$ be a probability distribution on the inputs. If every deterministic algorithm that makes at
@@ -115,182 +112,118 @@ easy direction, which is an averaging argument:
     achieving the maximum, $R$ errs with probability greater than $\delta$.
 \end{proof}
 
-\paragraph{The input distribution.} We use the distribution $\mu$ of \cref{fig:dist-1001}:
-\begin{itemize}
-    \item with probability $\sfrac{1}{2}$, $f$ is a uniformly random $1$-to-$1$ function, i.e., the table
-          of values $(f(0^n), \dots, f(1^n))$ is a uniformly random permutation of $\set{0,1}^n$
-          (call this distribution $\mathcal{P}$);
-    \item with probability $\sfrac{1}{2}$, $f$ is drawn from the distribution $\mathcal{D}$ of random
-          $2$-to-$1$ functions: choose $s$ uniformly among the $N - 1$ nonzero strings, which splits
-          $\set{0,1}^n$ into $\sfrac{N}{2}$ pairs $\set{x, x \oplus s}$; then assign to the pairs distinct
-          values, uniformly at random among all such assignments, and let $f(x) = f(x \oplus s)$ be the
-          value of the pair of $x$.
-\end{itemize}
+\paragraph{The input distribution.} We use the distribution $\mathcal{D}$ of random $2$-to-$1$
+functions (\cref{fig:dist-1001}): choose $s$ uniformly among the $N - 1$ nonzero strings, which splits
+$\set{0,1}^n$ into $\sfrac{N}{2}$ pairs $\set{x, x \oplus s}$; then assign to the pairs distinct
+values, uniformly at random among all such assignments, and let $f(x) = f(x \oplus s)$ be the value of
+the pair of $x$. On such an input an algorithm for Simon's problem has to output $s$.
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}[scale=0.82, every node/.style={font=\small}]
-        % 1-to-1 table
-        \node[left] at (-0.2,0.35) {$\mathcal{P}$:};
         \draw (0,0) rectangle (8,0.7);
         \foreach \x in {1,2,3,4,5,6,7} {\draw (\x,0) -- (\x,0.7);}
-        \foreach \x/\v in {0.5/5, 1.5/0, 2.5/7, 3.5/2, 4.5/6, 5.5/1, 6.5/3, 7.5/4} {\node at (\x,0.35) {$\v$};}
+        \foreach \x/\v in {0.5/5, 1.5/0, 2.5/7, 3.5/2, 4.5/7, 5.5/2, 6.5/5, 7.5/0} {\node at (\x,0.35) {$\v$};}
         \node[below] at (0.5,0) {$000$};
         \node[below] at (1.5,0) {$001$};
         \node[below] at (7.5,0) {$111$};
         \node[below] at (4.5,0) {$\cdots$};
-        % 2-to-1 table
-        \node[left] at (-0.2,-2.55) {$\mathcal{D}$:};
-        \draw (0,-2.9) rectangle (8,-2.2);
-        \foreach \x in {1,2,3,4,5,6,7} {\draw (\x,-2.9) -- (\x,-2.2);}
-        \foreach \x/\v in {0.5/5, 1.5/0, 2.5/7, 3.5/2, 4.5/7, 5.5/2, 6.5/5, 7.5/0} {\node at (\x,-2.55) {$\v$};}
-        \node[below] at (0.5,-2.9) {$000$};
-        \node[below] at (1.5,-2.9) {$001$};
-        \node[below] at (7.5,-2.9) {$111$};
-        \node[below] at (4.5,-2.9) {$\cdots$};
-        \draw[<->, thick] (0.5,-2.1) to[bend left=30] node[above] {same value: $x$ and $x \oplus s$} (6.5,-2.1);
+        \draw[<->, thick] (0.5,0.8) to[bend left=30] node[above] {same value: $x$ and $x \oplus s$} (6.5,0.8);
     \end{tikzpicture}
-    \caption{The two halves of the input distribution $\mu$ for $n = 3$ (values written as integers).
-        Under $\mathcal{P}$ the table is a random permutation. Under $\mathcal{D}$ a random nonzero $s$ (here
-        $s = 110$) pairs up the inputs, and the two inputs of a pair get the same random value, different
-        pairs different values.}
+    \caption{A function drawn from $\mathcal{D}$ for $n = 3$ (values written as integers): a random
+        nonzero $s$ (here $s = 110$) pairs up the inputs, the two inputs of a pair get the same random
+        value, and different pairs get different values.}
     \label{fig:dist-1001}
 \end{figure}
 
 \paragraph{Principle of deferred decisions.} We do not have to choose the whole table in advance. We
-can generate the random input lazily, while the algorithm runs, and only decide the values that the
-algorithm asks for; the distribution of the answers is the same.
-\begin{itemize}
-    \item Under $\mathcal{P}$: when the algorithm queries a new input $q_i$, the answer $f(q_i)$ is a
-          uniformly random value among the $N - (i-1)$ values not used by the earlier answers.
-    \item Under $\mathcal{D}$: choose $s$ uniformly among the nonzero strings and keep it hidden. When the
-          algorithm queries $q_i$: if $q_i = q_j \oplus s$ for an earlier query $q_j$ (a \emph{collision}:
-          $q_i$ is the mirror of $q_j$), the answer is the earlier answer $f(q_j)$; otherwise $q_i$ lies in
-          a new pair, and the answer is a uniformly random value among the values not used so far
-          ($N - (i-1)$ of them as long as no collision has occurred).
-\end{itemize}
-Both procedures produce exactly the distributions $\mathcal{P}$ and $\mathcal{D}$ on the queried values,
-because a uniformly random injective assignment of values can be built one value at a time, each new
-value uniform among the unused ones.
-
-The lower bound has two steps: (1) under $\mathcal{D}$, an algorithm with few queries is unlikely to see
-a collision; (2) as long as it sees no collision, its answers look exactly as under $\mathcal{P}$, so it
-cannot tell the two cases apart. Step (1) is the computation done in class:
+can generate the random input lazily, while the algorithm runs: choose $s$ and keep it hidden, and
+when the algorithm queries $q_i$, answer as follows. If $q_i = q_j \oplus s$ for an earlier query $q_j$
+(a \emph{collision}: $q_i$ is the mirror of $q_j$), the answer is the earlier answer $f(q_j)$.
+Otherwise $q_i$ lies in a new pair, and the answer is a uniformly random value among the values not
+used so far ($N - (i-1)$ of them as long as no collision has occurred). This produces exactly the
+distribution $\mathcal{D}$ on the queried values, because a uniformly random injective assignment of
+values can be built one value at a time, each new value uniform among the unused ones.
 
 \begin{lemma}[Few Queries Rarely Collide]\label{lem:collision-1001}
-    Let $n \geq 2$, let $0 < \epsilon \leq \sfrac{1}{2}$, and let $A$ be a deterministic algorithm that
-    makes at most $k \leq \epsilon \sqrt{N}$ queries. Under $\mathcal{D}$, the probability that two of the
-    queries of $A$ form a pair $\set{x, x \oplus s}$ (a collision) is at most
-    \[\sum_{i=1}^{k} \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{k(k-1)}{N} < \epsilon^2.\]
+    Let $n \geq 2$ and let $A$ be a deterministic algorithm that makes $k \leq \sfrac{\sqrt{N}}{2}$
+    queries, all different, on an input drawn from $\mathcal{D}$.
+    \begin{enumerate}
+        \item The probability that two of the queries form a pair $\set{x, x \oplus s}$ (a collision)
+              is at most
+              \[\sum_{i=1}^{k} \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{k(k-1)}{N}.\]
+        \item Given that there is no collision among the $k$ queries, and given the $k$ answers, $s$ is
+              uniformly distributed over a set of at least $\sfrac{N}{2}$ strings.
+    \end{enumerate}
 \end{lemma}
 
 \begin{proof}
     Let $Q_i$ be the event that there is no collision among the first $i$ queries, and let $C_i$ be the
     event that the $\nth{i}$ query collides with an earlier one, i.e., $q_i \oplus s \in \set{q_1, \dots, q_{i-1}}$.
-    A collision among the $k$ queries means that some $C_i$ occurs, and if $C_i$ is the first one then
-    $Q_{i-1}$ holds. So by the union bound
-    \[\prob{\text{collision}} \leq \sum_{i=1}^{k} \prob{C_i \cap Q_{i-1}}.\]
 
-    Fix $i$ and condition on $Q_{i-1}$ and on the answers $f(q_1), \dots, f(q_{i-1})$ seen so far (they
-    are distinct, as $Q_{i-1}$ holds). What does the algorithm know about $s$? Since $A$ is
+    \emph{What the algorithm knows about $s$.} Fix $i \leq k + 1$ and condition on $Q_{i-1}$ and on the
+    answers $f(q_1), \dots, f(q_{i-1})$ seen so far (they are distinct, as $Q_{i-1}$ holds). Since $A$ is
     deterministic, the queries $q_1, \dots, q_{i-1}$ are the same for every $s$ that leads to these
     answers. By the lazy generation above, the answers were $i-1$ fresh random values, and this
     particular sequence of answers has probability $\prod_{j=1}^{i-1} \sfrac{1}{(N - j + 1)}$, the same for
     every $s$ that is not of the form $q_j \oplus q_l$ with $j < l \leq i - 1$; for an $s$ of this form,
     the queries $q_j$ and $q_l$ would have collided, contradicting $Q_{i-1}$, so the probability is $0$.
     By Bayes' rule, given the answers, $s$ is uniformly distributed over the nonzero strings that are not
-    among the at most
-    $\binom{i-1}{2}$ strings $q_j \oplus q_l$, a set of at least $N - 1 - \binom{i-1}{2}$ candidates. The
-    next query $q_i$ is determined by the answers ($A$ is deterministic), and $C_i$ occurs exactly when
+    among the at most $\binom{i-1}{2}$ strings $q_j \oplus q_l$, a set of at least
+    $N - 1 - \binom{i-1}{2}$ candidates. Since
+    $\binom{i-1}{2} \leq \binom{k}{2} \leq \sfrac{k^2}{2} \leq \sfrac{N}{8}$, this is at least
+    $N - 1 - \sfrac{N}{8} \geq \sfrac{N}{2}$ candidates for $N \geq 4$. For $i = k + 1$ this is part~2.
+
+    \emph{Part 1.} A collision among the $k$ queries means that some $C_i$ occurs, and if $C_i$ is the
+    first one then $Q_{i-1}$ holds, so by the union bound
+    $\prob{\text{collision}} \leq \sum_{i=1}^{k} \prob{C_i \cap Q_{i-1}}$. Given $Q_{i-1}$ and the answers,
+    the next query $q_i$ is determined ($A$ is deterministic), and $C_i$ occurs exactly when
     $s \in \set{q_i \oplus q_1, \dots, q_i \oplus q_{i-1}}$, a set of $i - 1$ strings. Therefore
-    \[\prob{C_i \given Q_{i-1}, \text{answers}} \leq \frac{i-1}{N - 1 - \binom{i-1}{2}},\]
-    and the same bound holds for $\prob{C_i \cap Q_{i-1}}$ after averaging over the answers.
-
-    For the final estimate, $\binom{i-1}{2} \leq \binom{k}{2} \leq \sfrac{k^2}{2} \leq \sfrac{\epsilon^2 N}{2} \leq \sfrac{N}{8}$,
-    so the denominator is at least $N - 1 - \sfrac{N}{8} \geq \sfrac{N}{2}$ for $N \geq 4$. Hence
-    \[\prob{\text{collision}} \leq \sum_{i=1}^{k} \frac{2(i-1)}{N} = \frac{2}{N} \cdot \frac{k(k-1)}{2} = \frac{k(k-1)}{N} < \frac{k^2}{N} \leq \epsilon^2. \qedhere\]
-\end{proof}
-
-Step (2) says that, without a collision, the algorithm sees the same thing under both distributions.
-
-\begin{lemma}[Indistinguishability]\label{lem:indist-1001}
-    Let $A$, $k$ and $\epsilon$ be as in \cref{lem:collision-1001}. For every sequence $t$ of answers
-    (the \emph{transcript} $T = (f(q_1), \dots, f(q_k))$ of $A$),
-    \[\prob[\mathcal{D}]{T = t} \geq \prob[\mathcal{D}]{T = t \text{ and no collision}} \geq (1 - \epsilon^2) \prob[\mathcal{P}]{T = t}.\]
-\end{lemma}
-
-\begin{proof}
-    If $t$ has two equal entries then $\prob[\mathcal{P}]{T = t} = 0$ and there is nothing to show. Let
-    $t = (a_1, \dots, a_k)$ have distinct entries. Under $\mathcal{P}$ every answer is uniform among the
-    unused values, so
-    \[\prob[\mathcal{P}]{T = t} = \prod_{i=1}^{k} \frac{1}{N - i + 1}.\]
-    Under $\mathcal{D}$, write $p_i$ for the probability of a collision at step $i$ given $Q_{i-1}$ and the
-    answers $a_1, \dots, a_{i-1}$; by the proof of \cref{lem:collision-1001},
-    $p_i \leq \pi_i := \sfrac{(i-1)}{(N - 1 - \binom{i-1}{2})}$. If there is no collision at step $i$, the
-    answer is a fresh value, uniform among the $N - i + 1$ unused ones, so it equals $a_i$ with
-    probability $\sfrac{1}{(N - i + 1)}$. Multiplying over the steps,
-    \begin{align*}
-        \prob[\mathcal{D}]{T = t \text{ and no collision}}
-         & = \prod_{i=1}^{k} (1 - p_i) \frac{1}{N - i + 1}
-        \geq \prod_{i=1}^{k} (1 - \pi_i) \cdot \prob[\mathcal{P}]{T = t} \\
-         & \geq \left(1 - \sum_{i=1}^{k} \pi_i\right) \prob[\mathcal{P}]{T = t},
-    \end{align*}
-    using $\prod (1 - \pi_i) \geq 1 - \sum \pi_i$ for $\pi_i \in [0, 1]$ (\cref{lem:prodsum-1001} below;
-    $\pi_i \leq \sfrac{2(i-1)}{N} \leq 1$ by the estimate in the proof of \cref{lem:collision-1001}).
-    By \cref{lem:collision-1001}, $\sum_i \pi_i < \epsilon^2$.
+    \[\prob{C_i \given Q_{i-1}, \text{answers}} \leq \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{2(i-1)}{N},\]
+    and the same bound holds for $\prob{C_i \cap Q_{i-1}}$ after averaging over the answers. Hence
+    \[\prob{\text{collision}} \leq \sum_{i=1}^{k} \frac{2(i-1)}{N} = \frac{2}{N} \cdot \frac{k(k-1)}{2} = \frac{k(k-1)}{N}. \qedhere\]
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:simon-rand-lb-1001}]
-    Let $A$ be a deterministic algorithm with at most $k \leq \sfrac{\sqrt{N}}{2}$ queries, i.e.,
-    $\epsilon = \sfrac{1}{2}$ in the lemmas. We may assume that $A$ makes exactly $k$ queries (extra
-    queries whose answers are ignored change nothing), so its transcript $T$ has length $k$. The output
-    of $A$ is a function of $T$. Let $\mathcal{T}$ be the set of transcripts on which $A$ outputs $0^n$
-    (``$f$ is $1$-to-$1$''), and let $p = \prob[\mathcal{P}]{T \in \mathcal{T}}$ be the probability that
-    $A$ is correct on a random $1$-to-$1$ function. Under $\mathcal{D}$, $A$ can only be correct if it
-    does not output $0^n$, so by \cref{lem:indist-1001} summed over all $t \in \mathcal{T}$,
-    \[\prob[\mathcal{D}]{A \text{ correct}} \leq \prob[\mathcal{D}]{T \notin \mathcal{T}}
-        = 1 - \prob[\mathcal{D}]{T \in \mathcal{T}}
-        \leq 1 - (1 - \epsilon^2) \prob[\mathcal{P}]{T \in \mathcal{T}} = 1 - (1 - \epsilon^2) p.\]
-    Therefore the success probability of $A$ on an input drawn from $\mu$ is
-    \[\frac{1}{2} \, p + \frac{1}{2} \left(1 - (1 - \epsilon^2) p\right)
-        = \frac{1}{2} + \frac{\epsilon^2}{2} \, p
-        \leq \frac{1}{2} + \frac{\epsilon^2}{2}
-        = \frac{1}{2} + \frac{1}{8} = \frac{5}{8} < \frac{2}{3}.\]
-    So every deterministic algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries errs with probability at
-    least $\sfrac{3}{8} > \sfrac{1}{3}$ on $\mu$. By \cref{lem:yao-1001} (with $\delta = \sfrac{1}{3}$),
-    every randomized algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries errs with probability greater
-    than $\sfrac{1}{3}$ on some input, i.e., its success probability on that input is less than
-    $\sfrac{2}{3}$. Hence an algorithm with success probability at least $\sfrac{2}{3}$ on every input
-    must make more than $\sfrac{\sqrt{N}}{2}$ queries on some input.
+    Let $A$ be a deterministic algorithm with $k \leq \sfrac{\sqrt{N}}{2}$ queries, all different, and
+    run it on an input drawn from $\mathcal{D}$. Its output is a function of the answers, and it is
+    correct only if the output is $s$. If there is no collision, then given the answers the output is
+    one fixed string, while $s$ is uniform over at least $\sfrac{N}{2}$ strings by part~2 of
+    \cref{lem:collision-1001}; so in this case $A$ is correct with probability at most $\sfrac{2}{N}$.
+    With part~1,
+    \[\prob{A \text{ correct}} \leq \prob{\text{collision}} + \frac{2}{N} \leq \frac{k(k-1) + 2}{N}.\]
+    If $k \geq 2$, then $k(k-1) + 2 \leq k^2 \leq \sfrac{N}{4}$ and the bound is at most $\sfrac{1}{4}$.
+    If $k \leq 1$, there is no collision at all and the bound is $\sfrac{2}{N} \leq \sfrac{1}{2}$. So
+    every deterministic algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries errs with probability at
+    least $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$. By \cref{lem:yao-1001} (with $\mu = \mathcal{D}$
+    and $\delta = \sfrac{1}{3}$), every randomized algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries
+    errs with probability greater than $\sfrac{1}{3}$ on some input. Hence an algorithm with success
+    probability at least $\sfrac{2}{3}$ on every input must make more than $\sfrac{\sqrt{N}}{2}$ queries
+    on some input.
 \end{proof}
 
-In words, as it was put in class: on the first distribution all answers are distinct and the algorithm
-cannot solve the problem quickly; on the second distribution the answers are also all distinct unless a
-collision occurs, which is unlikely with few queries, so the algorithm cannot quickly find any
-difference between the two distributions. The success probability $\sfrac{2}{3}$ is not important: the
-same proof with $\epsilon = \sqrt{2\gamma}$ shows that, for $\gamma \leq \sfrac{1}{8}$, success
-probability $\sfrac{1}{2} + \gamma$ needs more than $\sqrt{2\gamma N}$ queries.
+In class the argument was told with two distributions, a random $1$-to-$1$ function and a random
+$2$-to-$1$ function: on the first all answers are distinct, and on the second they are also all
+distinct unless a collision occurs, which is unlikely with few queries, so the algorithm cannot quickly
+find any difference between the two. The proof above needs only the second distribution, because an
+algorithm for Simon's problem has to find $s$ on it.
 
-\begin{corollary}[Deterministic Lower Bound]\label{thm:simon-det-lb-1001}
-    Every deterministic classical algorithm for Simon's problem makes more than $\sfrac{\sqrt{N}}{2}$
-    queries on some input. Hence the deterministic query complexity of Simon's problem is $\bigTh{\sqrt{N}}$.
+\begin{corollary}[Classical Query Complexity of Simon's Problem]\label{thm:simon-det-lb-1001}
+    The classical query complexity of Simon's problem is $\bigTh{\sqrt{N}} = \bigTh{\sqrt{2^n}}$, both
+    for deterministic algorithms and for randomized algorithms with constant success probability.
+    Simon's quantum algorithm, with $\bigO{n}$ queries, is therefore exponentially faster than every
+    classical algorithm.
 \end{corollary}
 
 \begin{proof}
     A deterministic algorithm that is always correct is a randomized algorithm (one that ignores its
-    random bits) with success probability $1 \geq \sfrac{2}{3}$ on every input, so
-    \cref{thm:simon-rand-lb-1001} applies to it. The matching upper bound is \cref{ex:simon-det-0929}.
+    random bits) with success probability $1 \geq \sfrac{2}{3}$, so by \cref{thm:simon-rand-lb-1001} both
+    kinds of algorithm need more than $\sfrac{\sqrt{N}}{2}$ queries on some input. The upper bounds are
+    \cref{ex:simon-det-0929} and \cref{thm:simon-rand-ub-1001}.
 \end{proof}
 
-\begin{corollary}[Classical Query Complexity of Simon's Problem]
-    The classical query complexity of Simon's problem is $\bigTh{\sqrt{N}} = \bigTh{\sqrt{2^n}}$, both
-    for deterministic algorithms (\cref{ex:simon-det-0929}, \cref{thm:simon-det-lb-1001}) and for
-    randomized algorithms with constant success probability (\cref{thm:simon-rand-ub-1001},
-    \cref{thm:simon-rand-lb-1001}). Simon's quantum algorithm, with $\bigO{n}$ queries, is therefore
-    exponentially faster than every classical algorithm.
-\end{corollary}
+The solution of \cref{ex:indep-1001} below uses the following elementary inequality.
 
-We used the following elementary inequality.
 
 \begin{lemma}\label{lem:prodsum-1001}
     For $a_1, \dots, a_m \in [0, 1]$, $\prod_{i=1}^{m} (1 - a_i) \geq 1 - \sum_{i=1}^{m} a_i$.

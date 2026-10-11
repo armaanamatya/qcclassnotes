@@ -86,7 +86,7 @@ i.e., $\expectation{\text{queries}} = \bigTh{n \log n}$.
     Since $H_n = \bigTh{\log n}$, we get $\expectation{X} = \bigTh{n \log n}$.
 \end{proof}
 
-\section{High Probability Bound}
+\subsection{High Probability Bound}
 
 The following was given in class as an exercise. Its solution uses the Chernoff bounds, which
 are stated at the end of this lecture, so it is given in \cref{sec:exercise-0901}.
@@ -111,13 +111,9 @@ $3 n \log n$ queries are enough with high probability. Here $\log$ is the natura
 \begin{proof}
     Let $B_i$ be the event that slot $i$ is not accessed. A query does not access slot $i$ with
     probability $1 - \frac{1}{n}$. Using $1 - x \leq e^{-x}$,
-    \begin{align*}
-        \prob{B_i} = \prob{\text{slot $i$ not accessed}}
-         & \leq \left(1 - \frac{1}{n}\right)^{3 n \log n} \\
-         & \leq e^{-\frac{1}{n} \cdot 3 n \log n}         \\
-         & = e^{-3 \ln n}                                  \\
-         & = \frac{1}{n^3}.
-    \end{align*}
+    \[\prob{B_i} = \prob{\text{slot $i$ not accessed}}
+        \leq \left(1 - \frac{1}{n}\right)^{3 n \log n}
+        \leq e^{-\frac{1}{n} \cdot 3 n \log n} = e^{-3 \ln n} = \frac{1}{n^3}.\]
     By the union bound,
     \[\prob{\bigcup_{i} B_i} \leq \sum_{i=1}^{n} \prob{B_i} = \frac{n}{n^3} = \frac{1}{n^2}.\]
 \end{proof}
@@ -193,14 +189,10 @@ The distribution of $X$ is concentrated around its mean $np$ (\cref{fig:concentr
     \end{itemize}
 \end{theorem}
 
-\section{Solution of the Exercise}\label{sec:exercise-0901}
+\subsection{Solution of the Exercise}\label{sec:exercise-0901}
 
-We now solve \cref{ex:maxload-0901} with the Chernoff bounds of \cref{thm:chernoff-0901}. The
-exercise says that the queries of random sampling are spread evenly over the slots: every slot is
-accessed about $\log n$ times, up to a constant $c$. We prove this in both directions. First, with
-$3 n \log n$ queries no slot is accessed much \emph{more} than the expected $3 \log n$ times (upper
-tail, $c = 18$). Second, with a constant factor more queries no slot is accessed much \emph{less}
-than expected (lower tail, $c = 6$); we also explain why the lower tail needs the extra queries.
+We now solve \cref{ex:maxload-0901} with the Chernoff bounds of \cref{thm:chernoff-0901}: with
+enough queries, with high probability no slot is accessed fewer than a constant times $\log n$ times.
 As before, $\log$ is the natural logarithm.
 
 Fix a slot $i$ and suppose that random sampling makes $T$ queries. Let
@@ -215,20 +207,6 @@ $\sfrac{1}{n}$, and the queries are independent (sampling with replacement), so 
 independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, exactly as in
 \cref{thm:chernoff-0901}, and
 \[\mu = \expectation{Y_i} = \frac{T}{n}.\]
-
-\begin{lemma}[Upper Tail: No Slot Is Accessed Too Often]\label{lem:maxload-upper-0901}
-    If random sampling makes $3 n \log n$ queries, then
-    \[\prob{\text{some slot is accessed} \geq 18 \log n \text{ times}} \leq \frac{1}{n^2}.\]
-\end{lemma}
-
-\begin{proof}
-    Fix a slot $i$. Here $T = 3 n \log n$, so $\mu = 3 \log n$, and $R = 18 \log n = 6\mu$. The
-    second Chernoff bound of \cref{thm:chernoff-0901} gives
-    \[\prob{Y_i \geq 18 \log n} \leq \frac{1}{2^{18 \log n}} = \frac{1}{n^{18 \log 2}} \leq \frac{1}{n^3},\]
-    where $2^{18 \log n} = e^{18 \log 2 \cdot \log n} = n^{18 \log 2}$ and $18 \log 2 > 12 > 3$. Let
-    $C_i$ be the event that slot $i$ is accessed at least $18 \log n$ times. By the union bound,
-    \[\prob{\bigcup_{i=1}^{n} C_i} \leq \sum_{i=1}^{n} \prob{C_i} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}. \qedhere\]
-\end{proof}
 
 \begin{lemma}[Lower Tail: No Slot Is Accessed Too Rarely]\label{lem:maxload-lower-0901}
     If random sampling makes $24 n \log n$ queries, then
@@ -251,24 +229,10 @@ independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, exactly as in
     contained in $\bigcup_i D_i$ and has probability at most $\sfrac{1}{n^2}$ as well.
 \end{proof}
 
-\paragraph{Why the lower tail needs more queries.} With only $T = 3 n \log n$ queries we have
-$\mu = 3 \log n$, and the lower tail bound gives, for every $0 < \delta < 1$,
-\[\prob{Y_i < (1 - \delta) \, 3 \log n} \leq e^{-\frac{3 \log n \cdot \delta^2}{2}}
-    = \frac{1}{n^{3 \delta^2 / 2}} > \frac{1}{n^{3/2}}.\]
-After the union bound over the $n$ slots this is more than $n^{-1/2}$, which is far from the
-$n^{-2}$ that the exercise asks for. In general, with $T = a \, n \log n$ queries the same computation
-gives $n \cdot n^{-a \delta^2 / 2}$, which is at most $\sfrac{1}{n^2}$ as soon as $a \geq \sfrac{6}{\delta^2}$;
-\cref{lem:maxload-lower-0901} is the choice $\delta = \sfrac{1}{2}$, $a = 24$. The upper tail does
-not have this problem because the bound $2^{-R}$ for $R \geq 6\mu$ is much stronger.
-
-\begin{corollary}[Every Slot Is Accessed $\bigTh{\log n}$ Times]\label{cor:maxload-0901}
-    If random sampling makes $24 n \log n$ queries, then with probability at least $1 - \sfrac{2}{n^2}$
-    every slot is accessed at least $12 \log n$ and fewer than $144 \log n$ times.
-\end{corollary}
-
-\begin{proof}
-    The lower bound is \cref{lem:maxload-lower-0901}. For the upper bound, repeat the proof of
-    \cref{lem:maxload-upper-0901} with $\mu = 24 \log n$ and $R = 6\mu = 144 \log n$:
-    $\prob{Y_i \geq 144 \log n} \leq 2^{-144 \log n} \leq n^{-3}$, and the union bound gives
-    $\sfrac{1}{n^2}$. The two failure events together have probability at most $\sfrac{2}{n^2}$.
-\end{proof}
+The lemma uses $24 n \log n$ queries instead of the $3 n \log n$ of \cref{thm:whp} because with
+$\mu = 3 \log n$ the lower tail bound $e^{-\mu\delta^2/2}$ is larger than $n^{-3/2}$ for every
+$\delta < 1$, which is too weak for the union bound over the $n$ slots. The number of accesses is
+bounded from above in the same way, with the second Chernoff bound: for $\mu = 24 \log n$ and
+$R = 6\mu = 144 \log n$ it gives $\prob{Y_i \geq 144 \log n} \leq 2^{-144 \log n} \leq n^{-3}$, so with
+probability at least $1 - \sfrac{1}{n^2}$ no slot is accessed $144 \log n$ times or more. Together,
+with $24 n \log n$ queries every slot is accessed $\bigTh{\log n}$ times with high probability.
