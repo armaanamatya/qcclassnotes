@@ -214,25 +214,141 @@ where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. The random variables 
     \sim \frac{m^2}{n}.
 \end{align*}
 
-\newpage
 % Dashed box in my notes: exercise given in class.
-\begin{exercise}
+\begin{exercise}\label{ex:birthday-0903}
     Show that
     \[\prob{X \geq 1} \geq \bigTh{1},\]
     i.e., the birthday paradox occurs.
 \end{exercise}
 
-\noindent From class:
-\[\variance{X} = \variance{\sum_{i \neq j} X_{ij}}.\]
-\solutionspace % TODO: replace with \begin{proof} ... \end{proof}
+The hint given in class is to compute the variance
+\[\variance{X} = \variance{\sum_{i \neq j} X_{ij}}\]
+and to use Chebyshev's inequality (\cref{thm:chebyshev}): if the variance of $X$ is small compared
+to $\expectation{X}^2$, then $X$ is rarely far from its mean, and in particular rarely $0$. We first
+prove the claim that the $X_{ij}$ are pairwise independent, which is what makes the variance easy
+to compute.
+
+\begin{lemma}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
+    For any two different pairs $\set{i,j} \neq \set{k,l}$,
+    \[\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}} = \frac{1}{n^2},\]
+    i.e., $X_{ij}$ and $X_{kl}$ are independent. Consequently
+    \[\variance{X} = \sum_{i \neq j} \variance{X_{ij}}
+        = \binom{m}{2} \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \expectation{X}.\]
+\end{lemma}
+
+\begin{proof}
+    Since $X_{ij} X_{kl} = 1$ exactly when both indicators are $1$,
+    \[\expectation{X_{ij} X_{kl}} = \prob{f(i) = f(j) \text{ and } f(k) = f(l)}.\]
+    There are two cases.
+    \begin{itemize}
+        \item The pairs are disjoint, $\set{i,j} \cap \set{k,l} = \emptyset$. Then the two events
+              depend on the birthdays of four different people, which are independent, so the
+              probability is $\prob{f(i) = f(j)} \cdot \prob{f(k) = f(l)} = \sfrac{1}{n^2}$.
+        \item The pairs share one person, say $\set{i,j}$ and $\set{i,k}$ with $j \neq k$. The
+              birthdays $f(j)$ and $f(k)$ are independent of $f(i)$ and of each other, and each
+              equals a given day $b$ with probability $\sfrac{1}{n}$, so
+              \[\prob{f(j) = f(i) \text{ and } f(k) = f(i)}
+                  = \sum_{b=1}^{n} \prob{f(i) = b} \cdot \frac{1}{n} \cdot \frac{1}{n}
+                  = \frac{1}{n^2}.\]
+    \end{itemize}
+    In both cases $\expectation{X_{ij} X_{kl}} = \sfrac{1}{n^2} = \expectation{X_{ij}} \expectation{X_{kl}}$.
+    For two indicator random variables this is the same as independence, since their joint
+    distribution is determined by $\prob{X_{ij} = 1}$, $\prob{X_{kl} = 1}$ and $\prob{X_{ij} = X_{kl} = 1}$.
+
+    For the variance, write $X - \expectation{X} = \sum_{i \neq j} \left(X_{ij} - \expectation{X_{ij}}\right)$
+    and expand the square:
+    \begin{align*}
+        \variance{X}
+         & = \expectation{\Big(\sum_{i \neq j} \left(X_{ij} - \expectation{X_{ij}}\right)\Big)^2}                                                           \\
+         & = \sum_{i \neq j} \expectation{\left(X_{ij} - \expectation{X_{ij}}\right)^2}
+        + \sum_{\set{i,j} \neq \set{k,l}} \expectation{\left(X_{ij} - \expectation{X_{ij}}\right) \left(X_{kl} - \expectation{X_{kl}}\right)} \\
+         & = \sum_{i \neq j} \variance{X_{ij}}
+        + \sum_{\set{i,j} \neq \set{k,l}} \left(\expectation{X_{ij} X_{kl}} - \expectation{X_{ij}} \expectation{X_{kl}}\right)
+        = \sum_{i \neq j} \variance{X_{ij}},
+    \end{align*}
+    where the second sum vanishes by the first part. Finally $X_{ij}$ is an indicator with
+    $\prob{X_{ij} = 1} = \sfrac{1}{n}$, so $X_{ij}^2 = X_{ij}$ and
+    \[\variance{X_{ij}} = \expectation{X_{ij}^2} - \expectation{X_{ij}}^2
+        = \frac{1}{n} - \frac{1}{n^2} = \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \frac{1}{n}.\]
+    Summing over the $\binom{m}{2}$ pairs gives $\variance{X} \leq \binom{m}{2} \frac{1}{n} = \expectation{X}$.
+\end{proof}
+
+\begin{theorem}[The Birthday Paradox Occurs]\label{thm:birthday-0903}
+    If $m \geq 2\sqrt{n} + 1$, then
+    \[\prob{X \geq 1} \geq \frac{1}{2}.\]
+    In words: with $\bigO{\sqrt{n}}$ people there is a collision with constant probability.
+\end{theorem}
+
+\begin{proof}
+    The event $X = 0$ (no collision) is contained in the event $\abs{X - \expectation{X}} \geq \expectation{X}$,
+    since $X = 0$ means $X - \expectation{X} = -\expectation{X}$. By Chebyshev's inequality
+    (\cref{thm:chebyshev}) with $a = \expectation{X}$, and then \cref{lem:pairwise-0903},
+    \[\prob{X = 0} \leq \prob{\abs{X - \expectation{X}} \geq \expectation{X}}
+        \leq \frac{\variance{X}}{\expectation{X}^2} \leq \frac{\expectation{X}}{\expectation{X}^2} = \frac{1}{\expectation{X}}.\]
+    For $m \geq 2\sqrt{n} + 1$, since $m(m-1)$ grows with $m$,
+    \[\expectation{X} = \frac{m(m-1)}{2n} \geq \frac{(2\sqrt{n} + 1) \cdot 2\sqrt{n}}{2n}
+        = \frac{4n + 2\sqrt{n}}{2n} \geq 2,\]
+    so $\prob{X = 0} \leq \sfrac{1}{2}$, and $\prob{X \geq 1} = 1 - \prob{X = 0} \geq \sfrac{1}{2}$.
+\end{proof}
+
+The direct computation of $\prob{\text{all birthdays different}}$ above already gave
+$\prob{X = 0} \leq \sfrac{1}{e}$ for $m = \sqrt{2n} + 1$. The point of this \emph{second moment}
+argument is that it only uses $\expectation{X}$ and $\variance{X}$, so it also works when the exact
+probability cannot be computed.
 
 \section{Quantum Birthday Paradox}
 
-An algorithm makes $k$ queries
-\[f(x_1), \dots, f(x_k).\]
+The birthday paradox, seen as an algorithm, solves the \emph{collision problem}: given query access
+to a function $f$, find $x \neq y$ with $f(x) = f(y)$. Querying $m = \sqrt{2n} + 1$ random points finds
+a collision with probability at least $\sfrac{1}{2}$, so $\bigO{\sqrt{n}}$ queries suffice classically.
+The quantum version of the problem is studied later in the course; here we show that classically
+$\sqrt{n}$ queries are also necessary. An algorithm makes $k$ queries
+\[f(x_1), \dots, f(x_k),\]
+where the point $x_s$ may depend on the earlier answers $f(x_1), \dots, f(x_{s-1})$ and on random coins.
 
 % Not in a dashed box in my notes, but written as something to show.
-\begin{exercise}
+\begin{exercise}\label{ex:collision-lb-0903}
     Show a $\sqrt{n}$ lower bound in the classical case.
 \end{exercise}
-\solutionspace % TODO: replace with \begin{proof} ... \end{proof}
+
+We use the same model as in the birthday paradox: $f \colon D \to [n]$, where $[n] = \set{1, \dots, n}$,
+is a \emph{random function}, i.e., every value $f(x)$ is uniform in $[n]$ and independent of all the
+other values (the birthday of person $x$). The algorithm \emph{finds a collision} if it outputs
+$x \neq y$ with $f(x) = f(y)$. We may assume that the algorithm queries the two points that it
+outputs: if it does not, it can do so with at most $2$ extra queries, which does not change the
+bound below. We may also assume that the $k$ queried points are different, since repeating a query
+gives no new information.
+
+\begin{theorem}[Classical Lower Bound for Collision Finding]\label{thm:collision-lb-0903}
+    Let $f \colon D \to [n]$ be a random function. Every classical algorithm (deterministic or
+    randomized, adaptive) that makes $k$ queries finds a collision with probability at most
+    \[\frac{\binom{k}{2}}{n} = \frac{k(k-1)}{2n}.\]
+    In particular, to find a collision with probability at least $\sfrac{1}{2}$ it needs
+    $k > \sqrt{n}$ queries, so the classical query complexity of the collision problem is $\bigOm{\sqrt{n}}$.
+\end{theorem}
+
+\begin{proof}
+    Since the algorithm queries the points that it outputs, it can only find a collision if two of
+    its queried values agree. Let $E_s$ be the event that the $\nth{s}$ query collides with an earlier
+    one, i.e., $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$. A collision among the $k$ queries means
+    that some $E_s$ occurs, so by the union bound
+    \[\prob{\text{collision}} \leq \sum_{s=1}^{k} \prob{E_s}.\]
+    We claim that $\prob{E_s} \leq \frac{s-1}{n}$. Consider the moment just before the $\nth{s}$
+    query. The algorithm chooses $x_s$ from the $s-1$ answers seen so far and from its random coins;
+    condition on all of these. Then $x_s$ is a fixed point that has not been queried before, so its
+    value $f(x_s)$ is still a uniformly random element of $[n]$, independent of the $s-1$ values
+    $f(x_1), \dots, f(x_{s-1})$, which are now fixed. The probability that $f(x_s)$ equals one of these
+    $s-1$ fixed values is therefore at most $\frac{s-1}{n}$, no matter how the algorithm chose $x_s$.
+    Since this holds for every outcome of the first $s-1$ steps, it also holds without conditioning,
+    which proves the claim. Hence
+    \[\prob{\text{collision}} \leq \sum_{s=1}^{k} \frac{s-1}{n} = \frac{0 + 1 + \dots + (k-1)}{n} = \frac{k(k-1)}{2n}.\]
+    If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then $\frac{k(k-1)}{2n} \geq \frac{1}{2}$,
+    i.e., $k^2 > k(k-1) \geq n$, so $k > \sqrt{n}$.
+\end{proof}
+
+\paragraph{Worst case inputs.} \cref{thm:collision-lb-0903} is a statement about a \emph{random}
+input $f$: the distributional complexity of the collision problem under the uniform distribution on
+functions is $\bigOm{\sqrt{n}}$. By Yao's minmax principle from the lecture of September~1 (in its
+version for algorithms that are allowed to err), this is also a lower bound for every randomized
+algorithm on its worst case input. Together with the birthday paradox, which finds a collision with
+$\bigO{\sqrt{n}}$ queries, the classical query complexity of finding a collision is $\bigTh{\sqrt{n}}$.
