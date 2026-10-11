@@ -54,7 +54,7 @@ steps (\cref{fig:grover4-1006}).
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}[every node/.style={font=\small}, xscale=0.82, yscale=0.85]
+    \begin{tikzpicture}[every node/.style={font=\small}, xscale=0.82, yscale=0.62]
         % panel 1
         \begin{scope}
             \draw[->] (-0.3,0) -- (4.3,0);
@@ -126,7 +126,7 @@ the second Hadamard gate returns the extra qubit to $\ket{1}$. One application o
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}[gate/.style={draw, fill=white, minimum size=6mm, inner sep=1pt}]
+    \begin{tikzpicture}[scale=0.82, gate/.style={draw, fill=white, minimum size=6mm, inner sep=1pt}]
         \foreach \y in {3,2.25,1} {\draw (0,\y) -- (6,\y);}
         \node at (0.6,1.7) {$\vdots$};
         \node at (5.4,1.7) {$\vdots$};
@@ -199,7 +199,7 @@ make no query.
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}[box/.style={draw, fill=white, minimum height=1.6cm, minimum width=1.1cm, inner sep=2pt},
+    \begin{tikzpicture}[scale=0.82, box/.style={draw, fill=white, minimum height=1.6cm, minimum width=1.1cm, inner sep=2pt},
             meter/.style={draw, circle, fill=white, inner sep=1.5pt}, every node/.style={font=\small}]
         \node[left] at (0,0) {$\ket{0^n}$};
         \draw (0,0) -- (10.9,0);
@@ -336,12 +336,12 @@ written down, but the computation was not finished; we complete it here.
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}[scale=1.15, every node/.style={font=\small}]
+    \begin{tikzpicture}[scale=0.85, every node/.style={font=\small}]
         \draw[->] (0,0) -- (4.2,0) node[right] {$\ket{B}$ (non-solutions)};
         \draw[->] (0,0) -- (0,4.2) node[above] {$\ket{A}$ (solutions)};
         \draw[->, thick] (0,0) -- (16:3.8) node[right] {$\ket{h}$};
         \draw[->, thick] (0,0) -- (48:3.8) node[above right] {$G\ket{h}$};
-        \draw[->, thick] (0,0) -- (80:3.8) node[above] {$G^2\ket{h}$};
+        \draw[->, thick] (0,0) -- (80:3.8) node[above right] {$G^2\ket{h}$};
         \draw[->, thick, dashed] (0,0) -- (112:3.8) node[above left] {$G^3\ket{h}$};
         \draw (1.4,0) arc (0:16:1.4) node[midway, right] {$\theta$};
         \draw (16:2.2) arc (16:48:2.2) node[midway, above right] {$2\theta$};
