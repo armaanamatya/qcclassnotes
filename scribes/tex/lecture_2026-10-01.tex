@@ -172,6 +172,44 @@ ones.
     bound $e^{-(k-1)^2/(2N)}$ in its proof is at most $\sfrac{1}{3}$ for $k \geq \sqrt{2N \ln 3} + 1$).
 \end{proof}
 
+The same bound holds if the algorithm only has to tell the two cases apart.
+
+\begin{corollary}[Decision Version]\label{cor:simon-decision-1001}
+    Let $n \geq 2$. Every randomized classical algorithm that decides, with success probability at
+    least $\sfrac{2}{3}$ on every input, whether $f$ is $1$-to-$1$ or $2$-to-$1$ makes more than
+    $\sfrac{\sqrt{N}}{2}$ queries on some input.
+\end{corollary}
+
+\begin{proof}
+    Let $\mathcal{P}$ be the uniform distribution on $1$-to-$1$ functions (the table of values is a
+    uniformly random permutation of $\set{0,1}^n$), and let $\mu$ draw $f$ from $\mathcal{P}$ or from
+    $\mathcal{D}$ with probability $\sfrac{1}{2}$ each. Let $A$ be a deterministic algorithm with
+    $k \leq \sfrac{\sqrt{N}}{2}$ queries, all different, as in the proof of
+    \cref{thm:simon-rand-lb-1001}. Its answer is a function of the sequence
+    $T = (f(q_1), \dots, f(q_k))$ of answers.
+
+    Let $t = (a_1, \dots, a_k)$ have distinct entries. Under $\mathcal{P}$ every answer is uniform
+    among the unused values, so $\prob[\mathcal{P}]{T = t} = \prod_{i=1}^{k} \sfrac{1}{(N - i + 1)}$.
+    Under $\mathcal{D}$, let $p_i$ be the probability of a collision at step $i$, given no collision
+    before and the answers $a_1, \dots, a_{i-1}$. By the proof of \cref{lem:collision-1001},
+    $p_i \leq \sfrac{2(i-1)}{N}$, and without a collision the $\nth{i}$ answer is uniform among the
+    $N - i + 1$ unused values. Hence, by \cref{lem:prodsum-1001} below,
+    \[\prob[\mathcal{D}]{T = t} \geq \prod_{i=1}^{k} \frac{1 - p_i}{N - i + 1}
+        \geq \left(1 - \sum_{i=1}^{k} \frac{2(i-1)}{N}\right) \prob[\mathcal{P}]{T = t}
+        = \left(1 - \frac{k(k-1)}{N}\right) \prob[\mathcal{P}]{T = t}
+        \geq \frac{3}{4} \prob[\mathcal{P}]{T = t},\]
+    because $k(k-1) \leq k^2 \leq \sfrac{N}{4}$.
+
+    Let $\mathcal{T}$ be the set of sequences on which $A$ answers ``$1$-to-$1$'', and let
+    $q = \prob[\mathcal{P}]{T \in \mathcal{T}}$; sequences with a repeated entry have probability $0$
+    under $\mathcal{P}$. Summing over $t \in \mathcal{T}$ gives
+    $\prob[\mathcal{D}]{T \in \mathcal{T}} \geq \frac{3}{4} q$, so $A$ is correct on an input drawn from
+    $\mu$ with probability at most
+    \[\frac{1}{2} q + \frac{1}{2}\left(1 - \frac{3}{4} q\right) = \frac{1}{2} + \frac{q}{8} \leq \frac{5}{8} < \frac{2}{3}.\]
+    So $A$ errs with probability at least $\sfrac{3}{8} > \sfrac{1}{3}$ on $\mu$, and the claim
+    follows from \cref{lem:yao-1001} as before.
+\end{proof}
+
 \begin{lemma}\label{lem:prodsum-1001}
     For $a_1, \dots, a_m \in [0, 1]$, $\prod_{i=1}^{m} (1 - a_i) \geq 1 - \sum_{i=1}^{m} a_i$.
 \end{lemma}

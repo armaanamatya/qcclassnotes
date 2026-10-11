@@ -117,8 +117,20 @@ flips the sign of every $\ket{x}$ with $f(x) = 1$.
 
 \subsection{The \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
-To generalize Deutsch's algorithm to $n$ bits we apply the Hadamard gate to each of $n$ qubits. For
-$x, y \in \set{0,1}^n$, the inner product of the bit strings modulo $2$ is
+To generalize Deutsch's algorithm to $n$ bits we apply the Hadamard gate to each of $n$ qubits.
+Start with $n = 2$ and let $\ket{x} = \ket{x_1 x_2} = \ket{x_1}\ket{x_2}$. Using
+\cref{eq:mixed-0915} and then \cref{eq:hadamard-0924} on each qubit,
+\begin{align*}
+    (H \otimes H)\ket{x}
+     & = H\ket{x_1} \otimes H\ket{x_2}
+    = \left(\frac{1}{\sqrt{2}} \sum_{y_1 \in \set{0,1}} (-1)^{x_1 y_1} \ket{y_1}\right)
+    \left(\frac{1}{\sqrt{2}} \sum_{y_2 \in \set{0,1}} (-1)^{x_2 y_2} \ket{y_2}\right) \\
+     & = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x_1 y_1 + x_2 y_2} \ket{y}
+    = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x \cdot y} \ket{y},
+\end{align*}
+where $x \cdot y = x_1 y_1 \oplus x_2 y_2$, since only the parity of the exponent matters. For
+example, $(H \otimes H)\ket{01} = \frac{1}{2}\left(\ket{00} - \ket{01} + \ket{10} - \ket{11}\right)$.
+In general, for $x, y \in \set{0,1}^n$, the inner product of the bit strings modulo $2$ is
 \[x \cdot y = x_1 y_1 \oplus x_2 y_2 \oplus \dots \oplus x_n y_n.\]
 
 \begin{lemma}[Walsh--Hadamard Transform]\label{lem:wh-0924}
