@@ -37,6 +37,12 @@
     before skip=4mm, after skip=4mm,
 }
 
+% Dirac notation for the quantum lectures (scribe.sty does not define it).
+% Usage: \ket{0}, \bra{x}, \braket{x}{y}
+\newcommand{\ket}[1]{\lvert #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 \rvert}
+\newcommand{\braket}[2]{\langle #1 \vert #2 \rangle}
+
 % Blank space for a solution/proof that still has to be written.
 % Usage: \solutionspace or \solutionspace[10cm]
 % Replace the command with a proof environment once the solution is written.
