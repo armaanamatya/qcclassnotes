@@ -49,3 +49,14 @@
 \newcommand{\solutionspace}[1][8cm]{%
     \par\noindent\textbf{Solution.}\par
     \vspace{#1}}
+
+% Euclidean norm of a vector/state. Usage: \norm{v}, \norm{v}_2^2
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% Probability and expectation with an optional subscript for the random choice.
+% Usage: \prob{A} as before, or \prob[x \sim \mu]{A}; same for \expectation.
+% scribe.sty defines the one-argument versions; these keep that behavior.
+\RenewDocumentCommand{\prob}{o m}{%
+    \IfValueTF{#1}{\operatorname{\Pr}_{#1}\left(#2\right)}{\operatorname{\Pr}\left(#2\right)}}
+\RenewDocumentCommand{\expectation}{o m}{%
+    \IfValueTF{#1}{\operatorname{\mathbb{E}}_{#1}\left[#2\right]}{\operatorname{\mathbb{E}}\left[#2\right]}}
