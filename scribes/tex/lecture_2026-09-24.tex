@@ -18,8 +18,8 @@ Quantumly, Deutsch's algorithm does it with $1$ query.
 
 A quantum circuit is reversible, but $f$ need not be (a constant $f$ forgets its input). We therefore
 convert $f$ into a reversible \emph{quantum version} $U_f$: a controlled-$f$ gate modeled on the
-CNOT gate (\cref{fig:uf-0924}). CNOT maps $\ket{a}\ket{b} \mapsto \ket{a}\ket{a \oplus b}$, and $U_f$
-maps
+CNOT gate of \cref{def:cnot-0915}. Where CNOT XORs the control bit $a$ into the target, $U_f$ XORs
+$f(a)$ into it (\cref{fig:uf-0924}):
 \[U_f \colon \ket{a}\ket{b} \longmapsto \ket{a}\ket{b \oplus f(a)}.\]
 The first qubit (the input $a$) is left unchanged, and $f(a)$ is XORed into the second qubit.
 Applying $U_f$ twice gives back $\ket{a}\ket{b}$, so $U_f$ is reversible. One application of $U_f$
@@ -28,29 +28,17 @@ counts as one query to $f$.
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}
-        % CNOT
         \draw (0,1) -- (3,1);
         \draw (0,0) -- (3,0);
         \node[left] at (0,1) {$\ket{a}$};
         \node[left] at (0,0) {$\ket{b}$};
-        \filldraw (1.5,1) circle (2pt);
-        \draw (1.5,1) -- (1.5,-0.25);
-        \draw (1.5,0) circle (0.25);
+        \draw[fill=white] (1,-0.45) rectangle (2,1.45);
+        \node at (1.5,0.5) {$U_f$};
         \node[right] at (3,1) {$\ket{a}$};
-        \node[right] at (3,0) {$\ket{a \oplus b}$};
-        % U_f
-        \begin{scope}[xshift=7cm]
-            \draw (0,1) -- (3,1);
-            \draw (0,0) -- (3,0);
-            \node[left] at (0,1) {$\ket{a}$};
-            \node[left] at (0,0) {$\ket{b}$};
-            \draw[fill=white] (1,-0.45) rectangle (2,1.45);
-            \node at (1.5,0.5) {$U_f$};
-            \node[right] at (3,1) {$\ket{a}$};
-            \node[right] at (3,0) {$\ket{b \oplus f(a)}$};
-        \end{scope}
+        \node[right] at (3,0) {$\ket{b \oplus f(a)}$};
     \end{tikzpicture}
-    \caption{Left: the CNOT gate. Right: the quantum query $U_f$, a controlled-$f$ gate.}
+    \caption{The quantum query $U_f$, a controlled-$f$ gate (compare the CNOT gate of
+        \cref{fig:cnot-0915}).}
     \label{fig:uf-0924}
 \end{figure}
 
@@ -90,16 +78,14 @@ $\ket{1}$).
     \label{fig:deutsch-0924}
 \end{figure}
 
-Recall that the Hadamard gate $H$ acts as
-\[H\ket{0} = \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right),
-    \qquad
-    H\ket{1} = \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right),\]
-or, in one formula, for $a \in \set{0,1}$,
+The action of the Hadamard gate on $\ket{0}$ and $\ket{1}$ (\cref{eq:hadamard-0915}) can be written
+in one formula: for $a \in \set{0,1}$,
 \begin{equation}\label{eq:hadamard-0924}
     H\ket{a} = \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)
     = \frac{1}{\sqrt{2}} \sum_{b \in \set{0,1}} (-1)^{ab} \ket{b}.
 \end{equation}
-Since $H^2 = I$, applying $H$ to the right-hand side of \cref{eq:hadamard-0924} gives back $\ket{a}$.
+Since $H^2 = I$ (\cref{lem:hh-0915}), applying $H$ to the right-hand side of \cref{eq:hadamard-0924}
+gives back $\ket{a}$.
 
 \begin{theorem}[Deutsch's Algorithm]\label{thm:deutsch-0924}
     The circuit of \cref{fig:deutsch-0924} makes one query to $f$, and measuring its first qubit gives
@@ -108,7 +94,7 @@ Since $H^2 = I$, applying $H$ to the right-hand side of \cref{eq:hadamard-0924} 
 \end{theorem}
 
 \begin{proof}
-    After the first two Hadamard gates the state is
+    After the first two Hadamard gates the state is (by \cref{eq:mixed-0915})
     \begin{align*}
         \ket{\psi_1}
          & = H\ket{0} \otimes H\ket{1}
@@ -156,7 +142,7 @@ one query flips the sign of every $\ket{x}$ with $f(x) = 1$ at once.
 
 To generalize Deutsch's algorithm to $n$ bits we need the Hadamard gate applied to each of $n$ qubits.
 Start with $n = 2$ and let $\ket{x} = \ket{x_1 x_2} = \ket{x_1}\ket{x_2}$. Using
-\cref{eq:hadamard-0924} on each qubit,
+\cref{eq:mixed-0915} and then \cref{eq:hadamard-0924} on each qubit,
 \begin{align*}
     (H \otimes H)\ket{x}
      & = H\ket{x_1} \otimes H\ket{x_2}                                                                 \\
