@@ -151,7 +151,11 @@ $\mu = \expectation{Y_i} = \sfrac{T}{n}$.
     in the first and has probability at most $\sfrac{1}{n^2}$ as well.
 \end{proof}
 
-Similarly, the second Chernoff bound with $R = 6\mu = 144 \log n$ gives
+The lemma uses $24 n \log n$ queries and not the $3 n \log n$ of \cref{thm:whp}: with
+$\mu = 3 \log n$ the lower tail bound is $n^{-3\delta^2/2} > n^{-3/2}$ per slot, which is too weak
+for the union bound over the $n$ slots. Similarly, still with $24 n \log n$ queries
+($\mu = 24 \log n$), the second Chernoff bound with $R = 6\mu = 144 \log n$ gives
 $\prob{Y_i \geq 144 \log n} \leq 2^{-144 \log n} \leq n^{-3}$, so by the union bound, with
-probability at least $1 - \sfrac{1}{n^2}$ no slot is accessed $144 \log n$ times or more. So with
-$24 n \log n$ queries every slot is accessed $\bigTh{\log n}$ times with high probability.
+probability at least $1 - \sfrac{1}{n^2}$ no slot is accessed $144 \log n$ times or more. So the
+exercise also holds with ``$\geq$'' in place of ``$\leq$'' ($c = 144$), and with $24 n \log n$
+queries every slot is accessed $\bigTh{\log n}$ times with probability at least $1 - \sfrac{2}{n^2}$.

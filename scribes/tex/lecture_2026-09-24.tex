@@ -106,9 +106,11 @@ gives back $\ket{a}$.
 \section{Phase Flip and the \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
 If the second (target) qubit of $U_f$ is in the state
-$\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then, as in the proof of \cref{thm:deutsch-0924},
-$U_f$ leaves the target qubit unchanged and puts the sign $(-1)^{f(x)}$ in front of every input
-$\ket{x}$. We drop the target qubit and write the query in the \emph{phase flip} form
+$\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then, by the computation in the proof of
+\cref{thm:deutsch-0924}, for every input $x$ (also for $x \in \set{0,1}^n$, where
+$U_f \colon \ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$),
+\[U_f \, \ket{x} \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = (-1)^{f(x)} \, \ket{x} \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}).\]
+We drop the target qubit and write the query in the \emph{phase flip} form
 \[U_f \colon \ket{x} \longmapsto (-1)^{f(x)} \ket{x}.\]
 By linearity, $U_f$ maps $\sum_x \alpha_x \ket{x}$ to $\sum_x \alpha_x (-1)^{f(x)} \ket{x}$: one query
 flips the sign of every $\ket{x}$ with $f(x) = 1$.

@@ -57,7 +57,7 @@ $\bra{\phi} = \left(\ket{\phi}\right)^\dagger$, where $\dagger$ (``dagger'') is 
 \emph{conjugate transpose}: transpose the vector or matrix and replace every entry by its complex
 conjugate. For $\ket{\phi} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ we get
 $\bra{\phi} = \begin{pmatrix} \overline{\alpha} & \overline{\beta} \end{pmatrix}$. The dagger equals
-the inverse only for unitary matrices.
+the inverse only for unitary matrices (\cref{def:unitary-0915}).
 
 A bra times a ket is a number, the \emph{inner product}, and it gives the (Euclidean) norm: for
 $\ket{x}, \ket{y} \in \mathbb{C}^n$ with entries $x_i$, $y_i$,
@@ -98,7 +98,7 @@ The solution is \cref{thm:unitary-0915}.
     \begin{enumerate}
         \item $M$ is Hermitian:
               $M^\dagger = (U^\dagger U)^\dagger - I^\dagger = U^\dagger (U^\dagger)^\dagger - I = M$.
-        \item For every $\ket{x}$, by the first part,
+        \item For every $\ket{x}$, since $\norm{U \ket{x}}^2 = \bra{x} U^\dagger U \ket{x}$ for every matrix $U$,
               $\bra{x} M \ket{x} = \bra{x} U^\dagger U \ket{x} - \braket{x}{x}
                   = \norm{U \ket{x}}^2 - \norm{\ket{x}}^2 = 0$.
     \end{enumerate}
@@ -127,7 +127,8 @@ multiplying $U^\dagger U = I$ by $U^{-1}$ on the right gives $U^\dagger = U^{-1}
 $U U^\dagger = I$. So every unitary matrix is invertible, and its inverse $U^\dagger$ is again unitary.
 
 A quantum gate is a linear map that sends every state, i.e., every unit vector, to a state. A linear
-map that preserves the norm of unit vectors preserves the norm of all vectors, so by
+map that preserves the norm of unit vectors preserves the norm of all vectors (every vector is a
+multiple of a unit vector), so by
 \cref{thm:unitary-0915} it is unitary. Conversely, every unitary matrix maps states to states.
 
 \section{Quantum Circuits and One-Qubit Gates}

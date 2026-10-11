@@ -141,7 +141,9 @@ ones.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:simon-rand-lb-1001}]
-    Let $A$ be a deterministic algorithm with $k \leq \sfrac{\sqrt{N}}{2}$ queries, all different, on an
+    Let $A$ be a deterministic algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries. We may assume
+    that it never repeats a query and makes the same number $k \leq \sfrac{\sqrt{N}}{2}$ of queries on
+    every input (extra queries whose answers are ignored do not change the output). Run it on an
     input drawn from $\mathcal{D}$; it is correct only if its output is $s$. If there is no collision,
     then given the answers the output is one fixed string, while $s$ is uniform over at least
     $\sfrac{N}{2}$ strings by part~2 of \cref{lem:collision-1001}, so $A$ is correct with probability
@@ -152,6 +154,8 @@ ones.
     with probability at least $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$, and by \cref{lem:yao-1001}
     (with $\mu = \mathcal{D}$, $\delta = \sfrac{1}{3}$) every randomized algorithm with at most
     $\sfrac{\sqrt{N}}{2}$ queries errs with probability greater than $\sfrac{1}{3}$ on some input.
+    Hence an algorithm with success probability at least $\sfrac{2}{3}$ on every input makes more
+    than $\sfrac{\sqrt{N}}{2}$ queries on some input.
 \end{proof}
 
 \begin{corollary}[Classical Query Complexity of Simon's Problem]\label{thm:simon-det-lb-1001}
@@ -164,7 +168,8 @@ ones.
 \begin{proof}
     A deterministic algorithm that is always correct is a randomized algorithm with success
     probability $1 \geq \sfrac{2}{3}$, so \cref{thm:simon-rand-lb-1001} gives the lower bound for both
-    kinds. The upper bounds are \cref{ex:simon-det-0929} and \cref{thm:simon-rand-ub-1001}.
+    kinds. The upper bounds are \cref{ex:simon-det-0929} and \cref{thm:simon-rand-ub-1001} (the
+    bound $e^{-(k-1)^2/(2N)}$ in its proof is at most $\sfrac{1}{3}$ for $k \geq \sqrt{2N \ln 3} + 1$).
 \end{proof}
 
 \begin{lemma}\label{lem:prodsum-1001}

@@ -7,8 +7,8 @@ and we generalize Grover's algorithm to \emph{quantum amplitude amplification}.
 \paragraph{Recap.} We keep the notation of the last lecture ($a$, $b = N - a$ with
 $1 \leq a \leq N - 1$, $\ket{A}$, $\ket{B}$, $Z_f$, $Z_0$, $D$, $\ket{h}$ and the Grover iteration
 $G = D Z_f = -H^{\otimes n} Z_0 H^{\otimes n} Z_f$; \cref{fig:grover-circuit-1006}). The number of
-iterations, about $\sqrt{\sfrac{N}{a}}$, depends on $a$; \cref{sec:randomk-1008} removes this
-assumption. By \cref{eq:h-AB-1006}, $\ket{h} = \sin\theta \ket{A} + \cos\theta \ket{B}$ with
+iterations, about $\sqrt{\sfrac{N}{a}}$, depends on $a$, so $a$ has to be known; \cref{sec:randomk-1008}
+removes this assumption. By \cref{eq:h-AB-1006}, $\ket{h} = \sin\theta \ket{A} + \cos\theta \ket{B}$ with
 $\theta = \sin^{-1}\left(\sqrt{\sfrac{a}{N}}\right) \in (0, \sfrac{\pi}{2})$. We write a unit vector
 of the plane spanned by $\ket{A}$ and $\ket{B}$ with real coefficients as
 $\sin\alpha \ket{A} + \cos\alpha \ket{B}$ and call $\alpha$ its \emph{angle} (measured from $\ket{B}$
@@ -45,9 +45,10 @@ $\ket{h}$ and $\ket{h^\perp}$ are a second orthonormal basis of the plane
     reflection of the plane about the line of $\ket{h}$.
 \end{wsolution}
 
-\paragraph{The sign of $G$.} In this lecture the Grover iteration is written as
-$G = \left(H^{\otimes n} Z_0 H^{\otimes n}\right)\left(-Z_f\right)$, which is the same operator as
-$G = D Z_f$. In the form $D Z_f$ it is the reflection about $\ket{B}$ followed by the reflection about
+\paragraph{The sign of $G$.} In class the Grover iteration was also written as
+$G = \left(H^{\otimes n} Z_0 H^{\otimes n}\right)\left(-Z_f\right)$. This is the same operator as
+$G = D Z_f = \left(-H^{\otimes n} Z_0 H^{\otimes n}\right) Z_f$, because the minus sign can be moved
+from one factor to the other. In the form $D Z_f$ it is the reflection about $\ket{B}$ followed by the reflection about
 $\ket{h}$; in the other form $-Z_f$ negates the $\ket{B}$ component and
 $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$ negates the $\ket{h}$ component, so it is the
 reflection about $\ket{A}$ followed by the reflection about $\ket{h^\perp}$. Both pairs of lines make
@@ -202,7 +203,7 @@ $\theta \approx \sin\theta = \sqrt{\sfrac{a}{N}}$ we take
     Moreover $\kappa \geq \frac{\pi}{4}\sqrt{2} > 1$ because $\sfrac{N}{a} \geq 2$, so $k \geq 1$.
 \end{proof}
 
-Rounding $\kappa$ up can be worse than rounding down: for $a = \sfrac{N}{4}$ we have
+The bracket can also be read as rounding up; that reading does not give the bound in general: for $a = \sfrac{N}{4}$ we have
 $\theta = \sfrac{\pi}{6}$ and $\kappa = \sfrac{\pi}{2} \approx 1.57$, so $\floor{\kappa} = 1$
 iteration gives the angle $\sfrac{\pi}{2}$ and success probability $1$, while $\ceil{\kappa} = 2$
 iterations overshoot to $\sfrac{5\pi}{6}$ and success probability $\sfrac{1}{4}$.
@@ -261,10 +262,19 @@ not use $a$.
 For the smaller set $\set{1, \dots, \floor{\sqrt{N}}}$ the same proof works with
 $K = \floor{\sqrt{N}} \geq \sqrt{\sfrac{N}{2}}$ (by the same argument on the parity of $n$). Then
 $K \sin 2\theta \geq \sqrt{a} \geq 1$ and $\prob{\text{success}} \geq \frac{1}{2} - \frac{1}{4} = \frac{1}{4}$.
+For this smaller set the assumption $a \leq \sfrac{N}{2}$ is removed by first testing one uniformly
+random $x$ with one classical query, which is a solution with probability more than $\sfrac{1}{2}$
+if $a > \sfrac{N}{2}$.
+
+For $K = \floor{2\sqrt{N}}$ the assumption is not needed. For any $1 \leq a \leq N - 1$ we have
+$0 < \theta < \sfrac{\pi}{2}$, so $\sin 2\theta > 0$ and the equality in \cref{eq:avg-1008} still
+holds, with numerator at most $2$. The larger of $a$ and $b$ is at least $\sfrac{N}{2}$ and the
+smaller at least $1$, so $\sin 2\theta = \sfrac{2\sqrt{ab}}{N} \geq \sqrt{\sfrac{2}{N}}$,
+$K \sin 2\theta \geq \sqrt{2N} \cdot \sqrt{\sfrac{2}{N}} = 2$ and
+$\prob{\text{success}} \geq \frac{1}{2} - \frac{2}{8} = \frac{1}{4}$.
+
 A constant success probability is enough: we check $f(x) = 1$ for the measured $x$ with one more
-query and repeat if the check fails. The assumption $a \leq \sfrac{N}{2}$ costs nothing, because for
-$a > \sfrac{N}{2}$ a uniformly random $x$ is a solution with probability more than $\sfrac{1}{2}$. A
-fixed $k$ does not work in general: for $a = 1$ and $k = 1$ the success probability is
+query and repeat if the check fails. A fixed $k$ does not work in general: for $a = 1$ and $k = 1$ the success probability is
 $\sin^2 3\theta \leq 9\theta^2 < \sfrac{12}{N}$ by \cref{eq:theta2-1008}.
 
 \section{Quantum Amplitude Amplification}\label{sec:ampamp-1008}

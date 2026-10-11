@@ -177,7 +177,7 @@ Here $p_t$ and $\pi$ are row vectors as before, $x$, $w$ and $z$ are real column
 $x_u$ ($u \in V$), and $\mathbf{1}$ is the column vector with all entries $1$. A nonzero column
 vector $x$ is an \emph{eigenvector} of a matrix $M$ with \emph{eigenvalue} $\lambda$ if $Mx = \lambda x$.
 
-\paragraph{A symmetric matrix with the same eigenvalues.} The matrix $P = D^{-1} A$ is symmetric only
+\paragraph{A symmetric matrix with the same eigenvalues.} The matrix $P = D^{-1} A$ is in general not symmetric: for a connected graph it is symmetric only
 if all degrees are equal. Let $D^{1/2}$ be the diagonal matrix with entries
 $\sqrt{d_1}, \dots, \sqrt{d_n}$ and $D^{-1/2}$ its inverse, and put $N = D^{-1/2} A D^{-1/2}$, i.e.,
 $N_{uv} = \sfrac{A_{uv}}{\sqrt{d_u d_v}}$, which is symmetric because $A$ is. Then
@@ -312,7 +312,9 @@ of $x$ over the neighbours of $u$:
 single edge on the vertices $1, 2$, $(a, b) P = (b, a)$, so from $p_0 = (1, 0)$ the distribution
 alternates between $(1, 0)$ and $(0, 1)$, although $\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$ is
 stationary. Here $x = (1, -1)^{T}$ satisfies $Px = -x$, the eigenvalue $-1$ that Step~2 excludes. If
-$G$ is not connected, the limit depends on the start: in two disjoint triangles the token never
-leaves its triangle, so by \cref{lem:triangle-0908} the walk converges to the uniform distribution
-on that triangle. Both of these distributions are stationary, so the stationary distribution is not
-unique; the eigenvalue $1$ occurs twice, which Step~1 excludes.
+$G$ is not connected, the limit depends on the start: in two disjoint triangles on $\set{1,2,3}$
+and $\set{4,5,6}$ the token never leaves its triangle, so by \cref{lem:triangle-0908} the walk
+started in the first triangle converges to $\left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}, 0, 0, 0\right)$
+and the walk started in the second to $\left(0, 0, 0, \sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$.
+Both are stationary, so the stationary distribution is not unique. Here $x = (1,1,1,0,0,0)^{T}$ and
+$\mathbf{1}$ both satisfy $Px = x$: the eigenvalue $1$ occurs twice, which Step~1 excludes.

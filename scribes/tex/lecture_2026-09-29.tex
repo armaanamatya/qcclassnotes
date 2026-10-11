@@ -23,8 +23,8 @@ $x \cdot y = x_1 y_1 \oplus \dots \oplus x_n y_n$.
     If $z = 0^n$, all $2^n$ terms are $1$. If $z \neq 0^n$, pick $i$ with $z_i = 1$ and let $e_i$ be
     the string with a single $1$ in position $i$. The map $x \mapsto x \oplus e_i$ is its own inverse
     and has no fixed point, so it splits $\set{0,1}^n$ into $2^{n-1}$ disjoint pairs
-    $\set{x, x \oplus e_i}$. Since
-    $z \cdot (x \oplus e_i) = z \cdot x \oplus z_i = z \cdot x \oplus 1$, every pair contributes
+    $\set{x, x \oplus e_i}$. The inner product is linear modulo $2$, so
+    $z \cdot (x \oplus e_i) = z \cdot x \oplus z_i = z \cdot x \oplus 1$, and every pair contributes
     $(-1)^{z \cdot x} + (-1)^{z \cdot x \oplus 1} = 0$.
 \end{proof}
 
@@ -198,7 +198,7 @@ of linear equations over the field $\set{0,1}$ (addition is $\oplus$). If $y_1, 
 \emph{linearly independent} over $\set{0,1}$, the system has rank $n - 1$, so its solution space has
 dimension $n - (n-1) = 1$ and consists of $0^n$ and one nonzero string $s'$. Gaussian elimination over
 $\set{0,1}$ tests the independence and computes $s'$ in $\bigO{n^3}$ time. The true $s$ satisfies every
-equation (so at most $n - 1$ of them can be independent, and $n - 1$ independent ones are enough);
+equation (so if $s \neq 0^n$ at most $n - 1$ of them can be independent, and $n - 1$ independent ones are enough);
 hence if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 
 \begin{algorithm}[ht]

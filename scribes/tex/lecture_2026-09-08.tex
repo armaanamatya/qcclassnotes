@@ -131,7 +131,7 @@ the first and the third row.
 
 \section{A Randomized Algorithm for Leader Election}
 
-Throughout, $\log$ is the natural logarithm, $p = \frac{2 \log n}{n}$ and
+In this section, $\log$ is the natural logarithm, $p = \frac{2 \log n}{n}$ and
 $k = \left\lceil \sqrt{n \log n} \right\rceil$. We have $p \leq 1$ and $k \leq n$ for every
 $n \geq 1$, since $2 \log n \leq n$. The algorithm has four steps.
 \begin{enumerate}
@@ -186,7 +186,8 @@ The solution is \cref{thm:leader-atleast-0908}.
 \end{exercise}
 
 The solution is \cref{thm:leader-atmost-0908}, which uses \cref{lem:badpair-0908,lem:disjoint-0908};
-``exactly $1$ leader'' is \cref{thm:leader-0908}. Call a pair of different nodes $\set{u,v}$ a
+together with \cref{thm:leader-atleast-0908} it gives exactly one leader with probability tending
+to $1$ (\cref{thm:leader-0908}). Call a pair of different nodes $\set{u,v}$ a
 \emph{bad pair} if both are candidates and they have no common referee, i.e., $C_u = C_v = 1$ and
 $R_u \cap R_v = \emptyset$.
 

@@ -8,7 +8,7 @@ Markov's inequality uses only the expectation $\expectation{X}$ of the random va
 also called the \emph{first moment}.
 
 \begin{theorem}[Markov's Inequality]\label{thm:markov}
-    Let $X \geq 0$ be a random variable. Then, for any $a > 0$,
+    Let $X \geq 0$ be a random variable with $\expectation{X} > 0$. Then, for any $a > 0$,
     \[\prob{X \geq a \expectation{X}} \leq \frac{1}{a}.\]
     Equivalently, for any $b > 0$,
     \[\prob{X \geq b} \leq \frac{\expectation{X}}{b}.\]
@@ -19,7 +19,7 @@ also called the \emph{first moment}.
     $I = 1 \leq \frac{X}{b}$, and if $X < b$ then $I = 0 \leq \frac{X}{b}$ because $X \geq 0$.
     Taking expectations on both sides,
     \[\prob{X \geq b} = \prob{I = 1} = \expectation{I} \leq \expectation{\frac{X}{b}} = \frac{\expectation{X}}{b}.\]
-    Taking $b = a \expectation{X}$ gives $\prob{X \geq a \expectation{X}} \leq \frac{1}{a}$.
+    Taking $b = a \expectation{X} > 0$ gives $\prob{X \geq a \expectation{X}} \leq \frac{1}{a}$.
 \end{proof}
 
 \section{Chebyshev's Inequality and the Chernoff Bound}
@@ -88,7 +88,7 @@ Hence $\bigO{\sqrt{n}}$ people are enough to have a constant probability of coll
 \subsection{Expected Number of Collisions}
 
 The birthday paradox can be seen as throwing $m$ balls into $n$ bins.
-We show that for $m \approx \sqrt{2n}$,
+We show that for $m \geq \sqrt{2n} + 1$,
 $\expectation{\text{\# collisions}} \geq 1$.
 
 Let $X$ be the number of collisions. $X$ takes values from $0$ to $\binom{m}{2}$. Write
@@ -183,12 +183,13 @@ As in the birthday paradox, $f \colon D \to [n]$, where $[n] = \set{1, \dots, n}
 \emph{random function}, i.e., every value $f(x)$ is uniform in $[n]$ and independent of all the
 other values. The algorithm \emph{finds a collision} if it outputs $x \neq y$ with $f(x) = f(y)$.
 We may assume that it queries the two points that it outputs (at most $2$ extra queries, which
-does not change the bound below) and that the $k$ queried points are different, since repeating a
-query gives no new information.
+does not affect the bound $\bigOm{\sqrt{n}}$) and that the queried points are different, since
+repeating a query gives no new information.
 
 \begin{theorem}[Classical Lower Bound for Collision Finding]\label{thm:collision-lb-0903}
     Let $f \colon D \to [n]$ be a random function. Every classical algorithm (deterministic or
-    randomized, adaptive) that makes $k$ queries finds a collision with probability at most
+    randomized, adaptive) that makes $k$ queries to different points, including the two points that
+    it outputs, finds a collision with probability at most
     \[\frac{\binom{k}{2}}{n} = \frac{k(k-1)}{2n}.\]
     In particular, to find a collision with probability at least $\sfrac{1}{2}$ it needs
     $k > \sqrt{n}$ queries, so the classical query complexity of the collision problem is $\bigOm{\sqrt{n}}$.
@@ -210,7 +211,7 @@ query gives no new information.
 \end{proof}
 
 \paragraph{Worst case inputs.} \cref{thm:collision-lb-0903} is about a \emph{random} input $f$.
-By Yao's minmax principle from the lecture of September~1 (in its version for algorithms that are
-allowed to err), the bound $\bigOm{\sqrt{n}}$ also holds for every randomized algorithm on its
+By Yao's minmax principle from the lecture of September~1, applied to the success probability
+instead of the expected number of queries, the bound $\bigOm{\sqrt{n}}$ also holds for every randomized algorithm on its
 worst case input. With the birthday paradox, the classical query complexity of finding a collision
 is $\bigTh{\sqrt{n}}$.
