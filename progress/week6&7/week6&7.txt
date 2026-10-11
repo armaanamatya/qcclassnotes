@@ -1,0 +1,4 @@
+Weeks 6 and 7: iPad notebook pages 150-166 (screenshots exported Oct 6; newest first).
+  Sep 29 (pages 150-155): Walsh-Hadamard and Deutsch-Jozsa recap, Bernstein-Vazirani, Simon's algorithm
+  Oct 1  (pages 156-161): classical upper and lower bounds for Simon's problem (Yao), Simon's analysis, linear independence of the y's
+  Oct 6  (pages 162-166): Grover's search (phase flip, diffusion operator, two-dimensional rotation picture)
