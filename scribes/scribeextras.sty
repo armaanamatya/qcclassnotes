@@ -21,10 +21,15 @@
     \addcontentsline{toc}{part}{Week #1: #2}%
 }
 
-% Starts the notes of a new lecture day inside the current week.
+% Starts the notes of a new lecture day inside the current week. A week starts on a new page;
+% the Thursday lecture follows the Tuesday lecture on the same page (after all the figures of
+% the Tuesday lecture), to avoid half-empty pages.
 % Usage: \newlecture{Tuesday, September 1, 2026}{Topic of the lecture}
+\RequirePackage{placeins} % \FloatBarrier
 \newcommand{\newlecture}[2]{%
-    \clearpage
+    \par\FloatBarrier
+    \vspace{0.4in}%
+    \needspace{2.5in}%
     \phantomsection
     \addcontentsline{toc}{lecture}{#1}%
     \hrule
@@ -40,7 +45,11 @@
 }
 
 % Table of contents: weeks are the top level (the `part' entries), the lecture days come below
-% them as bold lines, and the sections of a lecture are indented below their day.
+% them as bold lines, and the sections of a lecture are indented below their day. Subsections
+% and paragraphs are not listed (scribe.sty sets the depth to 3).
+\setcounter{tocdepth}{1}
+\setlength{\cftbeforepartskip}{1.1em}
+\setlength{\cftbeforesecskip}{0.1em}
 \newcommand*{\l@lecture}[2]{%
     \addpenalty{-\@highpenalty}%
     \vskip 0.8em plus 1pt

@@ -16,7 +16,7 @@ also called the \emph{first moment}.
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.7]
         \draw (0,0) -- (8,0);
         \draw (0,0.1) -- (0,-0.1) node[below] {\small $0$};
         \draw (3,0.1) -- (3,-0.1);
@@ -79,55 +79,38 @@ Here $\abs{X - \expectation{X}}$ is the deviation of $X$ from its mean.
 \section{Chernoff Bound}
 
 The Chernoff bounds of the last lecture (\cref{thm:chernoff-0901}) were restated in class with the
-independence assumption made explicit. For a sum $X = \sum_{i=1}^{n} X_i$ of \emph{mutually
-independent} indicator random variables with $\prob{X_i = 1} = p_i$, linearity of expectation gives
-$\mu = \expectation{X} = \sum_{i=1}^{n} p_i$, and for $0 < \delta < 1$
-\[\prob{X \geq (1+\delta)\mu} \leq e^{-\frac{\mu \delta^2}{3}},
-    \qquad
-    \prob{X < (1-\delta)\mu} \leq e^{-\frac{\mu \delta^2}{2}},\]
-and $\prob{X \geq R} \leq 2^{-R}$ for $R \geq 6\mu$.
+independence assumption made explicit: $X = \sum_{i=1}^{n} X_i$ must be a sum of \emph{mutually
+independent} indicator random variables, and then $\mu = \expectation{X} = \sum_{i=1}^{n} p_i$ with
+$p_i = \prob{X_i = 1}$ by linearity of expectation.
 
 \section{Search}
 
 Let $f \colon D \to R$ be a function from a domain $D$ to a range $R$ (\cref{fig:function}).
 Given $y$, we ask: is there an $x$ such that $f(x) = y$? We consider
-\[f \colon [1, \dots, N] \to [1, \dots, N],\]
-and we want to find an $x$ such that $f(x) = k$. The function can be seen as an array with $n$
-slots, where $n$ is the size of the domain, and the cost of an algorithm is the number of queries
-to $f$.
+$f \colon [1, \dots, N] \to [1, \dots, N]$ and want to find an $x$ such that $f(x) = k$. As in the
+earlier lectures, the function can be seen as an array with $n$ slots (\cref{fig:coinflips-0825}),
+where $n$ is the size of the domain, and the cost of an algorithm is the number of queries to $f$: a
+randomized classical algorithm needs $\bigTh{n}$ queries, and Grover's algorithm needs
+$\bigO{\sqrt{n}}$ queries. For the random sampling algorithm,
+$\expectation{\text{queries}} = \bigO{n}$ and one sample has $\prob{\text{Success}} = \sfrac{1}{n}$.
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}
-        % array
-        \draw (0,0) rectangle (6,0.7);
-        \foreach \x in {1,2,4,5} {\draw (\x,0) -- (\x,0.7);}
-        \node at (3,0.35) {$\cdots$};
-        \node[below] at (0.5,0) {\small $1$};
-        \node[below] at (5.5,0) {\small $n$};
-        % function from D to R
-        \draw (8.5,0.35) ellipse (0.6 and 1);
-        \draw (11.5,0.35) ellipse (0.6 and 1);
-        \node at (8.5,1.65) {$D$};
-        \node at (11.5,1.65) {$R$};
-        \node[point] (y) at (11.5,0.35) {};
+    \begin{tikzpicture}[scale=0.55]
+        \draw (0,0.35) ellipse (0.6 and 1);
+        \draw (3,0.35) ellipse (0.6 and 1);
+        \node at (0,1.7) {$D$};
+        \node at (3,1.7) {$R$};
+        \node[point] (y) at (3,0.35) {};
         \foreach \h in {0.95,0.35,-0.25} {
-                \node[point] (x) at (8.5,\h) {};
+                \node[point] (x) at (0,\h) {};
                 \draw[->] (x) -- (y);
             }
-        \node at (10,1.35) {$f$};
+        \node at (1.5,1.35) {$f$};
     \end{tikzpicture}
-    \caption{Left: an array with $n$ slots. Right: a function $f \colon D \to R$.}
+    \caption{A function $f \colon D \to R$.}
     \label{fig:function}
 \end{figure}
-
-\begin{itemize}
-    \item Randomized classical algorithm: $\bigTh{n}$ queries.
-    \item Grover's algorithm: $\bigO{\sqrt{n}}$ queries.
-\end{itemize}
-
-For the random sampling algorithm,
-\[\expectation{\text{queries}} = \bigO{n}, \qquad \prob{\text{Success}} = \frac{1}{n}.\]
 
 \paragraph{Probability amplitude amplification.} If the classical success probability is $p$, then
 in the quantum case it becomes $\sqrt{p}$.
@@ -166,7 +149,7 @@ We show that for $m \approx \sqrt{2n}$,
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.7]
         % bins
         \draw (0,0) rectangle (1,3.2);
         \foreach \y in {0.8,1.6,2.4} {\draw (0,\y) -- (1,\y);}
