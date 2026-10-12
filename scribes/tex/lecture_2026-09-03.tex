@@ -53,6 +53,7 @@ Chebyshev's inequality uses the variance of the random variable, which is also c
 \end{theorem}
 
 \begin{proof}
+    Both sides of $\abs{X - \expectation{X}} \geq a$ are nonnegative, so we can square them:
     \[\prob{\abs{X - \expectation{X}} \geq a}
         = \prob{\left(X - \expectation{X}\right)^2 \geq a^2}
         \leq \frac{\expectation{\left(X - \expectation{X}\right)^2}}{a^2}
