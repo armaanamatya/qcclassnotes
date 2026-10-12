@@ -153,29 +153,36 @@ where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. By linearity of expec
     = \frac{m(m-1)}{2n} \sim \frac{m^2}{2n} = \bigTh{\frac{m^2}{n}}.\]
 For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$.
 
-\begin{lemma}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
+\begin{claim}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
     The $X_{ij}$ are \emph{pairwise independent}: for any two different pairs
     $\set{i,j} \neq \set{k,l}$,
     \[\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}} = \frac{1}{n^2}.\]
     So
     \[\variance{X} = \sum_{i \neq j} \variance{X_{ij}}
         = \binom{m}{2} \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \expectation{X}.\]
-\end{lemma}
+\end{claim}
 
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     We have $\expectation{X_{ij} X_{kl}} = \prob{f(i) = f(j) \text{ and } f(k) = f(l)}$. If the
+%     pairs are disjoint, the two events depend on the independent birthdays of four different
+%     people, so the probability is $\prob{f(i) = f(j)} \cdot \prob{f(k) = f(l)} = \sfrac{1}{n^2}$.
+%     Otherwise the pairs share one person, say $\set{i,j}$ and $\set{i,k}$ with $j \neq k$. Then
+%     $f(j)$ and $f(k)$ are independent of $f(i)$ and of each other, and each equals a given day $b$
+%     with probability $\sfrac{1}{n}$, so
+%     \[\prob{f(j) = f(i) \text{ and } f(k) = f(i)}
+%         = \sum_{b=1}^{n} \prob{f(i) = b} \cdot \frac{1}{n} \cdot \frac{1}{n}
+%         = \frac{1}{n^2}.\]
+%     In both cases
+%     $\expectation{X_{ij} X_{kl}} = \sfrac{1}{n^2} = \expectation{X_{ij}} \expectation{X_{kl}}$.
+%     For two indicators this is the same as independence, because their joint distribution is
+%     fixed by $\prob{X_{ij} = 1}$, $\prob{X_{kl} = 1}$ and $\prob{X_{ij} = X_{kl} = 1}$.
     We have $\expectation{X_{ij} X_{kl}} = \prob{f(i) = f(j) \text{ and } f(k) = f(l)}$. If the
-    pairs are disjoint, the two events depend on the independent birthdays of four different
-    people, so the probability is $\prob{f(i) = f(j)} \cdot \prob{f(k) = f(l)} = \sfrac{1}{n^2}$.
-    Otherwise the pairs share one person, say $\set{i,j}$ and $\set{i,k}$ with $j \neq k$. Then
-    $f(j)$ and $f(k)$ are independent of $f(i)$ and of each other, and each equals a given day $b$
-    with probability $\sfrac{1}{n}$, so
-    \[\prob{f(j) = f(i) \text{ and } f(k) = f(i)}
-        = \sum_{b=1}^{n} \prob{f(i) = b} \cdot \frac{1}{n} \cdot \frac{1}{n}
-        = \frac{1}{n^2}.\]
-    In both cases
-    $\expectation{X_{ij} X_{kl}} = \sfrac{1}{n^2} = \expectation{X_{ij}} \expectation{X_{kl}}$.
-    For two indicators this is the same as independence, because their joint distribution is
-    fixed by $\prob{X_{ij} = 1}$, $\prob{X_{kl} = 1}$ and $\prob{X_{ij} = X_{kl} = 1}$.
+    pairs are disjoint, the two events depend on four independent birthdays, so the probability is
+    $\sfrac{1}{n^2}$. If they share one person, say $\set{i,j}$ and $\set{i,k}$, then for every
+    value $b$ of $f(i)$ each of $f(j)$ and $f(k)$ equals $b$ with probability $\sfrac{1}{n}$,
+    independently, so the probability is again $\sfrac{1}{n^2}$. Two indicators with
+    $\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}}$ are independent.
 
     Expand the square of
     $X - \expectation{X} = \sum_{i \neq j} \left(X_{ij} - \expectation{X_{ij}}\right)$:
@@ -214,17 +221,26 @@ For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$
 
 \section{Quantum Birthday Paradox}
 
+% Commented out: longer wording of the text that follows.
+% The \emph{collision problem} is: given query access to a function $f$, find $x \neq y$ with
+% $f(x) = f(y)$. By \cref{ex:birthday-0903}, $\bigO{\sqrt{n}}$ classical queries to random points
+% are enough. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$, where the point $x_s$ may depend on
+% the earlier answers $f(x_1), \dots, f(x_{s-1})$ and on random coins.
+%
+% As in the birthday paradox, $f \colon D \to [n]$, where $[n] = \set{1, \dots, n}$, is a
+% \emph{random function}: every value $f(x)$ is uniform in $[n]$ and independent of all the
+% other values. The algorithm \emph{finds a collision} if it outputs $x \neq y$ with $f(x) = f(y)$.
+% We may assume that it queries the two points that it outputs. This costs at most $2$ extra queries,
+% which does not affect the bound $\bigOm{\sqrt{n}}$. We may also assume that the queried points are
+% different, because repeating a query gives no new information.
 The \emph{collision problem} is: given query access to a function $f$, find $x \neq y$ with
 $f(x) = f(y)$. By \cref{ex:birthday-0903}, $\bigO{\sqrt{n}}$ classical queries to random points
-are enough. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$, where the point $x_s$ may depend on
-the earlier answers $f(x_1), \dots, f(x_{s-1})$ and on random coins.
+are enough. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$, where $x_s$ may depend on the
+earlier answers and on random coins.
 
-As in the birthday paradox, $f \colon D \to [n]$, where $[n] = \set{1, \dots, n}$, is a
-\emph{random function}: every value $f(x)$ is uniform in $[n]$ and independent of all the
-other values. The algorithm \emph{finds a collision} if it outputs $x \neq y$ with $f(x) = f(y)$.
-We may assume that it queries the two points that it outputs. This costs at most $2$ extra queries,
-which does not affect the bound $\bigOm{\sqrt{n}}$. We may also assume that the queried points are
-different, because repeating a query gives no new information.
+As in the birthday paradox, $f \colon D \to [n]$ is a \emph{random function}: every value $f(x)$ is
+uniform in $[n] = \set{1, \dots, n}$ and independent of the others. We assume that the algorithm
+queries the two points that it outputs (at most $2$ extra queries) and never repeats a query.
 
 \begin{exercisebox}
 \begin{exercise}\label{ex:collision-lb-0903}\label{thm:collision-lb-0903}
@@ -238,15 +254,24 @@ different, because repeating a query gives no new information.
 \end{exercise}
 \tcblower
 \begin{proof}
-    The algorithm queries the points that it outputs, so it can only find a collision if two of
-    its queried values agree. Let $E_s$ be the event that
-    $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$. A collision needs $E_s$ to occur for some $s$.
-    Condition on the first $s-1$ answers and on the random coins of the algorithm. Then $x_s$ is a
-    fixed point that has not been queried before. So $f(x_s)$ is still uniform in $[n]$ and
-    independent of the $s-1$ values $f(x_1), \dots, f(x_{s-1})$, which are now fixed. It equals one
-    of them with probability at most $\frac{s-1}{n}$, no matter how the algorithm chose $x_s$. This
-    holds for every outcome of the first $s-1$ steps and of the coins, so
-    $\prob{E_s} \leq \frac{s-1}{n}$ without conditioning. By the union bound,
+% Commented out: longer wording of the text that follows.
+%     The algorithm queries the points that it outputs, so it can only find a collision if two of
+%     its queried values agree. Let $E_s$ be the event that
+%     $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$. A collision needs $E_s$ to occur for some $s$.
+%     Condition on the first $s-1$ answers and on the random coins of the algorithm. Then $x_s$ is a
+%     fixed point that has not been queried before. So $f(x_s)$ is still uniform in $[n]$ and
+%     independent of the $s-1$ values $f(x_1), \dots, f(x_{s-1})$, which are now fixed. It equals one
+%     of them with probability at most $\frac{s-1}{n}$, no matter how the algorithm chose $x_s$. This
+%     holds for every outcome of the first $s-1$ steps and of the coins, so
+%     $\prob{E_s} \leq \frac{s-1}{n}$ without conditioning. By the union bound,
+%     \[\prob{\text{collision}} \leq \sum_{s=1}^{k} \prob{E_s} \leq \sum_{s=1}^{k} \frac{s-1}{n} = \frac{k(k-1)}{2n}.\]
+%     If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then
+%     $\frac{k(k-1)}{2n} \geq \frac{1}{2}$, so $k^2 > k(k-1) \geq n$ and $k > \sqrt{n}$.
+    A collision needs two queried values to agree. Let $E_s$ be the event that
+    $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$. Given the first $s-1$ answers and the random
+    coins, $x_s$ is a fixed point that has not been queried, so $f(x_s)$ is uniform in $[n]$ and
+    independent of the $s-1$ earlier values. So $\prob{E_s} \leq \frac{s-1}{n}$ for every such
+    outcome, and so also without conditioning. By the union bound,
     \[\prob{\text{collision}} \leq \sum_{s=1}^{k} \prob{E_s} \leq \sum_{s=1}^{k} \frac{s-1}{n} = \frac{k(k-1)}{2n}.\]
     If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then
     $\frac{k(k-1)}{2n} \geq \frac{1}{2}$, so $k^2 > k(k-1) \geq n$ and $k > \sqrt{n}$.

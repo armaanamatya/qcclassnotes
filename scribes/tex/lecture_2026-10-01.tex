@@ -101,59 +101,99 @@ $f(q_j)$. Otherwise answer a uniformly random value among those not used so far 
 as long as no collision has occurred). This produces $\mathcal{D}$, because a uniformly random
 injective assignment can be built one value at a time, each uniform among the unused ones.
 
+% Commented out: longer wording of the text that follows.
+% \begin{lemma}[Few Queries Rarely Collide]\label{lem:collision-1001}
+%     Let $n \geq 2$ and let $A$ be a deterministic algorithm that makes $k \leq \sfrac{\sqrt{N}}{2}$
+%     queries, all different, on an input drawn from $\mathcal{D}$.
+%     \begin{enumerate}
+%         \item The probability that two of the queries form a pair $\set{x, x \oplus s}$ (a collision)
+%               is at most
+%               \[\sum_{i=1}^{k} \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{k(k-1)}{N}.\]
+%         \item Given that there is no collision among the $k$ queries, and given the $k$ answers, $s$ is
+%               uniformly distributed over a set of at least $\sfrac{N}{2}$ strings.
+%     \end{enumerate}
+% \end{lemma}
+%
+% \begin{proof}
+%     Let $Q_i$ be the event that there is no collision among the first $i$ queries, and $C_i$ the
+%     event $q_i \oplus s \in \set{q_1, \dots, q_{i-1}}$ that the $\nth{i}$ query collides with an
+%     earlier one.
+%
+%     \emph{What the algorithm knows about $s$.} Fix $i \leq k + 1$ and condition on $Q_{i-1}$ and on the
+%     (distinct) answers $f(q_1), \dots, f(q_{i-1})$. Since $A$ is deterministic, the queries
+%     $q_1, \dots, q_{i-1}$ are the same for every $s$ that leads to these answers. By the lazy
+%     generation, this sequence of answers has probability $\prod_{j=1}^{i-1} \sfrac{1}{(N - j + 1)}$, the
+%     same for every $s$ not of the form $q_j \oplus q_l$ with $j < l \leq i - 1$. It is $0$ for an $s$
+%     of this form ($q_j$ and $q_l$ would have collided). By Bayes' rule, given the answers, $s$ is
+%     uniform over the nonzero strings that are not among the at most $\binom{i-1}{2}$ strings
+%     $q_j \oplus q_l$. This is a set of at least $N - 1 - \binom{i-1}{2} \geq N - 1 - \sfrac{k^2}{2} \geq
+%         N - 1 - \sfrac{N}{8} \geq \sfrac{N}{2}$ candidates (as $i - 1 \leq k \leq \sfrac{\sqrt{N}}{2}$
+%     and $N \geq 4$). For $i = k + 1$ this is part~2.
+%
+%     \emph{Part 1.} If $C_i$ is the first collision then $Q_{i-1}$ holds, so by the union bound
+%     $\prob{\text{collision}} \leq \sum_{i=1}^{k} \prob{C_i \cap Q_{i-1}}$. Given $Q_{i-1}$ and the answers,
+%     $q_i$ is determined, and $C_i$ occurs exactly when $s$ is one of the $i - 1$ strings
+%     $q_i \oplus q_1, \dots, q_i \oplus q_{i-1}$. Averaging over the answers,
+%     \[\prob{C_i \cap Q_{i-1}} \leq \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{2(i-1)}{N},
+%         \qquad \text{so} \qquad
+%         \prob{\text{collision}} \leq \sum_{i=1}^{k} \frac{2(i-1)}{N} = \frac{k(k-1)}{N}. \qedhere\]
+% \end{proof}
+%
+% \begin{proof}[Proof of \cref{thm:simon-rand-lb-1001}]
+%     Let $A$ be a deterministic algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries. We may assume
+%     that it never repeats a query and makes the same number $k \leq \sfrac{\sqrt{N}}{2}$ of queries on
+%     every input, because extra queries whose answers are ignored do not change the output. Run it on
+%     an input drawn from $\mathcal{D}$. It is correct only if its output is $s$. Suppose there is no
+%     collision. Given the answers, the output is one fixed string, and $s$ is uniform over at least
+%     $\sfrac{N}{2}$ strings by part~2 of \cref{lem:collision-1001}. So $A$ is correct with probability
+%     at most $\sfrac{2}{N}$. With part~1,
+%     \[\prob{A \text{ correct}} \leq \prob{\text{collision}} + \frac{2}{N} \leq \frac{k(k-1) + 2}{N}.\]
+%     If $k \geq 2$, then $k(k-1) + 2 \leq k^2 \leq \sfrac{N}{4}$ and the bound is at most $\sfrac{1}{4}$.
+%     If $k \leq 1$, there is no collision and the bound is $\sfrac{2}{N} \leq \sfrac{1}{2}$. So $A$ errs
+%     with probability at least $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$. By \cref{lem:yao-1001}
+%     with $\mu = \mathcal{D}$ and $\delta = \sfrac{1}{3}$, every randomized algorithm with at most
+%     $\sfrac{\sqrt{N}}{2}$ queries errs with probability greater than $\sfrac{1}{3}$ on some input.
+%     So an algorithm with success probability at least $\sfrac{2}{3}$ on every input makes more than
+%     $\sfrac{\sqrt{N}}{2}$ queries on some input.
+% \end{proof}
 \begin{lemma}[Few Queries Rarely Collide]\label{lem:collision-1001}
     Let $n \geq 2$ and let $A$ be a deterministic algorithm that makes $k \leq \sfrac{\sqrt{N}}{2}$
-    queries, all different, on an input drawn from $\mathcal{D}$.
-    \begin{enumerate}
-        \item The probability that two of the queries form a pair $\set{x, x \oplus s}$ (a collision)
-              is at most
-              \[\sum_{i=1}^{k} \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{k(k-1)}{N}.\]
-        \item Given that there is no collision among the $k$ queries, and given the $k$ answers, $s$ is
-              uniformly distributed over a set of at least $\sfrac{N}{2}$ strings.
-    \end{enumerate}
+    different queries on an input drawn from $\mathcal{D}$. The probability that two of the queries
+    form a pair $\set{x, x \oplus s}$ (a collision) is at most
+    \[\sum_{i=1}^{k} \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{k(k-1)}{N}.\]
 \end{lemma}
 
 \begin{proof}
-    Let $Q_i$ be the event that there is no collision among the first $i$ queries, and $C_i$ the
-    event $q_i \oplus s \in \set{q_1, \dots, q_{i-1}}$ that the $\nth{i}$ query collides with an
-    earlier one.
-
-    \emph{What the algorithm knows about $s$.} Fix $i \leq k + 1$ and condition on $Q_{i-1}$ and on the
-    (distinct) answers $f(q_1), \dots, f(q_{i-1})$. Since $A$ is deterministic, the queries
-    $q_1, \dots, q_{i-1}$ are the same for every $s$ that leads to these answers. By the lazy
-    generation, this sequence of answers has probability $\prod_{j=1}^{i-1} \sfrac{1}{(N - j + 1)}$, the
-    same for every $s$ not of the form $q_j \oplus q_l$ with $j < l \leq i - 1$. It is $0$ for an $s$
-    of this form ($q_j$ and $q_l$ would have collided). By Bayes' rule, given the answers, $s$ is
-    uniform over the nonzero strings that are not among the at most $\binom{i-1}{2}$ strings
-    $q_j \oplus q_l$. This is a set of at least $N - 1 - \binom{i-1}{2} \geq N - 1 - \sfrac{k^2}{2} \geq
-        N - 1 - \sfrac{N}{8} \geq \sfrac{N}{2}$ candidates (as $i - 1 \leq k \leq \sfrac{\sqrt{N}}{2}$
-    and $N \geq 4$). For $i = k + 1$ this is part~2.
-
-    \emph{Part 1.} If $C_i$ is the first collision then $Q_{i-1}$ holds, so by the union bound
-    $\prob{\text{collision}} \leq \sum_{i=1}^{k} \prob{C_i \cap Q_{i-1}}$. Given $Q_{i-1}$ and the answers,
-    $q_i$ is determined, and $C_i$ occurs exactly when $s$ is one of the $i - 1$ strings
-    $q_i \oplus q_1, \dots, q_i \oplus q_{i-1}$. Averaging over the answers,
-    \[\prob{C_i \cap Q_{i-1}} \leq \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{2(i-1)}{N},
-        \qquad \text{so} \qquad
-        \prob{\text{collision}} \leq \sum_{i=1}^{k} \frac{2(i-1)}{N} = \frac{k(k-1)}{N}. \qedhere\]
+    The $\nth{i}$ query $q_i$ collides if $q_i \oplus s = q_j$ for some $j < i$. Suppose there is no
+    collision among $q_1, \dots, q_{i-1}$, and fix their (distinct) answers. Since $A$ is
+    deterministic, the answers determine $q_1, \dots, q_i$. No collision rules out the at most
+    $\binom{i-1}{2}$ strings $q_j \oplus q_l$ as values of $s$. In the lazy generation, these answers
+    have probability $\prod_{j=1}^{i-1} \sfrac{1}{(N-j+1)}$ for every other nonzero $s$, the same for
+    all of them. So, given the answers, $s$ is uniform over the remaining nonzero strings, and there
+    are at least $N - 1 - \binom{i-1}{2}$ of them. The query $q_i$ collides for at most $i - 1$ of
+    them (the strings $q_i \oplus q_j$), so
+    \[\prob{q_i \text{ is the first collision}} \leq \frac{i-1}{N - 1 - \binom{i-1}{2}} \leq \frac{2(i-1)}{N}.\]
+    The last step holds because $\binom{i-1}{2} \leq \sfrac{k^2}{2} \leq \sfrac{N}{8}$ and $N \geq 4$,
+    so the denominator is at least $\sfrac{N}{2}$. Summing over $i = 1, \dots, k$ gives
+    $\frac{k(k-1)}{N}$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:simon-rand-lb-1001}]
-    Let $A$ be a deterministic algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries. We may assume
-    that it never repeats a query and makes the same number $k \leq \sfrac{\sqrt{N}}{2}$ of queries on
-    every input, because extra queries whose answers are ignored do not change the output. Run it on
-    an input drawn from $\mathcal{D}$. It is correct only if its output is $s$. Suppose there is no
-    collision. Given the answers, the output is one fixed string, and $s$ is uniform over at least
-    $\sfrac{N}{2}$ strings by part~2 of \cref{lem:collision-1001}. So $A$ is correct with probability
-    at most $\sfrac{2}{N}$. With part~1,
+    Let $A$ be a deterministic algorithm with $k \leq \sfrac{\sqrt{N}}{2}$ queries, run on an input
+    drawn from $\mathcal{D}$. We may assume that it never repeats a query. If there is no collision
+    among the $k$ queries, then given the answers the output of $A$ is one fixed string, and $s$ is
+    uniform over at least $N - 1 - \binom{k}{2} \geq \sfrac{N}{2}$ strings (the argument in the proof
+    of \cref{lem:collision-1001}, after the $\nth{k}$ query). So $A$ outputs $s$ with probability at
+    most $\sfrac{2}{N}$, and
     \[\prob{A \text{ correct}} \leq \prob{\text{collision}} + \frac{2}{N} \leq \frac{k(k-1) + 2}{N}.\]
-    If $k \geq 2$, then $k(k-1) + 2 \leq k^2 \leq \sfrac{N}{4}$ and the bound is at most $\sfrac{1}{4}$.
-    If $k \leq 1$, there is no collision and the bound is $\sfrac{2}{N} \leq \sfrac{1}{2}$. So $A$ errs
-    with probability at least $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$. By \cref{lem:yao-1001}
-    with $\mu = \mathcal{D}$ and $\delta = \sfrac{1}{3}$, every randomized algorithm with at most
-    $\sfrac{\sqrt{N}}{2}$ queries errs with probability greater than $\sfrac{1}{3}$ on some input.
-    So an algorithm with success probability at least $\sfrac{2}{3}$ on every input makes more than
-    $\sfrac{\sqrt{N}}{2}$ queries on some input.
+    For $k \geq 2$ this is at most $\sfrac{k^2}{N} \leq \sfrac{1}{4}$, and for $k \leq 1$ it is
+    $\sfrac{2}{N} \leq \sfrac{1}{2}$. So $A$ errs with probability at least
+    $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$.
+
+    By \cref{lem:yao-1001} with $\mu = \mathcal{D}$ and $\delta = \sfrac{1}{3}$, every randomized
+    algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries errs with probability greater than
+    $\sfrac{1}{3}$ on some input. So an algorithm with success probability at least $\sfrac{2}{3}$
+    on every input makes more than $\sfrac{\sqrt{N}}{2}$ queries on some input.
 \end{proof}
 
 \begin{corollary}[Classical Query Complexity of Simon's Problem]\label{thm:simon-det-lb-1001}
@@ -176,41 +216,56 @@ injective assignment can be built one value at a time, each uniform among the un
     $\sfrac{\sqrt{N}}{2}$ queries on some input.
 \end{corollary}
 
+% Commented out: longer wording of the text that follows.
+% \begin{proof}
+%     Let $\mathcal{P}$ be the uniform distribution on $1$-to-$1$ functions. Let $\mu$ draw $f$ from
+%     $\mathcal{P}$ or from
+%     $\mathcal{D}$ with probability $\sfrac{1}{2}$ each. Let $A$ be a deterministic algorithm with
+%     $k \leq \sfrac{\sqrt{N}}{2}$ queries, all different, as in the proof of
+%     \cref{thm:simon-rand-lb-1001}. Its answer is a function of the sequence
+%     $T = (f(q_1), \dots, f(q_k))$ of answers.
+%
+%     Let $t = (a_1, \dots, a_k)$ have distinct entries. Under $\mathcal{P}$ every answer is uniform
+%     among the unused values, so $\prob[\mathcal{P}]{T = t} = \prod_{i=1}^{k} \sfrac{1}{(N - i + 1)}$.
+%     Under $\mathcal{D}$, let $p_i$ be the probability of a collision at step $i$, given no collision
+%     before and the answers $a_1, \dots, a_{i-1}$. By the proof of \cref{lem:collision-1001},
+%     $p_i \leq \sfrac{2(i-1)}{N}$. Without a collision the $\nth{i}$ answer is uniform among the
+%     $N - i + 1$ unused values. By \cref{lem:prodsum-1001} below,
+%     \begin{align*}
+%         \prob[\mathcal{D}]{T = t} \geq \prod_{i=1}^{k} \frac{1 - p_i}{N - i + 1}
+%          & \geq \left(1 - \sum_{i=1}^{k} \frac{2(i-1)}{N}\right) \prob[\mathcal{P}]{T = t} \\
+%          & = \left(1 - \frac{k(k-1)}{N}\right) \prob[\mathcal{P}]{T = t}
+%         \geq \frac{3}{4} \prob[\mathcal{P}]{T = t},
+%     \end{align*}
+%     because $k(k-1) \leq k^2 \leq \sfrac{N}{4}$.
+%
+%     Let $\mathcal{T}$ be the set of sequences on which $A$ answers ``$1$-to-$1$'', and let
+%     $q = \prob[\mathcal{P}]{T \in \mathcal{T}}$. Sequences with a repeated entry have probability $0$
+%     under $\mathcal{P}$. Summing over $t \in \mathcal{T}$ gives
+%     $\prob[\mathcal{D}]{T \in \mathcal{T}} \geq \frac{3}{4} q$. So $A$ is correct on an input drawn from
+%     $\mu$ with probability at most
+%     \[\frac{1}{2} q + \frac{1}{2}\left(1 - \frac{3}{4} q\right) = \frac{1}{2} + \frac{q}{8} \leq \frac{5}{8} < \frac{2}{3}.\]
+%     So $A$ errs with probability at least $\sfrac{3}{8} > \sfrac{1}{3}$ on $\mu$. The claim
+%     follows from \cref{lem:yao-1001}.
+% \end{proof}
 \begin{proof}
-    Let $\mathcal{P}$ be the uniform distribution on $1$-to-$1$ functions. Let $\mu$ draw $f$ from
-    $\mathcal{P}$ or from
-    $\mathcal{D}$ with probability $\sfrac{1}{2}$ each. Let $A$ be a deterministic algorithm with
-    $k \leq \sfrac{\sqrt{N}}{2}$ queries, all different, as in the proof of
-    \cref{thm:simon-rand-lb-1001}. Its answer is a function of the sequence
-    $T = (f(q_1), \dots, f(q_k))$ of answers.
-
-    Let $t = (a_1, \dots, a_k)$ have distinct entries. Under $\mathcal{P}$ every answer is uniform
-    among the unused values, so $\prob[\mathcal{P}]{T = t} = \prod_{i=1}^{k} \sfrac{1}{(N - i + 1)}$.
-    Under $\mathcal{D}$, let $p_i$ be the probability of a collision at step $i$, given no collision
-    before and the answers $a_1, \dots, a_{i-1}$. By the proof of \cref{lem:collision-1001},
-    $p_i \leq \sfrac{2(i-1)}{N}$. Without a collision the $\nth{i}$ answer is uniform among the
-    $N - i + 1$ unused values. By \cref{lem:prodsum-1001} below,
-    \begin{align*}
-        \prob[\mathcal{D}]{T = t} \geq \prod_{i=1}^{k} \frac{1 - p_i}{N - i + 1}
-         & \geq \left(1 - \sum_{i=1}^{k} \frac{2(i-1)}{N}\right) \prob[\mathcal{P}]{T = t} \\
-         & = \left(1 - \frac{k(k-1)}{N}\right) \prob[\mathcal{P}]{T = t}
-        \geq \frac{3}{4} \prob[\mathcal{P}]{T = t},
-    \end{align*}
-    because $k(k-1) \leq k^2 \leq \sfrac{N}{4}$.
-
-    Let $\mathcal{T}$ be the set of sequences on which $A$ answers ``$1$-to-$1$'', and let
-    $q = \prob[\mathcal{P}]{T \in \mathcal{T}}$. Sequences with a repeated entry have probability $0$
-    under $\mathcal{P}$. Summing over $t \in \mathcal{T}$ gives
-    $\prob[\mathcal{D}]{T \in \mathcal{T}} \geq \frac{3}{4} q$. So $A$ is correct on an input drawn from
-    $\mu$ with probability at most
-    \[\frac{1}{2} q + \frac{1}{2}\left(1 - \frac{3}{4} q\right) = \frac{1}{2} + \frac{q}{8} \leq \frac{5}{8} < \frac{2}{3}.\]
-    So $A$ errs with probability at least $\sfrac{3}{8} > \sfrac{1}{3}$ on $\mu$. The claim
-    follows from \cref{lem:yao-1001}.
+    Take a uniformly random $1$-to-$1$ function with probability $\sfrac{1}{2}$ and a function drawn
+    from $\mathcal{D}$ with probability $\sfrac{1}{2}$. Let $A$ be a deterministic algorithm with at
+    most $\sfrac{\sqrt{N}}{2}$ queries, all different, and let $q$ be the probability that it answers
+    ``$1$-to-$1$'' on the random $1$-to-$1$ function. In both cases every answer is uniform among the
+    values not used so far, until the first collision. So we can give $A$ the same answers in both
+    cases, and then it gives the same output unless a collision occurs. A collision has probability
+    at most $\sfrac{1}{4}$ (\cref{lem:collision-1001}), so $A$ answers ``$2$-to-$1$'' on
+    $\mathcal{D}$ with probability at most $1 - q + \sfrac{1}{4}$. So $A$ is correct with probability
+    at most
+    \[\frac{1}{2} q + \frac{1}{2}\left(1 - q + \frac{1}{4}\right) = \frac{5}{8},\]
+    and it errs with probability at least $\sfrac{3}{8} > \sfrac{1}{3}$. \Cref{lem:yao-1001} with
+    $\delta = \sfrac{1}{3}$ gives the bound for randomized algorithms.
 \end{proof}
 
-\begin{lemma}\label{lem:prodsum-1001}
+\begin{claim}\label{lem:prodsum-1001}
     For $a_1, \dots, a_m \in [0, 1]$, $\prod_{i=1}^{m} (1 - a_i) \geq 1 - \sum_{i=1}^{m} a_i$.
-\end{lemma}
+\end{claim}
 
 \begin{proof}
     We use induction on $m$, with equality for $m = 1$. Multiplying the hypothesis for $m - 1$ by
@@ -280,23 +335,38 @@ $s' \neq 0^n$ (\cref{thm:simon-0929}).
 \end{exercise}
 \tcblower
 \begin{proof}
-    Suppose that $y_1, \dots, y_j$ are linearly independent, $0 \leq j < d$. Their span consists of the
-    $2^j$ vectors $\sum_{i \leq j} c_i y_i$ with $c_i \in \set{0,1}$, all different by independence,
-    and it lies inside $V$. The vector $y_{j+1}$ is uniform over the $2^d$ elements of
-    $V$ and independent of $y_1, \dots, y_j$. Then $y_1, \dots, y_{j+1}$ are linearly independent exactly
-    when $y_{j+1}$ is not in this span, which has probability $1 - \sfrac{2^j}{2^d} = 1 - 2^{-(d-j)}$.
-    Multiplying for $j = 0, \dots, m-1$, the first $m$ vectors are linearly independent with
-    probability
+% Commented out: longer wording of the text that follows.
+%     Suppose that $y_1, \dots, y_j$ are linearly independent, $0 \leq j < d$. Their span consists of the
+%     $2^j$ vectors $\sum_{i \leq j} c_i y_i$ with $c_i \in \set{0,1}$, all different by independence,
+%     and it lies inside $V$. The vector $y_{j+1}$ is uniform over the $2^d$ elements of
+%     $V$ and independent of $y_1, \dots, y_j$. Then $y_1, \dots, y_{j+1}$ are linearly independent exactly
+%     when $y_{j+1}$ is not in this span, which has probability $1 - \sfrac{2^j}{2^d} = 1 - 2^{-(d-j)}$.
+%     Multiplying for $j = 0, \dots, m-1$, the first $m$ vectors are linearly independent with
+%     probability
+%     \[\prod_{j=0}^{m-1} \left(1 - \frac{1}{2^{d-j}}\right) = \prod_{i=d-m+1}^{d} \left(1 - \frac{1}{2^i}\right),\]
+%     which gives the two products for $m = d$ and $m = d - 1$. By \cref{lem:prodsum-1001} and the
+%     geometric series $\sum_{i \geq 2} 2^{-i} = \sfrac{1}{2}$,
+%     \[\prod_{i=2}^{d} \left(1 - \frac{1}{2^i}\right) \geq 1 - \sum_{i=2}^{d} \frac{1}{2^i} \geq \frac{1}{2},
+%         \qquad
+%         \prod_{i=1}^{d} \left(1 - \frac{1}{2^i}\right) = \frac{1}{2} \prod_{i=2}^{d} \left(1 - \frac{1}{2^i}\right) \geq \frac{1}{4}.\]
+%     In the $2$-to-$1$ case each $y_i$ is uniform over the $2^{n-1}$ strings with $s \cdot y = 0$
+%     (\cref{thm:simon-run-0929}). They are the solution set of one nontrivial homogeneous linear
+%     equation, so they form a subspace of dimension $d = n - 1$, and we take $n - 1 = d$ samples. In
+%     the $1$-to-$1$ case each $y_i$ is uniform over $\set{0,1}^n$ (\cref{ex:simon-11-1001}), $d = n$,
+%     and we take $d - 1$ samples.
+    If $y_1, \dots, y_j$ are linearly independent, their span has $2^j$ elements and lies in $V$,
+    and $y_{j+1}$ is uniform over the $2^d$ elements of $V$ and independent of $y_1, \dots, y_j$. So $y_1, \dots, y_{j+1}$ are linearly independent with
+    probability $1 - \sfrac{2^j}{2^d}$. Multiplying for $j = 0, \dots, m-1$, the first $m$ vectors are
+    linearly independent with probability
     \[\prod_{j=0}^{m-1} \left(1 - \frac{1}{2^{d-j}}\right) = \prod_{i=d-m+1}^{d} \left(1 - \frac{1}{2^i}\right),\]
-    which gives the two products for $m = d$ and $m = d - 1$. By \cref{lem:prodsum-1001} and the
-    geometric series $\sum_{i \geq 2} 2^{-i} = \sfrac{1}{2}$,
+    which gives the two products for $m = d$ and $m = d - 1$. By \cref{lem:prodsum-1001},
     \[\prod_{i=2}^{d} \left(1 - \frac{1}{2^i}\right) \geq 1 - \sum_{i=2}^{d} \frac{1}{2^i} \geq \frac{1}{2},
         \qquad
         \prod_{i=1}^{d} \left(1 - \frac{1}{2^i}\right) = \frac{1}{2} \prod_{i=2}^{d} \left(1 - \frac{1}{2^i}\right) \geq \frac{1}{4}.\]
-    In the $2$-to-$1$ case each $y_i$ is uniform over the $2^{n-1}$ strings with $s \cdot y = 0$
-    (\cref{thm:simon-run-0929}). They are the solution set of one nontrivial homogeneous linear
-    equation, so they form a subspace of dimension $d = n - 1$, and we take $n - 1 = d$ samples. In
-    the $1$-to-$1$ case each $y_i$ is uniform over $\set{0,1}^n$ (\cref{ex:simon-11-1001}), $d = n$,
-    and we take $d - 1$ samples.
+    In the $2$-to-$1$ case $V = \set{y \suchthat s \cdot y = 0}$ is the solution set of a linear
+    equation, so it is a subspace, and it has $2^{n-1}$ elements (\cref{thm:simon-run-0929}). So
+    $d = n - 1$, we have $n - 1 = d$ strings, and part~1 gives $\sfrac{1}{4}$. In the $1$-to-$1$ case
+    $V = \set{0,1}^n$ (\cref{ex:simon-11-1001}) and $d = n$, we have $d - 1$ strings, and part~2
+    gives $\sfrac{1}{2}$.
 \end{proof}
 \end{exercisebox}

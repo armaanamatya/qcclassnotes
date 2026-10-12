@@ -9,6 +9,11 @@
 \usepackage{scribe}
 \usepackage{scribeextras} % \newlecture, dashed exercise boxes, \solutionspace, inline TikZ
 
+\theoremstyle{plain}
+\newtheorem{claim}[theorem]{Claim}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,10 +112,15 @@ Professor Gopal Pandurangan\\
 \input{tex/lecture_2026-10-08}
 
 % AI use declaration (required by the course if AI tools were used).
-% \clearpage
-% \section*{AI Use Declaration}
-% TODO: say which tool was used, how it was used, what I modified,
-% and give the shareable link of the chat.
+\clearpage
+\section*{AI Use Declaration}
+
+Tool: Claude Code (Anthropic).
+
+I used AI to transcribe my handwritten notes from class and convert them to \LaTeX. I used AI as a
+verifier and to explore: I worked out the steps and the ways to solve the problems manually, and then
+used AI to verify them. The figures and examples come from the partial examples done in class, and
+some are AI generated for practice.
 
 % Uncomment if something is cited with \cite{...}.
 % \bibliographystyle{abbrv}

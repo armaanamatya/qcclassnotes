@@ -10,14 +10,14 @@ one query) and the \emph{Walsh--Hadamard transform} (\cref{lem:wh-0924})
 $H^{\otimes n} \ket{x} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}$, where
 $x \cdot y = x_1 y_1 \oplus \dots \oplus x_n y_n$.
 
-\begin{lemma}[Sum of Signs]\label{lem:signsum-0929}
+\begin{claim}[Sum of Signs]\label{lem:signsum-0929}
     For every $z \in \set{0,1}^n$,
     \[\sum_{x \in \set{0,1}^n} (-1)^{z \cdot x} =
         \begin{cases}
             2^n & \text{if } z = 0^n, \\
             0   & \text{if } z \neq 0^n.
         \end{cases}\]
-\end{lemma}
+\end{claim}
 
 \begin{proof}
     If $z = 0^n$, all $2^n$ terms are $1$. If $z \neq 0^n$, pick $i$ with $z_i = 1$ and let $e_i$ be
@@ -145,38 +145,62 @@ form.
 \end{theorem}
 
 \begin{proof}
-    By \cref{lem:wh-0924}, the first layer of Hadamard gates gives
-    $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{0^n}$. The query $U_f$ turns this into
-    $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{f(x)}$. The second layer of Hadamard gates on the
-    control register (\cref{lem:wh-0924} applied to every $\ket{x}$) gives
+% Commented out: longer wording of the text that follows.
+%     By \cref{lem:wh-0924}, the first layer of Hadamard gates gives
+%     $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{0^n}$. The query $U_f$ turns this into
+%     $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{f(x)}$. The second layer of Hadamard gates on the
+%     control register (\cref{lem:wh-0924} applied to every $\ket{x}$) gives
+%     \begin{equation}\label{eq:simon-final-0929}
+%         \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}\ket{f(x)}.
+%     \end{equation}
+%     The amplitude $\alpha_{y,z}$ of a basis state $\ket{y}\ket{z}$ collects the $x$ with $f(x) = z$.
+%     Measuring only the first register gives $y$ with probability $\sum_{z} \abs{\alpha_{y,z}}^2$
+%     (the probabilities of all basis states $\ket{y}\ket{z}$ with this $y$ add up).
+%
+%     \emph{Case 2: $f$ is $1$-to-$1$.} The $2^n$ strings $f(x)$ are all different, so every basis state
+%     $\ket{y}\ket{f(x)}$ appears exactly once in \cref{eq:simon-final-0929}, with amplitude
+%     $\frac{1}{2^n} (-1)^{x \cdot y}$. So $y$ has probability
+%     $\sum_{x} \abs{\frac{1}{2^n} (-1)^{x \cdot y}}^2 = 2^n \cdot \frac{1}{2^{2n}} = \frac{1}{2^n}$.
+%
+%     \emph{Case 1: $f$ is $2$-to-$1$ with period $s \neq 0^n$.} The range $R$ of $f$ has
+%     $\abs{R} = 2^{n-1}$ elements. For every $z \in R$ let $x_z$ be one of its two preimages; the other
+%     is $x_z \oplus s$. Because $(x_z \oplus s) \cdot y = x_z \cdot y \oplus s \cdot y$, the amplitude of
+%     $\ket{y}\ket{z}$ in \cref{eq:simon-final-0929} is
+%     \[\frac{1}{2^n} \left((-1)^{x_z \cdot y} + (-1)^{(x_z \oplus s) \cdot y}\right)
+%         = \frac{1}{2^n} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right)\]
+%     for $z \in R$ (and $0$ for $z \notin R$). So $y$ has probability
+%     \[\sum_{z \in R} \abs{\frac{1}{2^n} \left(1 + (-1)^{s \cdot y}\right)}^2
+%         = 2^{n-1} \cdot \frac{\left(1 + (-1)^{s \cdot y}\right)^2}{2^{2n}}
+%         = \begin{cases}
+%             \sfrac{1}{2^{n-1}} & \text{if } s \cdot y = 0, \\
+%             0                  & \text{if } s \cdot y = 1.
+%         \end{cases}\]
+%     There are $2^{n-1}$ strings $y$ with $s \cdot y = 0$, because the pairing $y \mapsto y \oplus e_i$
+%     of the proof of \cref{lem:signsum-0929}, with $s_i = 1$, matches every $y$ with $s \cdot y = 0$ to
+%     a $y'$ with $s \cdot y' = 1$.
+    By \cref{lem:wh-0924}, after the first Hadamard gates, the query $U_f$ and the second Hadamard
+    gates the state is
     \begin{equation}\label{eq:simon-final-0929}
         \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}\ket{f(x)}.
     \end{equation}
-    The amplitude $\alpha_{y,z}$ of a basis state $\ket{y}\ket{z}$ collects the $x$ with $f(x) = z$.
-    Measuring only the first register gives $y$ with probability $\sum_{z} \abs{\alpha_{y,z}}^2$
-    (the probabilities of all basis states $\ket{y}\ket{z}$ with this $y$ add up).
+    Fix $y$. Its probability is the sum of the squared amplitudes of the states $\ket{y}\ket{z}$.
 
-    \emph{Case 2: $f$ is $1$-to-$1$.} The $2^n$ strings $f(x)$ are all different, so every basis state
-    $\ket{y}\ket{f(x)}$ appears exactly once in \cref{eq:simon-final-0929}, with amplitude
-    $\frac{1}{2^n} (-1)^{x \cdot y}$. So $y$ has probability
-    $\sum_{x} \abs{\frac{1}{2^n} (-1)^{x \cdot y}}^2 = 2^n \cdot \frac{1}{2^{2n}} = \frac{1}{2^n}$.
-
-    \emph{Case 1: $f$ is $2$-to-$1$ with period $s \neq 0^n$.} The range $R$ of $f$ has
-    $\abs{R} = 2^{n-1}$ elements. For every $z \in R$ let $x_z$ be one of its two preimages; the other
-    is $x_z \oplus s$. Because $(x_z \oplus s) \cdot y = x_z \cdot y \oplus s \cdot y$, the amplitude of
-    $\ket{y}\ket{z}$ in \cref{eq:simon-final-0929} is
+    \emph{$f$ is $2$-to-$1$ with period $s$.} Every value $z$ of $f$ has two preimages $x_z$ and
+    $x_z \oplus s$, and $(x_z \oplus s) \cdot y = x_z \cdot y \oplus s \cdot y$. So the amplitude of
+    $\ket{y}\ket{z}$ is
     \[\frac{1}{2^n} \left((-1)^{x_z \cdot y} + (-1)^{(x_z \oplus s) \cdot y}\right)
-        = \frac{1}{2^n} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right)\]
-    for $z \in R$ (and $0$ for $z \notin R$). So $y$ has probability
-    \[\sum_{z \in R} \abs{\frac{1}{2^n} \left(1 + (-1)^{s \cdot y}\right)}^2
-        = 2^{n-1} \cdot \frac{\left(1 + (-1)^{s \cdot y}\right)^2}{2^{2n}}
+        = \frac{1}{2^n} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right).\]
+    There are $2^{n-1}$ values $z$, so $y$ has probability
+    \[2^{n-1} \cdot \frac{\left(1 + (-1)^{s \cdot y}\right)^2}{2^{2n}}
         = \begin{cases}
             \sfrac{1}{2^{n-1}} & \text{if } s \cdot y = 0, \\
             0                  & \text{if } s \cdot y = 1.
         \end{cases}\]
-    There are $2^{n-1}$ strings $y$ with $s \cdot y = 0$, because the pairing $y \mapsto y \oplus e_i$
-    of the proof of \cref{lem:signsum-0929}, with $s_i = 1$, matches every $y$ with $s \cdot y = 0$ to
-    a $y'$ with $s \cdot y' = 1$.
+    Exactly $2^{n-1}$ strings $y$ have $s \cdot y = 0$, by the pairing in the proof of
+    \cref{lem:signsum-0929}.
+
+    \emph{$f$ is $1$-to-$1$.} All $f(x)$ are different, so every state $\ket{y}\ket{f(x)}$ has
+    amplitude $\pm \frac{1}{2^n}$, and $y$ has probability $2^n \cdot \frac{1}{2^{2n}} = \frac{1}{2^n}$.
 \end{proof}
 
 \subsection{From the Measurements to \texorpdfstring{$s$}{s}}
@@ -239,28 +263,38 @@ are enough: if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 \end{exercise}
 \tcblower
 \begin{wsolution}
-    We query a set $S$ such that every nonzero string is the XOR of two elements of $S$. A collision
-    in $S$ then gives $s$. Let $m = \ceil{n/2}$ and write every $n$-bit string as $x = (u, v)$ with
-    $u \in \set{0,1}^m$ its first $m$ bits and $v \in \set{0,1}^{n-m}$ its last $n - m$ bits. Let
-    \[S_1 = \set{(u, 0^{n-m}) \suchthat u \in \set{0,1}^m}, \qquad
-        S_2 = \set{(0^m, v) \suchthat v \in \set{0,1}^{n-m}}, \qquad
-        S = S_1 \cup S_2.\]
+% Commented out: longer wording of the text that follows.
+%     We query a set $S$ such that every nonzero string is the XOR of two elements of $S$. A collision
+%     in $S$ then gives $s$. Let $m = \ceil{n/2}$ and write every $n$-bit string as $x = (u, v)$ with
+%     $u \in \set{0,1}^m$ its first $m$ bits and $v \in \set{0,1}^{n-m}$ its last $n - m$ bits. Let
+%     \[S_1 = \set{(u, 0^{n-m}) \suchthat u \in \set{0,1}^m}, \qquad
+%         S_2 = \set{(0^m, v) \suchthat v \in \set{0,1}^{n-m}}, \qquad
+%         S = S_1 \cup S_2.\]
+%
+%     \emph{The algorithm.} Query $f$ on every $x \in S$. If there are $x \neq x'$ in $S$ with
+%     $f(x) = f(x')$, output $s = x \oplus x'$. Otherwise output $s = 0^n$.
+%
+%     \emph{Queries.} Because $n - m \leq m \leq \sfrac{(n+1)}{2}$, the algorithm makes
+%     $\abs{S} \leq 2^m + 2^{n-m} \leq 2 \cdot 2^{m} \leq 2 \cdot 2^{(n+1)/2} = 2\sqrt{2} \cdot \sqrt{2^n}
+%         = \bigO{\sqrt{2^n}}$ queries, and it is deterministic.
+%
+%     \emph{Claim: every $s \neq 0^n$ is the XOR of two different elements of $S$.} Write $s = (u, v)$. Then
+%     $(u, 0^{n-m}) \in S_1$, $(0^m, v) \in S_2$ and $(u, 0^{n-m}) \oplus (0^m, v) = s$. The two elements
+%     are different, because otherwise $u = 0^m$ and $v = 0^{n-m}$, so $s = 0^n$.
+%
+%     \emph{Correctness.} If $f$ is $2$-to-$1$ with period $s \neq 0^n$, by the claim there are $x \neq x'$
+%     in $S$ with $x' = x \oplus s$, so $f(x) = f(x')$ and we find a collision. Any collision
+%     $f(x) = f(x')$ with $x \neq x'$ satisfies $x' = x \oplus s$ by the promise, so the output
+%     $x \oplus x' = s$ is correct. If $f$ is $1$-to-$1$ there is no
+%     collision, and the output $0^n = s$ is correct.
+    Let $m = \ceil{n/2}$ and write $x = (u, v)$, where $u$ is the first $m$ bits of $x$ and $v$ the
+    last $n - m$ bits. Query $f$ on the set
+    \[S = \set{(u, 0^{n-m}) \suchthat u \in \set{0,1}^m} \cup \set{(0^m, v) \suchthat v \in \set{0,1}^{n-m}},\]
+    which has at most $2^m + 2^{n-m} \leq 2 \cdot 2^{(n+1)/2} = \bigO{\sqrt{2^n}}$ elements. If
+    $f(x) = f(x')$ for some $x \neq x'$ in $S$, output $s = x \oplus x'$. Otherwise output $s = 0^n$.
 
-    \emph{The algorithm.} Query $f$ on every $x \in S$. If there are $x \neq x'$ in $S$ with
-    $f(x) = f(x')$, output $s = x \oplus x'$. Otherwise output $s = 0^n$.
-
-    \emph{Queries.} Because $n - m \leq m \leq \sfrac{(n+1)}{2}$, the algorithm makes
-    $\abs{S} \leq 2^m + 2^{n-m} \leq 2 \cdot 2^{m} \leq 2 \cdot 2^{(n+1)/2} = 2\sqrt{2} \cdot \sqrt{2^n}
-        = \bigO{\sqrt{2^n}}$ queries, and it is deterministic.
-
-    \emph{Claim: every $s \neq 0^n$ is the XOR of two different elements of $S$.} Write $s = (u, v)$. Then
-    $(u, 0^{n-m}) \in S_1$, $(0^m, v) \in S_2$ and $(u, 0^{n-m}) \oplus (0^m, v) = s$. The two elements
-    are different, because otherwise $u = 0^m$ and $v = 0^{n-m}$, so $s = 0^n$.
-
-    \emph{Correctness.} If $f$ is $2$-to-$1$ with period $s \neq 0^n$, by the claim there are $x \neq x'$
-    in $S$ with $x' = x \oplus s$, so $f(x) = f(x')$ and we find a collision. Any collision
-    $f(x) = f(x')$ with $x \neq x'$ satisfies $x' = x \oplus s$ by the promise, so the output
-    $x \oplus x' = s$ is correct. If $f$ is $1$-to-$1$ there is no
-    collision, and the output $0^n = s$ is correct.
+    If $s = (u, v) \neq 0^n$, then $(u, 0^{n-m})$ and $(0^m, v)$ are two different elements of $S$
+    whose XOR is $s$, so they collide, and every collision has $x \oplus x' = s$ by the promise. If
+    $f$ is $1$-to-$1$ there is no collision, and the output $0^n$ is correct.
 \end{wsolution}
 \end{exercisebox}

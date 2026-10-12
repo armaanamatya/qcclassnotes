@@ -15,3 +15,6 @@
 _minted*/
 tikzimages/
 build.log
+
+# Local submission packages
+submission/

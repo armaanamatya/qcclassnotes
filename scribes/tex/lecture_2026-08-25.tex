@@ -4,31 +4,50 @@
 
 \section{Efficient Algorithms: Primes and Factoring}
 
-To decide whether a number $n$ is prime, the input is the binary representation of $n$, so the
-\emph{input size} is $N = \log_2 n$ bits. An algorithm is \textbf{efficient} if it runs in time
-polynomial in the input size, here $\bigO{(\log_2 n)^k}$ for a constant $k$.
+% Commented out: longer wording of the text that follows.
+% To decide whether a number $n$ is prime, the input is the binary representation of $n$, so the
+% \emph{input size} is $N = \log_2 n$ bits. An algorithm is \textbf{efficient} if it runs in time
+% polynomial in the input size, here $\bigO{(\log_2 n)^k}$ for a constant $k$.
+%
+% Trial division up to $\sqrt{n}$ takes $\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time, which is exponential.
+% A deterministic polynomial-time algorithm exists ($\tilde{\mathcal{O}}(N^{6})$) but is not used in
+% practice. The \emph{randomized} Miller--Rabin test takes $\bigO{N^3}$ time: if $n$ is composite, at
+% least $\sfrac{3}{4}$ of the numbers in $\set{2, \dots, n-2}$ are \emph{witnesses} of this, and a prime
+% has no witness, so after $k$ independent samples a composite $n$ goes undetected with probability at
+% most $\left(\sfrac{1}{4}\right)^k$.
+%
+% \paragraph{Factoring.} Given $n = pq$ with $p, q$ prime, find $p$ and $q$. Factoring is an
+% \emph{encryption primitive}: if it can be solved quickly, the encryption is broken. No polynomial-time
+% classical algorithm is known, but \emph{Shor's factoring algorithm} is a quantum algorithm with
+% polynomial running time $\bigO{N^3}$. There is \emph{no} known quantum algorithm that solves
+% \nptime-complete problems (the hardest problems whose solutions can be verified in polynomial time,
+% such as 3-SAT) in polynomial time.
+The input of the primality problem is the binary representation of $n$, of size $N = \log_2 n$
+bits. An algorithm is \textbf{efficient} if it runs in time polynomial in $N$.
 
-Trial division up to $\sqrt{n}$ takes $\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time, which is exponential.
-A deterministic polynomial-time algorithm exists ($\tilde{\mathcal{O}}(N^{6})$) but is not used in
-practice. The \emph{randomized} Miller--Rabin test takes $\bigO{N^3}$ time: if $n$ is composite, at
-least $\sfrac{3}{4}$ of the numbers in $\set{2, \dots, n-2}$ are \emph{witnesses} of this, and a prime
-has no witness, so after $k$ independent samples a composite $n$ goes undetected with probability at
-most $\left(\sfrac{1}{4}\right)^k$.
+Trial division takes $\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time, which is exponential. A deterministic
+polynomial-time algorithm exists ($\tilde{\mathcal{O}}(N^{6})$) but is not used in practice. The
+\emph{randomized} Miller--Rabin test takes $\bigO{N^3}$ time: a composite $n$ has at least
+$\sfrac{3}{4}$ of $\set{2, \dots, n-2}$ as \emph{witnesses} and a prime has none, so $k$ independent
+samples miss a composite with probability at most $\left(\sfrac{1}{4}\right)^k$.
 
 \paragraph{Factoring.} Given $n = pq$ with $p, q$ prime, find $p$ and $q$. Factoring is an
-\emph{encryption primitive}: if it can be solved quickly, the encryption is broken. No polynomial-time
-classical algorithm is known, but \emph{Shor's factoring algorithm} is a quantum algorithm with
-polynomial running time $\bigO{N^3}$. There is \emph{no} known quantum algorithm that solves
-\nptime-complete problems (the hardest problems whose solutions can be verified in polynomial time,
-such as 3-SAT) in polynomial time.
+\emph{encryption primitive}. No polynomial-time classical algorithm is known, but \emph{Shor's
+factoring algorithm} is a quantum algorithm with running time $\bigO{N^3}$. No quantum algorithm is
+known that solves \nptime-complete problems such as 3-SAT in polynomial time.
 
 \section{Random Sampling}
 
-A randomized algorithm only needs to \emph{sample}. We assume that flipping a (fair) coin is an
-$\bigO{1}$ time primitive. Consider an array with $n$ slots (\cref{fig:coinflips-0825}), $n$ a power
-of $2$. Every index has $\log n$ bits, so flipping one coin for each bit samples a uniformly random
-element in $\bigO{\log n}$ time:
-$\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$ for every $i$.
+% Commented out: longer wording of the text that follows.
+% A randomized algorithm only needs to \emph{sample}. We assume that flipping a (fair) coin is an
+% $\bigO{1}$ time primitive. Consider an array with $n$ slots (\cref{fig:coinflips-0825}), $n$ a power
+% of $2$. Every index has $\log n$ bits, so flipping one coin for each bit samples a uniformly random
+% element in $\bigO{\log n}$ time:
+% $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$ for every $i$.
+A randomized algorithm only needs to \emph{sample}, and a (fair) coin flip is an $\bigO{1}$ time
+primitive. In an array with $n$ slots (\cref{fig:coinflips-0825}), $n$ a power of $2$, every index
+has $\log n$ bits. One coin flip per bit samples a uniformly random element in $\bigO{\log n}$ time,
+since $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$.
 
 \begin{figure}[ht]
     \centering
@@ -55,17 +74,25 @@ $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac
     \label{fig:coinflips-0825}
 \end{figure}
 
-Sampling can be done \emph{with} or \emph{without} replacement. We analyze sampling with replacement,
-since otherwise the samples are not independent. A sample hits a given element with probability
-$\sfrac{1}{n}$, so finding it takes $\expectation{\text{samples}} = \frac{1}{\sfrac{1}{n}} = n$
-samples in expectation.
+% Commented out: longer wording of the text that follows.
+% Sampling can be done \emph{with} or \emph{without} replacement. We analyze sampling with replacement,
+% since otherwise the samples are not independent. A sample hits a given element with probability
+% $\sfrac{1}{n}$, so finding it takes $\expectation{\text{samples}} = \frac{1}{\sfrac{1}{n}} = n$
+% samples in expectation.
+We sample \emph{with} replacement, so that the samples are independent. A sample hits a given
+element with probability $\sfrac{1}{n}$, so finding it takes $n$ samples in expectation
+(\cref{thm:geometric-0827}).
 
 \section{Search}
 
-An unsorted array $A$ with $n$ slots can only be accessed through \emph{queries} (``what is
-$A[i]$?''), and we want the index of a given element $x$. Linear search makes $\bigO{n}$ queries.
-For a lower bound, which has to hold for \emph{all} algorithms, we use an \emph{adversary argument}:
-the adversary constructs an input on which the given algorithm performs badly.
+% Commented out: longer wording of the text that follows.
+% An unsorted array $A$ with $n$ slots can only be accessed through \emph{queries} (``what is
+% $A[i]$?''), and we want the index of a given element $x$. Linear search makes $\bigO{n}$ queries.
+% For a lower bound, which has to hold for \emph{all} algorithms, we use an \emph{adversary argument}:
+% the adversary constructs an input on which the given algorithm performs badly.
+An unsorted array $A$ with $n$ slots is accessed by \emph{queries} (``what is $A[i]$?''), and we
+want the index of a given element $x$. Linear search makes $\bigO{n}$ queries. The lower bound uses
+an \emph{adversary argument}: the adversary builds an input on which the algorithm does badly.
 
 \begin{theorem}[Lower Bound for Deterministic Search]\label{thm:detsearch-0825}
     Every deterministic algorithm for search makes at least $n - 1$ queries in the worst case.
