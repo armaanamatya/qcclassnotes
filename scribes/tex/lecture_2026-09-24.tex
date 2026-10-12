@@ -8,7 +8,9 @@
     \emph{constant} ($f(0) = f(1)$) or \emph{balanced} ($f(0) \neq f(1)$).
 \end{problem}
 
-Classically we need $2$ queries: after one query, say $f(0)$, both answers are still possible.
+% Commented out: not in the lecture notes.
+% Classically we need $2$ queries: after one query, say $f(0)$, both answers are still possible.
+Classically we need $2$ queries.
 
 \subsection{The Quantum Query \texorpdfstring{$U_f$}{Uf}}
 
@@ -179,9 +181,11 @@ This is a \emph{promise problem}. Let $N = 2^n$ be the number of inputs.
 
 \subsection{Classical Query Complexity}
 
-\emph{Deterministic:} in the worst case we need $2^{n-1} + 1 = N/2 + 1$ queries, since after $N/2$
-equal values $f$ may still be either constant or balanced. The same holds for a randomized algorithm
-that has to succeed with probability $1$.
+% Commented out: not in the lecture notes.
+% \emph{Deterministic:} in the worst case we need $2^{n-1} + 1 = N/2 + 1$ queries, since after $N/2$
+% equal values $f$ may still be either constant or balanced. The same holds for a randomized algorithm
+% that has to succeed with probability $1$.
+\emph{Deterministic:} in the worst case we need $2^{n-1} + 1 = N/2 + 1$ queries.
 
 \emph{Randomized (Monte Carlo):} query $f$ on $\alpha$ independent uniformly random inputs and output
 ``balanced'' if two answers differ, ``constant'' otherwise. If $f$ is constant, we are always right. If

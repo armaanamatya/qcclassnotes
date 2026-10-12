@@ -113,14 +113,15 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
 \end{proof}
 \end{exercisebox}
 
-\paragraph{Remark.} For a square matrix, $U^\dagger U = I$ also gives $U U^\dagger = I$. If
-$U \ket{x} = 0$ then $\ket{x} = U^\dagger U \ket{x} = 0$, so $U$ is injective and so invertible.
-Multiplying $U^\dagger U = I$ by $U^{-1}$ on the right gives $U^\dagger = U^{-1}$, so
-$U U^\dagger = I$. So every unitary matrix is invertible, and its inverse $U^\dagger$ is again unitary.
-
-A quantum gate is a linear map that sends every state (every unit vector) to a state. Every vector
-is a multiple of a unit vector, so such a map preserves the norm of all vectors. By
-\cref{thm:unitary-0915} it is unitary. Conversely, every unitary matrix maps states to states.
+% Commented out: not in the lecture notes.
+% \paragraph{Remark.} For a square matrix, $U^\dagger U = I$ also gives $U U^\dagger = I$. If
+% $U \ket{x} = 0$ then $\ket{x} = U^\dagger U \ket{x} = 0$, so $U$ is injective and so invertible.
+% Multiplying $U^\dagger U = I$ by $U^{-1}$ on the right gives $U^\dagger = U^{-1}$, so
+% $U U^\dagger = I$. So every unitary matrix is invertible, and its inverse $U^\dagger$ is again unitary.
+% 
+% A quantum gate is a linear map that sends every state (every unit vector) to a state. Every vector
+% is a multiple of a unit vector, so such a map preserves the norm of all vectors. By
+% \cref{thm:unitary-0915} it is unitary. Conversely, every unitary matrix maps states to states.
 
 \section{Quantum Circuits and One-Qubit Gates}
 
@@ -137,7 +138,8 @@ $X \ket{0} = \ket{1}$ and $X \ket{1} = \ket{0}$. By linearity,
 \[X = \sigma_x = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix},
     \qquad
     X \left(\alpha \ket{0} + \beta \ket{1}\right) = \alpha \ket{1} + \beta \ket{0}.\]
-$X$ is real and symmetric, so $X^\dagger = X$ and $X^\dagger X = X^2 = I$. So $X$ is unitary.
+% Commented out: not in the lecture notes.
+% $X$ is real and symmetric, so $X^\dagger = X$ and $X^\dagger X = X^2 = I$. So $X$ is unitary.
 
 \begin{definition}[Hadamard Gate]\label{def:hadamard-0915}
     The \textbf{Hadamard gate} $H$ is the one-qubit gate with
@@ -279,8 +281,9 @@ $U^\dagger$ undoes it. Classical gates that take two bits to one bit, such as AN
     $\ket{u} - \ket{v}$ (for AND, $u = 00$ and $v = 01$, and for OR, $u = 01$ and $v = 11$).
 \end{proof}
 
-The CNOT gate is the reversible version of XOR. It computes $b \oplus a$ on the target wire and
-keeps $a$ on the control wire, so from $(a, b \oplus a)$ we recover $b = (b \oplus a) \oplus a$.
+% Commented out: not in the lecture notes.
+% The CNOT gate is the reversible version of XOR. It computes $b \oplus a$ on the target wire and
+% keeps $a$ on the control wire, so from $(a, b \oplus a)$ we recover $b = (b \oplus a) \oplus a$.
 
 \section{Tensor Products and Entanglement}
 

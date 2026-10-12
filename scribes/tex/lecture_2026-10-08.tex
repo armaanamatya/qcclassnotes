@@ -40,14 +40,15 @@ $\ket{h^\perp}$ are a second orthonormal basis of the plane (\cref{fig:reflectio
 \end{wsolution}
 \end{exercisebox}
 
-\paragraph{The sign of $G$.} In class the Grover iteration was also written as
-$G = \left(H^{\otimes n} Z_0 H^{\otimes n}\right)\left(-Z_f\right)$, which is the same operator as
-$D Z_f = \left(-H^{\otimes n} Z_0 H^{\otimes n}\right) Z_f$ because the minus sign can be moved from
-one factor to the other. The form $D Z_f$ is the reflection about
-$\ket{B}$ followed by the reflection about $\ket{h}$. In the other form, $-Z_f$ negates the $\ket{B}$
-component and $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$ negates the $\ket{h}$
-component, so it is the reflection about $\ket{A}$ followed by the reflection about $\ket{h^\perp}$.
-Both pairs of lines make the angle $\theta$.
+% Commented out: not in the lecture notes.
+% \paragraph{The sign of $G$.} In class the Grover iteration was also written as
+% $G = \left(H^{\otimes n} Z_0 H^{\otimes n}\right)\left(-Z_f\right)$, which is the same operator as
+% $D Z_f = \left(-H^{\otimes n} Z_0 H^{\otimes n}\right) Z_f$ because the minus sign can be moved from
+% one factor to the other. The form $D Z_f$ is the reflection about
+% $\ket{B}$ followed by the reflection about $\ket{h}$. In the other form, $-Z_f$ negates the $\ket{B}$
+% component and $H^{\otimes n} Z_0 H^{\otimes n} = I - 2\ket{h}\bra{h}$ negates the $\ket{h}$
+% component, so it is the reflection about $\ket{A}$ followed by the reflection about $\ket{h^\perp}$.
+% Both pairs of lines make the angle $\theta$.
 
 \begin{figure}[ht]
     \centering
@@ -187,10 +188,11 @@ we take
 \end{proof}
 \end{exercisebox}
 
-With $\ceil{\kappa}$ instead of $\floor{\kappa}$, the bound fails in general.
-For $a = \sfrac{N}{4}$ we have $\theta = \sfrac{\pi}{6}$ and $\kappa = \sfrac{\pi}{2} \approx 1.57$.
-Then $\floor{\kappa} = 1$ iteration gives the angle $\sfrac{\pi}{2}$ and success probability $1$,
-but $\ceil{\kappa} = 2$ iterations overshoot to $\sfrac{5\pi}{6}$ and give success probability $\sfrac{1}{4}$.
+% Commented out: not in the lecture notes.
+% With $\ceil{\kappa}$ instead of $\floor{\kappa}$, the bound fails in general.
+% For $a = \sfrac{N}{4}$ we have $\theta = \sfrac{\pi}{6}$ and $\kappa = \sfrac{\pi}{2} \approx 1.57$.
+% Then $\floor{\kappa} = 1$ iteration gives the angle $\sfrac{\pi}{2}$ and success probability $1$,
+% but $\ceil{\kappa} = 2$ iterations overshoot to $\sfrac{5\pi}{6}$ and give success probability $\sfrac{1}{4}$.
 
 \section{A Random Number of Iterations}\label{sec:randomk-1008}
 
