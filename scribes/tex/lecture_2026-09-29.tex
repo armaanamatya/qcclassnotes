@@ -45,29 +45,26 @@ gates is in the state
     for some unknown $n$-bit string $s$, find $s$.
 \end{problem}
 
-This is again a promise problem.
-
 \subsection{The Algorithm}
 
-The quantum algorithm is the Deutsch--Jozsa circuit (\cref{fig:dj-0924}); it makes one query.
-
 \begin{theorem}[Bernstein--Vazirani Algorithm]\label{thm:bv-0929}
-    Run the Deutsch--Jozsa circuit on $f(x) = s \cdot x$. Then measuring the $n$ control qubits gives
-    $y = s$ with probability $1$. Hence $s$ is found with a single query.
+    Run the Deutsch--Jozsa circuit (\cref{fig:dj-0924}) on $f(x) = s \cdot x$. Then measuring the $n$
+    control qubits gives $y = s$ with probability $1$. So a single query finds $s$.
 \end{theorem}
 
 \begin{proof}
-    By \cref{eq:dj-state-0929} (with the summation index $k$ renamed $x$), before the measurement the
-    control register is in the state $\sum_{y} \alpha_y \ket{y}$ with
+    By \cref{eq:dj-state-0929} (with the summation index $k$ renamed $x$), the control register is in
+    the state $\sum_{y} \alpha_y \ket{y}$ with
     \[\alpha_y = \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{s \cdot x \oplus y \cdot x}
         = \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{(s \oplus y) \cdot x},\]
-    since only the parity of the exponent matters and the inner product is bilinear modulo $2$. By
+    because only the parity of the exponent matters and the inner product is bilinear modulo $2$. By
     \cref{lem:signsum-0929} with $z = s \oplus y$, $\alpha_y = 1$ if $y = s$ and $\alpha_y = 0$ if
     $y \neq s$. So the state is $\ket{s}$, and the measurement gives $s$ with probability $1$.
 \end{proof}
 
-\paragraph{Query complexity versus running time.} The query model only counts the calls to $U_f$; the
-running time in the \emph{quantum Turing machine} (or quantum circuit) model counts all the gates, and the two are not always the same.
+\paragraph{Query complexity versus running time.} The query model only counts the calls to $U_f$. The
+running time in the \emph{quantum Turing machine} (or quantum circuit) model counts all the gates.
+The two are not always the same.
 
 \section{Simon's Algorithm}
 
@@ -79,23 +76,23 @@ running time in the \emph{quantum Turing machine} (or quantum circuit) model cou
     find $s$.
 \end{problem}
 
-If $s \neq 0^n$, then $f$ is \emph{$2$-to-$1$}: the inputs come in pairs $\set{x, x \oplus s}$, the two
-inputs of a pair map to the same output, and different pairs map to different outputs. If $s = 0^n$,
-then $f$ is \emph{$1$-to-$1$}. So the problem asks whether $f$ is $1$-to-$1$ or $2$-to-$1$ and, in the
-second case, for the period $s$ of $f$. We write $N = 2^n$.
+If $s \neq 0^n$, then $f$ is \emph{$2$-to-$1$} with period $s$: the two inputs of a pair
+$\set{x, x \oplus s}$ map to the same output, and different pairs map to different outputs. If
+$s = 0^n$, then $f$ is \emph{$1$-to-$1$}. So the problem asks whether $f$ is $1$-to-$1$ or $2$-to-$1$
+and, in the second case, for the period $s$. We write $N = 2^n$.
 
 \paragraph{Query complexity.} Classically, Simon's problem needs $\bigOm{\sqrt{N}} = \bigOm{\sqrt{2^n}}$
 queries, even for randomized algorithms (next lecture). Simon's quantum algorithm uses $\bigO{n}$
-queries; its classical part is a Gaussian elimination on an $n \times n$ system of linear equations
-over $\set{0,1}$, which takes $\bigO{n^3}$ time. This is an exponential speed-up.
+queries and a Gaussian elimination on an $n \times n$ system of linear equations over $\set{0,1}$,
+which takes $\bigO{n^3}$ time. This is an exponential speed-up.
 
 \subsection{The Circuit}
 
-The circuit (\cref{fig:simon-0929}) has two registers of $n$ qubits each, all starting in $\ket{0}$. The
-control register goes through Hadamard gates, then both registers go through $U_f$ (one query), then the
-control register goes through Hadamard gates again and is measured, giving a string $y \in \set{0,1}^n$.
-Since $f$ has $n$ output bits, we use $U_f$ in its original form
-$\ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$ and not the phase flip form.
+The circuit (\cref{fig:simon-0929}) has two registers of $n$ qubits each, all starting in $\ket{0}$.
+Hadamard gates act on the control register before and after the single query $U_f$. Then the control
+register is measured, giving a string $y \in \set{0,1}^n$. Because $f$ has $n$ output bits, we use
+$U_f$ in its original form $\ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$ and not the phase flip
+form.
 
 \begin{figure}[ht]
     \centering
@@ -149,51 +146,51 @@ $\ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$ and not the phase flip form.
 
 \begin{proof}
     By \cref{lem:wh-0924}, the first layer of Hadamard gates gives
-    $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{0^n}$, the query $U_f$ turns this into
-    $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{f(x)}$, and the second layer of Hadamard gates on the
+    $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{0^n}$. The query $U_f$ turns this into
+    $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}\ket{f(x)}$. The second layer of Hadamard gates on the
     control register (\cref{lem:wh-0924} applied to every $\ket{x}$) gives
     \begin{equation}\label{eq:simon-final-0929}
         \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}\ket{f(x)}.
     \end{equation}
-    The amplitude $\alpha_{y,z}$ of a basis state $\ket{y}\ket{z}$ collects the $x$ with $f(x) = z$,
-    and measuring only the first register gives $y$ with probability $\sum_{z} \abs{\alpha_{y,z}}^2$
+    The amplitude $\alpha_{y,z}$ of a basis state $\ket{y}\ket{z}$ collects the $x$ with $f(x) = z$.
+    Measuring only the first register gives $y$ with probability $\sum_{z} \abs{\alpha_{y,z}}^2$
     (the probabilities of all basis states $\ket{y}\ket{z}$ with this $y$ add up).
 
     \emph{Case 2: $f$ is $1$-to-$1$.} The $2^n$ strings $f(x)$ are all different, so every basis state
     $\ket{y}\ket{f(x)}$ appears exactly once in \cref{eq:simon-final-0929}, with amplitude
-    $\frac{1}{2^n} (-1)^{x \cdot y}$. Measuring the first register gives $y$ with probability
+    $\frac{1}{2^n} (-1)^{x \cdot y}$. So $y$ has probability
     $\sum_{x} \abs{\frac{1}{2^n} (-1)^{x \cdot y}}^2 = 2^n \cdot \frac{1}{2^{2n}} = \frac{1}{2^n}$.
 
     \emph{Case 1: $f$ is $2$-to-$1$ with period $s \neq 0^n$.} The range $R$ of $f$ has
     $\abs{R} = 2^{n-1}$ elements. For every $z \in R$ let $x_z$ be one of its two preimages; the other
-    is $x_z \oplus s$. Since $(x_z \oplus s) \cdot y = x_z \cdot y \oplus s \cdot y$, the amplitude of
+    is $x_z \oplus s$. Because $(x_z \oplus s) \cdot y = x_z \cdot y \oplus s \cdot y$, the amplitude of
     $\ket{y}\ket{z}$ in \cref{eq:simon-final-0929} is
     \[\frac{1}{2^n} \left((-1)^{x_z \cdot y} + (-1)^{(x_z \oplus s) \cdot y}\right)
         = \frac{1}{2^n} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right)\]
-    for $z \in R$ (and $0$ for $z \notin R$), and measuring the first register gives $y$ with probability
+    for $z \in R$ (and $0$ for $z \notin R$). So $y$ has probability
     \[\sum_{z \in R} \abs{\frac{1}{2^n} \left(1 + (-1)^{s \cdot y}\right)}^2
         = 2^{n-1} \cdot \frac{\left(1 + (-1)^{s \cdot y}\right)^2}{2^{2n}}
         = \begin{cases}
             \sfrac{1}{2^{n-1}} & \text{if } s \cdot y = 0, \\
             0                  & \text{if } s \cdot y = 1.
         \end{cases}\]
-    There are $2^{n-1}$ strings $y$ with $s \cdot y = 0$: the pairing $y \mapsto y \oplus e_i$ of the
-    proof of \cref{lem:signsum-0929}, with $s_i = 1$, matches every $y$ with $s \cdot y = 0$ to a $y'$
-    with $s \cdot y' = 1$.
+    There are $2^{n-1}$ strings $y$ with $s \cdot y = 0$, because the pairing $y \mapsto y \oplus e_i$
+    of the proof of \cref{lem:signsum-0929}, with $s_i = 1$, matches every $y$ with $s \cdot y = 0$ to
+    a $y'$ with $s \cdot y' = 1$.
 \end{proof}
 
 \subsection{From the Measurements to \texorpdfstring{$s$}{s}}
 
-Each run of the circuit gives a random $y$ with $s \cdot y = 0$, i.e., one linear equation
+Each run of the circuit gives a random $y$ with $s \cdot y = 0$, which is one linear equation
 $s_1 y_1 \oplus s_2 y_2 \oplus \dots \oplus s_n y_n = 0$ for the unknown bits $s_1, \dots, s_n$. Running
 the circuit $n - 1$ times gives a homogeneous system
 \[y_1 \cdot s = 0, \quad y_2 \cdot s = 0, \quad \dots, \quad y_{n-1} \cdot s = 0\]
 of linear equations over the field $\set{0,1}$ (addition is $\oplus$). If $y_1, \dots, y_{n-1}$ are
-\emph{linearly independent} over $\set{0,1}$, the system has rank $n - 1$, so its solution space has
+\emph{linearly independent} over $\set{0,1}$, the system has rank $n - 1$. Then its solution space has
 dimension $n - (n-1) = 1$ and consists of $0^n$ and one nonzero string $s'$. Gaussian elimination over
 $\set{0,1}$ tests the independence and computes $s'$ in $\bigO{n^3}$ time. The true $s$ satisfies every
-equation (so if $s \neq 0^n$ at most $n - 1$ of them can be independent, and $n - 1$ independent ones are enough);
-hence if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
+equation. So if $s \neq 0^n$, at most $n - 1$ of them can be independent, and $n - 1$ independent ones
+are enough: if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 
 \begin{algorithm}[ht]
     \caption{Simon's algorithm}
@@ -221,7 +218,7 @@ hence if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 \begin{proof}
     \emph{Never wrong.} If the algorithm does not fail, $y_1, \dots, y_{n-1}$ are independent and $s'$
     is the unique nonzero solution of the system. If $f$ is $2$-to-$1$ with period $s$, then $s$ is a
-    nonzero solution, so $s' = s$, and the test $f(s') = f(0^n) = f(0^n \oplus s)$ succeeds: the output
+    nonzero solution, so $s' = s$. The test $f(s') = f(0^n) = f(0^n \oplus s)$ succeeds, and the output
     $s' = s$ is correct. If $f$ is $1$-to-$1$, then $f(s') \neq f(0^n)$ because $s' \neq 0^n$, and the
     output $0^n = s$ is correct.
 
@@ -236,34 +233,32 @@ hence if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 
 \subsection{A Deterministic Classical Algorithm}
 
-Classically, $\bigO{\sqrt{2^n}}$ queries suffice even without randomness.
-
 \begin{exercise}\label{ex:simon-det-0929}
     Find a deterministic classical algorithm for Simon's problem that makes $\bigO{\sqrt{2^n}}$ queries.
 \end{exercise}
 
 \begin{wsolution}
-    We query a set $S$ such that every nonzero string is the XOR of two elements of $S$; a collision
-    in $S$ then reveals $s$. Let $m = \ceil{n/2}$ and write every $n$-bit string as $x = (u, v)$ with
+    We query a set $S$ such that every nonzero string is the XOR of two elements of $S$. A collision
+    in $S$ then gives $s$. Let $m = \ceil{n/2}$ and write every $n$-bit string as $x = (u, v)$ with
     $u \in \set{0,1}^m$ its first $m$ bits and $v \in \set{0,1}^{n-m}$ its last $n - m$ bits. Let
     \[S_1 = \set{(u, 0^{n-m}) \suchthat u \in \set{0,1}^m}, \qquad
         S_2 = \set{(0^m, v) \suchthat v \in \set{0,1}^{n-m}}, \qquad
         S = S_1 \cup S_2.\]
 
     \emph{The algorithm.} Query $f$ on every $x \in S$. If there are $x \neq x'$ in $S$ with
-    $f(x) = f(x')$, output $s = x \oplus x'$; otherwise output $s = 0^n$.
+    $f(x) = f(x')$, output $s = x \oplus x'$. Otherwise output $s = 0^n$.
 
-    \emph{Queries.} Since $n - m \leq m \leq \sfrac{(n+1)}{2}$, the algorithm makes
+    \emph{Queries.} Because $n - m \leq m \leq \sfrac{(n+1)}{2}$, the algorithm makes
     $\abs{S} \leq 2^m + 2^{n-m} \leq 2 \cdot 2^{m} \leq 2 \cdot 2^{(n+1)/2} = 2\sqrt{2} \cdot \sqrt{2^n}
         = \bigO{\sqrt{2^n}}$ queries, and it is deterministic.
 
     \emph{Claim: every $s \neq 0^n$ is the XOR of two different elements of $S$.} Write $s = (u, v)$. Then
     $(u, 0^{n-m}) \in S_1$, $(0^m, v) \in S_2$ and $(u, 0^{n-m}) \oplus (0^m, v) = s$. The two elements
-    are different, since otherwise $u = 0^m$ and $v = 0^{n-m}$, i.e., $s = 0^n$.
+    are different, because otherwise $u = 0^m$ and $v = 0^{n-m}$, so $s = 0^n$.
 
     \emph{Correctness.} If $f$ is $2$-to-$1$ with period $s \neq 0^n$, by the claim there are $x \neq x'$
-    in $S$ with $x' = x \oplus s$, so $f(x) = f(x')$ and a collision is found. Any collision
+    in $S$ with $x' = x \oplus s$, so $f(x) = f(x')$ and we find a collision. Any collision
     $f(x) = f(x')$ with $x \neq x'$ satisfies $x' = x \oplus s$ by the promise, so the output
-    $x \oplus x' = s$ is correct whichever collision is found. If $f$ is $1$-to-$1$ there is no
+    $x \oplus x' = s$ is correct. If $f$ is $1$-to-$1$ there is no
     collision, and the output $0^n = s$ is correct.
 \end{wsolution}

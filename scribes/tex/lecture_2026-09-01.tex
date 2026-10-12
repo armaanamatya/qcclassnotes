@@ -1,13 +1,11 @@
-In this lecture, we study the query complexity of search for classical randomized algorithms.
-We analyze random sampling, relate it to the coupon collector problem, state a lower bound
-for randomized search algorithms using Yao's minmax principle, and introduce Chernoff bounds.
+This lecture covers the query complexity of search for classical randomized algorithms: random
+sampling, the coupon collector problem, a lower bound by Yao's minmax principle, and Chernoff bounds.
 
 \section{Query Complexity for Search}
 
-Recall the search problem of the last lecture (\cref{fig:coinflips-0825}). An array of $n$ slots can
-only be accessed through \emph{queries}. A query to a slot $x$ returns the value $f(x)$, and the goal is
-to find the slot $x$ with $f(x) = 1$. The cost of an algorithm is its \emph{query complexity}, the number
-of queries that it makes.
+In the search problem of \cref{fig:coinflips-0825}, a \emph{query} to a slot $x$ of an array of $n$
+slots returns $f(x)$, and the goal is to find the slot $x$ with $f(x) = 1$. The \emph{query complexity}
+of an algorithm is the number of queries that it makes.
 
 \begin{definition}[Monte Carlo and Las Vegas Algorithms]
     A \textbf{Monte Carlo} algorithm is a randomized algorithm whose error probability is $> 0$.
@@ -15,18 +13,18 @@ of queries that it makes.
     A \textbf{Las Vegas} algorithm is a randomized algorithm whose error probability is $= 0$.
 \end{definition}
 
-Random sampling \emph{with replacement} queries in every step a slot chosen uniformly at random. Every
+Random sampling \emph{with replacement} queries a slot chosen uniformly at random in every step. Every
 query succeeds with probability $\sfrac{1}{n}$, so the number of queries until the first success is a
-\emph{geometric} random variable with parameter $\sfrac{1}{n}$ and
+\emph{geometric} random variable with parameter $\sfrac{1}{n}$, and
 $\expectation{\text{queries until find}} = n$.
-Stopped after a fixed number of queries, random sampling is a Monte Carlo algorithm (it can fail to
-find the slot). Run until the slot is found, it is a Las Vegas algorithm with $n$ expected queries.
+Stopped after a fixed number of queries, random sampling is a Monte Carlo algorithm, because it
+can fail to find the slot. Run until the slot is found, it is a Las Vegas algorithm with $n$
+expected queries.
 
 \section{Coupon Collector Problem}
 
 To distinguish 2 binary arrays with random sampling, all the $n$ slots have to be accessed. The
-number of queries needed by random sampling (with replacement) to access all the $n$ slots is the
-\emph{coupon collector problem}.
+number of queries that this takes is the \emph{coupon collector problem}.
 
 \begin{theorem}[Coupon Collector]\label{thm:coupon}
     Let $X$ be the number of queries made by random sampling (with replacement) until all the
@@ -37,8 +35,8 @@ number of queries needed by random sampling (with replacement) to access all the
 
 \begin{proof}
     Write $X = X_1 + X_2 + \dots + X_n$, where $X_i$ is the number of queries made to access a new
-    slot after $i-1$ different slots have already been accessed. Such a query accesses a new slot
-    with probability $\frac{n-(i-1)}{n}$, so $X_i \sim G\left(\frac{n-(i-1)}{n}\right)$ is geometric
+    slot after $i-1$ different slots have been accessed. Such a query accesses a new slot
+    with probability $\frac{n-(i-1)}{n}$. So $X_i \sim G\left(\frac{n-(i-1)}{n}\right)$ is geometric
     with $\expectation{X_i} = \frac{n}{n-(i-1)}$. By linearity of expectation,
     \[\expectation{X} = \sum_{i=1}^{n} \expectation{X_i} = n \sum_{i=1}^{n} \frac{1}{n-i+1} = n H_n,\]
     and $H_n = \bigTh{\log n}$.
@@ -46,28 +44,19 @@ number of queries needed by random sampling (with replacement) to access all the
 
 \subsection{High Probability Bound}
 
-The solution of the following exercise uses the Chernoff bounds and is given in
-\cref{sec:exercise-0901}.
-
-\begin{exercise}\label{ex:maxload-0901}
-    Show that
-    \[\prob{\text{any slot is accessed} \leq c \log n \text{ times}} \leq \frac{1}{n^2}\]
-    for a constant $c > 0$, if random sampling makes enough queries (a constant times $n \log n$).
-\end{exercise}
-
-With high probability $3 n \log n$ queries are enough. Here $\log$ is the natural logarithm.
+Here $\log$ is the natural logarithm.
 
 \begin{theorem}\label{thm:whp}
     If random sampling makes $3 n \log n$ queries, then
     \[\prob{\text{fail}} \leq \frac{1}{n^2},
-        \qquad\text{i.e.,}\qquad
+        \qquad\text{that is,}\qquad
         \prob{\text{Success}} \geq 1 - \frac{1}{n^2},\]
     where ``fail'' means that some slot is not accessed.
 \end{theorem}
 
 \begin{proof}
     Let $B_i$ be the event that slot $i$ is not accessed. A query misses slot $i$ with
-    probability $1 - \frac{1}{n}$ and the queries are independent, so using $1 - x \leq e^{-x}$,
+    probability $1 - \frac{1}{n}$, and the queries are independent. Using $1 - x \leq e^{-x}$, we get
     \[\prob{B_i} \leq \left(1 - \frac{1}{n}\right)^{3 n \log n}
         \leq e^{-3 \log n} = \frac{1}{n^3},
         \qquad
@@ -81,29 +70,27 @@ With high probability $3 n \log n$ queries are enough. Here $\log$ is the natura
     Any Las Vegas randomized algorithm for search needs $\bigOm{n}$ expected queries.
 \end{theorem}
 
-The lower bound is shown using Yao's minmax principle.
-
 \subsection*{Yao's Minmax Principle}
 
 Let $A^{\mathrm{rand}}$ be a randomized algorithm, and let $\expectation{A^{\mathrm{rand}}}$ be its
 expected number of queries on its worst input. Let $\mu$ be a probability distribution over the inputs,
-and let $D^{\mathrm{best}}_{\mu}$ be the best deterministic algorithm for inputs that are chosen
+and let $D^{\mathrm{best}}_{\mu}$ be the best deterministic algorithm for inputs chosen
 according to $\mu$. Then
 \[\expectation{A^{\mathrm{rand}}}
     \geq \max_{\mu} \operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]
     \geq \bigOm{n}.\]
 The quantity $\operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]$ is called the
-\emph{distributional complexity}. The first inequality is the principle; the second one holds for
-search and proves \cref{thm:lowerbound}:
+\emph{distributional complexity}. The first inequality is the principle. The second one holds for
+search and proves \cref{thm:lowerbound}.
 
 \begin{proof}[Proof of \cref{thm:lowerbound}]
     Let $\mu$ choose the slot $x$ with $f(x) = 1$ uniformly at random among the $n$ slots, and let $D$
     be a deterministic algorithm that is always correct. As long as all the answers are $0$, $D$
-    queries a fixed sequence of different slots $s_1, s_2, \dots$ (repeating a query gives no new
-    information). It cannot stop while all the answers are $0$ and two slots are not yet queried:
+    queries a fixed sequence of different slots $s_1, s_2, \dots$, because repeating a query gives no
+    new information. It cannot stop while all the answers are $0$ and two slots are not yet queried:
     either of them could be the solution, and $D$ would be wrong on one of the two inputs. So if the
     solution is $s_j$, then $D$ makes at least $\min(j, n-1)$ queries. Every $j$ has probability
-    $\sfrac{1}{n}$, hence
+    $\sfrac{1}{n}$, so
     \[\operatorname{\mathbb{E}}_{\mu}\left[D\right] \geq \frac{1}{n} \sum_{j=1}^{n} \min(j, n-1)
         \geq \frac{1}{n} \sum_{j=1}^{n-1} j = \frac{n-1}{2} = \bigOm{n}. \qedhere\]
 \end{proof}
@@ -112,7 +99,7 @@ search and proves \cref{thm:lowerbound}:
 
 If a coin gives heads with probability $\frac{1}{2} + \eps$ and is tossed $n$ times, then
 $\expectation{\text{Heads}} = \frac{n}{2} + n\eps$. Chernoff bounds show that the number of heads is
-close to its expectation, so that $\prob{\text{Heads} < \frac{n}{2}}$ is very small.
+close to its expectation, so $\prob{\text{Heads} < \frac{n}{2}}$ is very small.
 
 In general, let
 \[X = \sum_{i=1}^{n} X_i,
@@ -122,8 +109,7 @@ In general, let
         0 & \text{with probability } 1 - p_i,
     \end{cases}\]
 where the $X_i$ are independent Bernoulli random variables. If $p_i = p$ for all $i$, then
-$\expectation{X} = np$ and $\variance{X} = np(1-p)$, and the distribution of $X$ is concentrated
-around its mean $np$.
+$\expectation{X} = np$ and $\variance{X} = np(1-p)$.
 
 \begin{theorem}[Chernoff Bounds]\label{thm:chernoff-0901}
     Let $X = \sum_{i=1}^{n} X_i$ be as above and let $\mu = \expectation{X}$.
@@ -139,33 +125,32 @@ around its mean $np$.
 
 \subsection{Solution of the Exercise}\label{sec:exercise-0901}
 
-We solve \cref{ex:maxload-0901}. As before, $\log$ is the natural logarithm.
-Fix a slot $i$, suppose that random sampling makes $T$ queries, and let $Y_i = \sum_{t=1}^{T} Z_t$
-be the number of times that slot $i$ is accessed, where $Z_t = 1$ if the $\nth{t}$ query accesses
-slot $i$ and $Z_t = 0$ otherwise. The queries are independent (sampling with replacement) and each
-accesses slot $i$ with probability $\sfrac{1}{n}$, so the $Z_t$ are independent Bernoulli random
-variables with $p_t = \sfrac{1}{n}$, as in \cref{thm:chernoff-0901}, and
-$\mu = \expectation{Y_i} = \sfrac{T}{n}$.
-
-\begin{lemma}[Lower Tail: No Slot Is Accessed Too Rarely]\label{lem:maxload-lower-0901}
-    If random sampling makes $24 n \log n$ queries, then
-    \[\prob{\text{some slot is accessed} < 12 \log n \text{ times}} \leq \frac{1}{n^2}.\]
-    In particular, for $n \geq 2$,
-    $\prob{\text{some slot is accessed} \leq 6 \log n \text{ times}} \leq \sfrac{1}{n^2}$, which is
-    \cref{ex:maxload-0901} with $c = 6$.
-\end{lemma}
+\begin{exercise}\label{ex:maxload-0901}\label{lem:maxload-lower-0901}
+    Show that if random sampling makes $24 n \log n$ queries, then
+    \[\prob{\text{some slot is accessed} < 12 \log n \text{ times}} \leq \frac{1}{n^2},\]
+    so for $n \geq 2$ and $c = 6$,
+    \[\prob{\text{some slot is accessed} \leq c \log n \text{ times}} \leq \frac{1}{n^2}.\]
+\end{exercise}
 
 \begin{proof}
-    Here $T = 24 n \log n$, so $\mu = 24 \log n$. The lower tail bound of \cref{thm:chernoff-0901}
-    with $\delta = \sfrac{1}{2}$, for which $(1 - \delta)\mu = 12 \log n$, gives for every slot $i$
-    \[\prob{Y_i < 12 \log n} \leq e^{-\frac{\mu \delta^2}{2}} = e^{-\frac{24 \log n}{8}} = \frac{1}{n^3},\]
-    and by the union bound over the $n$ slots some slot has $Y_i < 12 \log n$ with probability at
+    Fix a slot $i$ and let $T = 24 n \log n$ be the number of queries. Let
+    $Y_i = \sum_{t=1}^{T} Z_t$ be the number of times that slot $i$ is accessed, where $Z_t = 1$ if
+    the $\nth{t}$ query accesses slot $i$ and $Z_t = 0$ otherwise. Sampling is with replacement, so
+    the queries are independent, and each accesses slot $i$ with probability $\sfrac{1}{n}$. So the
+    $Z_t$ are independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, as in
+    \cref{thm:chernoff-0901}, and $\mu = \expectation{Y_i} = \sfrac{T}{n} = 24 \log n$.
+
+    The lower tail bound of \cref{thm:chernoff-0901} with $\delta = \sfrac{1}{2}$, for which
+    $(1 - \delta)\mu = 12 \log n$, gives for every slot $i$
+    \[\prob{Y_i < 12 \log n} \leq e^{-\frac{\mu \delta^2}{2}}
+        = e^{-\frac{24 \log n}{8}} = \frac{1}{n^3}.\]
+    By the union bound over the $n$ slots, some slot has $Y_i < 12 \log n$ with probability at
     most $n \cdot \sfrac{1}{n^3} = \sfrac{1}{n^2}$. For $n \geq 2$ we have $\log n > 0$, so
-    $Y_i \leq 6 \log n$ implies $Y_i < 12 \log n$: the event of the second statement is contained
-    in the first and has probability at most $\sfrac{1}{n^2}$ as well.
+    $Y_i \leq 6 \log n$ implies $Y_i < 12 \log n$. So the second event is contained in the first and
+    also has probability at most $\sfrac{1}{n^2}$.
 \end{proof}
 
-The lemma uses $24 n \log n$ queries and not the $3 n \log n$ of \cref{thm:whp}, because with
+The proof uses $24 n \log n$ queries and not the $3 n \log n$ of \cref{thm:whp}. With
 $\mu = 3 \log n$ the lower tail bound is more than $n^{-3/2}$ per slot, which is too weak for the
 union bound over the $n$ slots. The exercise also holds with ``$\geq$'' in place of ``$\leq$'' and a
 larger constant ($c = 144$), by the second bound of \cref{thm:chernoff-0901} with $R = 6\mu$.

@@ -1,26 +1,24 @@
 In this lecture, we show that the \emph{classical} query complexity of Simon's problem is
-$\bigTh{\sqrt{N}}$, where $N = 2^n$ (the lower bound by Yao's minmax principle), and we complete the
-analysis of Simon's quantum algorithm: the measured strings are linearly independent with probability
-at least $\sfrac{1}{4}$.
+$\bigTh{\sqrt{N}}$, where $N = 2^n$, and that the strings measured by Simon's quantum algorithm are
+linearly independent with probability at least $\sfrac{1}{4}$.
 
 \section{Simon's Problem, Classically}
 
-Recall Simon's problem: $f \colon \set{0,1}^n \to \set{0,1}^n$ is given as a black box, and we are
-promised that $f$ is either $1$-to-$1$, or $2$-to-$1$ with a period $s \neq 0^n$, i.e.,
-\[f(x) = f(y) \iff x = y \ \text{ or } \ x \oplus y = s \ (\text{i.e., } y = x \oplus s).\]
-We have to find $s$ (with $s = 0^n$ meaning that $f$ is $1$-to-$1$). Let $N = 2^n$. A classical
-algorithm learns $f$ only through queries $f(q_1), f(q_2), \dots$, and we may assume that it never
-queries the same input twice. A \emph{collision} is a pair of queries $q_i \neq q_j$ with
-$f(q_i) = f(q_j)$. By the promise a collision gives $s = q_i \oplus q_j$.
+In Simon's problem, $f \colon \set{0,1}^n \to \set{0,1}^n$ is given as a black box with the promise
+\[f(x) = f(y) \iff x = y \ \text{ or } \ x \oplus y = s,\]
+and we have to find $s$ ($f$ is $1$-to-$1$ if $s = 0^n$ and $2$-to-$1$ with period $s$ otherwise).
+Let $N = 2^n$. A classical algorithm learns $f$ only through queries $f(q_1), f(q_2), \dots$, and we
+may assume that it never queries the same input twice. A \emph{collision} is a pair of queries
+$q_i \neq q_j$ with $f(q_i) = f(q_j)$. By the promise a collision gives $s = q_i \oplus q_j$.
 
 \subsection{Deterministic Algorithms}
 
 \Cref{ex:simon-det-0929} gives a deterministic algorithm with $\bigO{\sqrt{N}}$ queries. This is
-optimal by the lower bound for randomized algorithms proved below (\cref{thm:simon-det-lb-1001}).
+optimal by \cref{thm:simon-det-lb-1001}.
 
 \subsection{A Randomized Algorithm}
 
-As in the birthday paradox (lecture of September~3), we query random inputs and wait for a collision.
+We query random inputs and wait for a collision.
 
 \begin{algorithm}[ht]
     \caption{Randomized classical algorithm for Simon's problem}
@@ -37,21 +35,21 @@ As in the birthday paradox (lecture of September~3), we query random inputs and 
 
 \begin{theorem}[Randomized Upper Bound]\label{thm:simon-rand-ub-1001}
     If $f$ is $1$-to-$1$, \cref{alg:simon-rand-1001} is always correct. If $f$ is $2$-to-$1$ with period
-    $s$, it is wrong with probability at most $e^{-k(k-1)/(2N)}$. In particular, with
+    $s$, it is wrong with probability at most $e^{-k(k-1)/(2N)}$. So with
     $k \geq \sqrt{2N \ln N} + 1$ queries (an integer at most $N$ once $n \geq 3$) the algorithm is correct
-    with probability at least $1 - \sfrac{1}{N}$, and with $k \geq \sqrt{2N} + 1$, i.e., $\bigO{\sqrt{N}}$,
-    queries with probability at least $1 - \sfrac{1}{e}$.
+    with probability at least $1 - \sfrac{1}{N}$. With $k \geq \sqrt{2N} + 1$ queries, which is
+    $\bigO{\sqrt{N}}$, this probability is at least $1 - \sfrac{1}{e}$.
 \end{theorem}
 
 \begin{proof}
     If $f$ is $1$-to-$1$ there is no collision, and the output $0^n$ is correct. Let $f$ be $2$-to-$1$
-    with period $s \neq 0^n$. A collision gives $q_i \oplus q_j = s$ by the promise, so the algorithm
-    is wrong only if no collision occurs. Call $q_j \oplus s$ the \emph{mirror} of $q_j$; a collision
-    occurs at step $i$ exactly when $q_i$ is the mirror of an earlier query.
+    with period $s \neq 0^n$. The algorithm is wrong only if no collision occurs. Call $q_j \oplus s$
+    the \emph{mirror} of $q_j$. A collision occurs at step $i$ exactly when $q_i$ is the mirror of an
+    earlier query.
 
-    Suppose that no collision occurred among $q_1, \dots, q_{i-1}$. Their $i - 1$ mirrors are distinct
-    and none of them is among $q_1, \dots, q_{i-1}$ (that would be a collision), so all of them are
-    among the $N - (i-1)$ inputs not yet queried, and $q_i$ is uniform among those. Hence the
+    Suppose that no collision occurred among $q_1, \dots, q_{i-1}$. Their $i - 1$ mirrors are distinct,
+    and none is among $q_1, \dots, q_{i-1}$, because that would be a collision. Then all of them are
+    among the $N - (i-1)$ inputs not yet queried, and $q_i$ is uniform among those. So the
     probability of a collision at step $i$, given none before, is
     $\sfrac{(i-1)}{(N-i+1)} \geq \sfrac{(i-1)}{N}$. Multiplying over the $k$ steps and using
     $1 - x \leq e^{-x}$,
@@ -70,7 +68,7 @@ As in the birthday paradox (lecture of September~3), we query random inputs and 
 \begin{theorem}[Randomized Lower Bound]\label{thm:simon-rand-lb-1001}
     Let $n \geq 2$. Every randomized classical algorithm that solves Simon's problem with success
     probability at least $\sfrac{2}{3}$ on every input makes more than $\sfrac{\sqrt{N}}{2}$ queries on
-    some input. Hence every such algorithm needs $\bigOm{\sqrt{N}} = \bigOm{\sqrt{2^n}}$ queries.
+    some input. So every such algorithm needs $\bigOm{\sqrt{N}} = \bigOm{\sqrt{2^n}}$ queries.
 \end{theorem}
 
 \begin{lemma}[Yao's Minmax Principle, Easy Direction]\label{lem:yao-1001}
@@ -92,17 +90,16 @@ As in the birthday paradox (lecture of September~3), we query random inputs and 
     probability on the right is greater than $\delta$ by assumption.
 \end{proof}
 
-\paragraph{The input distribution.} Let $\mathcal{D}$ be the distribution of random $2$-to-$1$
-functions: choose $s$ uniformly among the $N - 1$ nonzero strings, which splits $\set{0,1}^n$ into
-$\sfrac{N}{2}$ pairs $\set{x, x \oplus s}$, and assign to the pairs distinct values, uniformly at
-random among all such assignments. On such an input an algorithm has to output $s$.
+\paragraph{The input distribution.} Let $\mathcal{D}$ be the following distribution of $2$-to-$1$
+functions. Choose $s$ uniformly among the $N - 1$ nonzero strings. This splits $\set{0,1}^n$ into
+$\sfrac{N}{2}$ pairs $\set{x, x \oplus s}$. Assign distinct values to the pairs, uniformly at
+random among all such assignments.
 
-\paragraph{Principle of deferred decisions.} We generate the input lazily. Choose $s$ and keep it
-hidden. When the algorithm queries $q_i$: if $q_i = q_j \oplus s$ for an earlier query $q_j$ (a
-\emph{collision}), answer $f(q_j)$; otherwise answer a uniformly random value among those not used so
-far ($N - (i-1)$ of them as long as no collision has occurred). This produces $\mathcal{D}$, because a
-uniformly random injective assignment can be built one value at a time, each uniform among the unused
-ones.
+\paragraph{Principle of deferred decisions.} We generate the input lazily. Choose $s$. When the
+algorithm queries $q_i$: if $q_i = q_j \oplus s$ for an earlier query $q_j$ (a collision), answer
+$f(q_j)$. Otherwise answer a uniformly random value among those not used so far ($N - (i-1)$ of them
+as long as no collision has occurred). This produces $\mathcal{D}$, because a uniformly random
+injective assignment can be built one value at a time, each uniform among the unused ones.
 
 \begin{lemma}[Few Queries Rarely Collide]\label{lem:collision-1001}
     Let $n \geq 2$ and let $A$ be a deterministic algorithm that makes $k \leq \sfrac{\sqrt{N}}{2}$
@@ -118,16 +115,17 @@ ones.
 
 \begin{proof}
     Let $Q_i$ be the event that there is no collision among the first $i$ queries, and $C_i$ the
-    event that the $\nth{i}$ query collides with an earlier one, i.e., $q_i \oplus s \in \set{q_1, \dots, q_{i-1}}$.
+    event $q_i \oplus s \in \set{q_1, \dots, q_{i-1}}$ that the $\nth{i}$ query collides with an
+    earlier one.
 
     \emph{What the algorithm knows about $s$.} Fix $i \leq k + 1$ and condition on $Q_{i-1}$ and on the
     (distinct) answers $f(q_1), \dots, f(q_{i-1})$. Since $A$ is deterministic, the queries
     $q_1, \dots, q_{i-1}$ are the same for every $s$ that leads to these answers. By the lazy
     generation, this sequence of answers has probability $\prod_{j=1}^{i-1} \sfrac{1}{(N - j + 1)}$, the
-    same for every $s$ not of the form $q_j \oplus q_l$ with $j < l \leq i - 1$, and probability $0$ for
-    an $s$ of this form ($q_j$ and $q_l$ would have collided). By Bayes' rule, given the answers, $s$
-    is uniform over the nonzero strings that are not among the at most $\binom{i-1}{2}$ strings
-    $q_j \oplus q_l$, a set of at least $N - 1 - \binom{i-1}{2} \geq N - 1 - \sfrac{k^2}{2} \geq
+    same for every $s$ not of the form $q_j \oplus q_l$ with $j < l \leq i - 1$. It is $0$ for an $s$
+    of this form ($q_j$ and $q_l$ would have collided). By Bayes' rule, given the answers, $s$ is
+    uniform over the nonzero strings that are not among the at most $\binom{i-1}{2}$ strings
+    $q_j \oplus q_l$. This is a set of at least $N - 1 - \binom{i-1}{2} \geq N - 1 - \sfrac{k^2}{2} \geq
         N - 1 - \sfrac{N}{8} \geq \sfrac{N}{2}$ candidates (as $i - 1 \leq k \leq \sfrac{\sqrt{N}}{2}$
     and $N \geq 4$). For $i = k + 1$ this is part~2.
 
@@ -143,25 +141,25 @@ ones.
 \begin{proof}[Proof of \cref{thm:simon-rand-lb-1001}]
     Let $A$ be a deterministic algorithm with at most $\sfrac{\sqrt{N}}{2}$ queries. We may assume
     that it never repeats a query and makes the same number $k \leq \sfrac{\sqrt{N}}{2}$ of queries on
-    every input (extra queries whose answers are ignored do not change the output). Run it on an
-    input drawn from $\mathcal{D}$; it is correct only if its output is $s$. If there is no collision,
-    then given the answers the output is one fixed string, while $s$ is uniform over at least
-    $\sfrac{N}{2}$ strings by part~2 of \cref{lem:collision-1001}, so $A$ is correct with probability
+    every input, because extra queries whose answers are ignored do not change the output. Run it on
+    an input drawn from $\mathcal{D}$. It is correct only if its output is $s$. Suppose there is no
+    collision. Given the answers, the output is one fixed string, and $s$ is uniform over at least
+    $\sfrac{N}{2}$ strings by part~2 of \cref{lem:collision-1001}. So $A$ is correct with probability
     at most $\sfrac{2}{N}$. With part~1,
     \[\prob{A \text{ correct}} \leq \prob{\text{collision}} + \frac{2}{N} \leq \frac{k(k-1) + 2}{N}.\]
     If $k \geq 2$, then $k(k-1) + 2 \leq k^2 \leq \sfrac{N}{4}$ and the bound is at most $\sfrac{1}{4}$.
     If $k \leq 1$, there is no collision and the bound is $\sfrac{2}{N} \leq \sfrac{1}{2}$. So $A$ errs
-    with probability at least $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$, and by \cref{lem:yao-1001}
-    (with $\mu = \mathcal{D}$, $\delta = \sfrac{1}{3}$) every randomized algorithm with at most
+    with probability at least $\sfrac{1}{2} > \sfrac{1}{3}$ on $\mathcal{D}$. By \cref{lem:yao-1001}
+    with $\mu = \mathcal{D}$ and $\delta = \sfrac{1}{3}$, every randomized algorithm with at most
     $\sfrac{\sqrt{N}}{2}$ queries errs with probability greater than $\sfrac{1}{3}$ on some input.
-    Hence an algorithm with success probability at least $\sfrac{2}{3}$ on every input makes more
-    than $\sfrac{\sqrt{N}}{2}$ queries on some input.
+    So an algorithm with success probability at least $\sfrac{2}{3}$ on every input makes more than
+    $\sfrac{\sqrt{N}}{2}$ queries on some input.
 \end{proof}
 
 \begin{corollary}[Classical Query Complexity of Simon's Problem]\label{thm:simon-det-lb-1001}
     The classical query complexity of Simon's problem is $\bigTh{\sqrt{N}} = \bigTh{\sqrt{2^n}}$, both
     for deterministic algorithms and for randomized algorithms with constant success probability.
-    Simon's quantum algorithm, with $\bigO{n}$ queries, is therefore exponentially faster than every
+    So Simon's quantum algorithm, with $\bigO{n}$ queries, is exponentially faster than every
     classical algorithm.
 \end{corollary}
 
@@ -172,8 +170,6 @@ ones.
     bound $e^{-(k-1)^2/(2N)}$ in its proof is at most $\sfrac{1}{3}$ for $k \geq \sqrt{2N \ln 3} + 1$).
 \end{proof}
 
-The same bound holds if the algorithm only has to tell the two cases apart.
-
 \begin{corollary}[Decision Version]\label{cor:simon-decision-1001}
     Let $n \geq 2$. Every randomized classical algorithm that decides, with success probability at
     least $\sfrac{2}{3}$ on every input, whether $f$ is $1$-to-$1$ or $2$-to-$1$ makes more than
@@ -181,8 +177,8 @@ The same bound holds if the algorithm only has to tell the two cases apart.
 \end{corollary}
 
 \begin{proof}
-    Let $\mathcal{P}$ be the uniform distribution on $1$-to-$1$ functions (the table of values is a
-    uniformly random permutation of $\set{0,1}^n$), and let $\mu$ draw $f$ from $\mathcal{P}$ or from
+    Let $\mathcal{P}$ be the uniform distribution on $1$-to-$1$ functions. Let $\mu$ draw $f$ from
+    $\mathcal{P}$ or from
     $\mathcal{D}$ with probability $\sfrac{1}{2}$ each. Let $A$ be a deterministic algorithm with
     $k \leq \sfrac{\sqrt{N}}{2}$ queries, all different, as in the proof of
     \cref{thm:simon-rand-lb-1001}. Its answer is a function of the sequence
@@ -192,8 +188,8 @@ The same bound holds if the algorithm only has to tell the two cases apart.
     among the unused values, so $\prob[\mathcal{P}]{T = t} = \prod_{i=1}^{k} \sfrac{1}{(N - i + 1)}$.
     Under $\mathcal{D}$, let $p_i$ be the probability of a collision at step $i$, given no collision
     before and the answers $a_1, \dots, a_{i-1}$. By the proof of \cref{lem:collision-1001},
-    $p_i \leq \sfrac{2(i-1)}{N}$, and without a collision the $\nth{i}$ answer is uniform among the
-    $N - i + 1$ unused values. Hence, by \cref{lem:prodsum-1001} below,
+    $p_i \leq \sfrac{2(i-1)}{N}$. Without a collision the $\nth{i}$ answer is uniform among the
+    $N - i + 1$ unused values. By \cref{lem:prodsum-1001} below,
     \begin{align*}
         \prob[\mathcal{D}]{T = t} \geq \prod_{i=1}^{k} \frac{1 - p_i}{N - i + 1}
          & \geq \left(1 - \sum_{i=1}^{k} \frac{2(i-1)}{N}\right) \prob[\mathcal{P}]{T = t} \\
@@ -203,13 +199,13 @@ The same bound holds if the algorithm only has to tell the two cases apart.
     because $k(k-1) \leq k^2 \leq \sfrac{N}{4}$.
 
     Let $\mathcal{T}$ be the set of sequences on which $A$ answers ``$1$-to-$1$'', and let
-    $q = \prob[\mathcal{P}]{T \in \mathcal{T}}$; sequences with a repeated entry have probability $0$
+    $q = \prob[\mathcal{P}]{T \in \mathcal{T}}$. Sequences with a repeated entry have probability $0$
     under $\mathcal{P}$. Summing over $t \in \mathcal{T}$ gives
-    $\prob[\mathcal{D}]{T \in \mathcal{T}} \geq \frac{3}{4} q$, so $A$ is correct on an input drawn from
+    $\prob[\mathcal{D}]{T \in \mathcal{T}} \geq \frac{3}{4} q$. So $A$ is correct on an input drawn from
     $\mu$ with probability at most
     \[\frac{1}{2} q + \frac{1}{2}\left(1 - \frac{3}{4} q\right) = \frac{1}{2} + \frac{q}{8} \leq \frac{5}{8} < \frac{2}{3}.\]
-    So $A$ errs with probability at least $\sfrac{3}{8} > \sfrac{1}{3}$ on $\mu$, and the claim
-    follows from \cref{lem:yao-1001} as before.
+    So $A$ errs with probability at least $\sfrac{3}{8} > \sfrac{1}{3}$ on $\mu$. The claim
+    follows from \cref{lem:yao-1001}.
 \end{proof}
 
 \begin{lemma}\label{lem:prodsum-1001}
@@ -217,20 +213,17 @@ The same bound holds if the algorithm only has to tell the two cases apart.
 \end{lemma}
 
 \begin{proof}
-    By induction on $m$, with equality for $m = 1$: multiplying the hypothesis for $m - 1$ by
-    $1 - a_m \geq 0$,
+    We use induction on $m$, with equality for $m = 1$. Multiplying the hypothesis for $m - 1$ by
+    $1 - a_m \geq 0$ gives
     \[\prod_{i=1}^{m} (1 - a_i) \geq \left(1 - \sum_{i=1}^{m-1} a_i\right)(1 - a_m)
         = 1 - \sum_{i=1}^{m} a_i + a_m \sum_{i=1}^{m-1} a_i \geq 1 - \sum_{i=1}^{m} a_i. \qedhere\]
 \end{proof}
 
 \section{Simon's Algorithm Revisited}
 
-In Simon's circuit (\cref{fig:simon-0929}, \cref{thm:simon-run-0929}) the state just before the
-measurement is
-\[\sum_{y \in \set{0,1}^n} \frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)} \ket{y}\]
-(target register written first), so the probability of measuring $y$ in the control register is the
-sum of the squared amplitudes of all basis states $\ket{z}\ket{y}$ with this $y$, i.e., the squared
-norm of the vector that multiplies $\ket{y}$:
+In the state \cref{eq:simon-final-0929} just before the measurement, the probability of measuring
+$y$ in the control register is the sum of the squared amplitudes of all basis states
+$\ket{y}\ket{z}$ with this $y$. This is the squared norm of the vector that multiplies $\ket{y}$:
 \[\prob{y} = \norm{\frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)}}_2^2.\]
 
 \subsection{The \texorpdfstring{$1$}{1}-to-\texorpdfstring{$1$}{1} Case}
@@ -241,9 +234,9 @@ norm of the vector that multiplies $\ket{y}$:
 \end{exercise}
 
 \begin{wsolution}
-    If $f$ is $1$-to-$1$, the $2^n$ vectors $\ket{f(x)}$ are distinct basis states, hence orthonormal,
-    so the vector multiplying $\ket{y}$ has $2^n$ orthogonal components, each of absolute value
-    $\sfrac{1}{2^n}$. Its squared norm (not its norm, which is $\sfrac{1}{\sqrt{2^n}}$) is
+    If $f$ is $1$-to-$1$, the $2^n$ vectors $\ket{f(x)}$ are distinct basis states, so they are
+    orthonormal. The vector multiplying $\ket{y}$ then has $2^n$ orthogonal components, each of
+    absolute value $\sfrac{1}{2^n}$. Its squared norm is
     \[\prob{y} = \sum_{x \in \set{0,1}^n} \left(\frac{1}{2^n}\right)^2 = 2^n \cdot \frac{1}{2^{2n}} = \frac{1}{2^n}.\]
     So the measured $y$ is uniformly distributed over $\set{0,1}^n$, and the probabilities add up to
     $2^n \cdot \sfrac{1}{2^n} = 1$.
@@ -251,62 +244,55 @@ norm of the vector that multiplies $\ket{y}$:
 
 \subsection{The \texorpdfstring{$2$}{2}-to-\texorpdfstring{$1$}{1} Case}
 
-For $f$ $2$-to-$1$ with period $s \neq 0^n$, collecting the two preimages $x_z$ and $x_z \oplus s$ of every
-$z$ in the range $R$ of $f$ turns the vector into
-$\frac{1}{2^n} \sum_{z \in R} (-1)^{x_z \cdot y} \left(1 + (-1)^{s \cdot y}\right) \ket{z}$, whose squared norm is
-$2^{n-1} \cdot \sfrac{4}{2^{2n}} = \sfrac{1}{2^{n-1}}$ if $s \cdot y = 0$ and $0$ if $s \cdot y = 1$
-(\cref{thm:simon-run-0929}, case 1). So we only ever measure strings $y$ with $s \cdot y = 0$, each of the
-$2^{n-1}$ such strings equally likely, and the total is $2^{n-1} \cdot \sfrac{1}{2^{n-1}} = 1$.
+If $f$ is $2$-to-$1$ with period $s \neq 0^n$, every $y$ with $s \cdot y = 0$ is measured with
+probability $\sfrac{1}{2^{n-1}}$ and every $y$ with $s \cdot y = 1$ with probability $0$
+(\cref{thm:simon-run-0929}, case 1). There are $2^{n-1}$ strings with $s \cdot y = 0$, so the
+probabilities add up to $2^{n-1} \cdot \sfrac{1}{2^{n-1}} = 1$.
 
 \subsection{Solving for \texorpdfstring{$s$}{s}}
 
-Running the circuit $n - 1$ times gives strings $y_1, \dots, y_{n-1}$, and in the $2$-to-$1$ case the
-system of linear equations $s \cdot y_1 = 0, \dots, s \cdot y_{n-1} = 0$ over $\set{0,1}$. If the
-$y_i$ are \emph{linearly independent}, the $(n-1) \times n$ coefficient matrix has rank $n - 1$, and
-Gaussian elimination gives a one-dimensional solution space $\set{0^n, s'}$. We test
-$f(0^n) = f(s')$ with two classical queries. If the test is true, then $f$ is $2$-to-$1$ and
-$s = s'$ by the promise (as $s' \neq 0^n$). If it is false, then $f$ is $1$-to-$1$, since in the
-$2$-to-$1$ case $s$ itself solves the system, so $s' = s$ and the test would be true. This is
-\cref{alg:simon-0929}.
+\Cref{alg:simon-0929} runs the circuit $n - 1$ times. In the $2$-to-$1$ case the measured strings
+$y_1, \dots, y_{n-1}$ give the system of $n - 1$ linear equations
+$s \cdot y_1 = 0, \dots, s \cdot y_{n-1} = 0$ over $\set{0,1}$. If the $y_i$ are linearly independent,
+the system has rank $n - 1$, and Gaussian elimination gives its only nonzero solution $s'$. The
+algorithm then tests $f(0^n) = f(s')$ with two classical queries. If $f$ is $2$-to-$1$, then $s$
+solves the system, so $s' = s$ and the test is true. If $f$ is $1$-to-$1$, the test is false because
+$s' \neq 0^n$ (\cref{thm:simon-0929}).
 
-\begin{exercise}\label{ex:indep-1001}
-    Show that the probability that the $y$'s are linearly independent is at least $\sfrac{1}{4}$.
-\end{exercise}
-
-\begin{theorem}[Linear Independence of Random Vectors]\label{thm:indep-1001}
+\begin{exercise}\label{ex:indep-1001}\label{thm:indep-1001}
     Let $V$ be a subspace of $\set{0,1}^n$ of dimension $d \geq 1$, so $\abs{V} = 2^d$, and let
-    $y_1, y_2, \dots$ be independent uniformly random elements of $V$.
+    $y_1, y_2, \dots$ be independent uniformly random elements of $V$. Show that
     \begin{enumerate}
         \item $y_1, \dots, y_d$ are linearly independent with probability
               \[\prod_{i=1}^{d} \left(1 - \frac{1}{2^i}\right)
                   = \left(1 - \frac{1}{2}\right)\left(1 - \frac{1}{2^2}\right)\left(1 - \frac{1}{2^3}\right) \cdots \left(1 - \frac{1}{2^d}\right)
-                  \geq \frac{1}{4}.\]
+                  \geq \frac{1}{4},\]
         \item $y_1, \dots, y_{d-1}$ are linearly independent with probability
               $\prod_{i=2}^{d} \left(1 - \sfrac{1}{2^i}\right) \geq \sfrac{1}{2}$.
     \end{enumerate}
-    In particular, in the $2$-to-$1$ case ($V = \set{y \suchthat s \cdot y = 0}$, $d = n - 1$) the strings
-    $y_1, \dots, y_{n-1}$ of Simon's algorithm are linearly independent with probability at least
-    $\sfrac{1}{4}$, and in the $1$-to-$1$ case ($V = \set{0,1}^n$, $d = n$) with probability at least
-    $\sfrac{1}{2}$.
-\end{theorem}
+    Deduce that the strings $y_1, \dots, y_{n-1}$ of Simon's algorithm are linearly independent with
+    probability at least $\sfrac{1}{4}$ in the $2$-to-$1$ case
+    ($V = \set{y \suchthat s \cdot y = 0}$, $d = n - 1$) and at least $\sfrac{1}{2}$ in the
+    $1$-to-$1$ case ($V = \set{0,1}^n$, $d = n$).
+\end{exercise}
 
 \begin{proof}
     Suppose that $y_1, \dots, y_j$ are linearly independent, $0 \leq j < d$. Their span consists of the
     $2^j$ vectors $\sum_{i \leq j} c_i y_i$ with $c_i \in \set{0,1}$, all different by independence,
-    and it lies inside the subspace $V$. The vector $y_{j+1}$ is uniform over the $2^d$ elements of
-    $V$, independent of $y_1, \dots, y_j$, and $y_1, \dots, y_{j+1}$ are linearly independent exactly
+    and it lies inside $V$. The vector $y_{j+1}$ is uniform over the $2^d$ elements of
+    $V$ and independent of $y_1, \dots, y_j$. Then $y_1, \dots, y_{j+1}$ are linearly independent exactly
     when $y_{j+1}$ is not in this span, which has probability $1 - \sfrac{2^j}{2^d} = 1 - 2^{-(d-j)}$.
-    Multiplying these conditional probabilities for $j = 0, \dots, m-1$, the first $m$ vectors are
-    linearly independent with probability
+    Multiplying for $j = 0, \dots, m-1$, the first $m$ vectors are linearly independent with
+    probability
     \[\prod_{j=0}^{m-1} \left(1 - \frac{1}{2^{d-j}}\right) = \prod_{i=d-m+1}^{d} \left(1 - \frac{1}{2^i}\right),\]
     which gives the two products for $m = d$ and $m = d - 1$. By \cref{lem:prodsum-1001} and the
     geometric series $\sum_{i \geq 2} 2^{-i} = \sfrac{1}{2}$,
     \[\prod_{i=2}^{d} \left(1 - \frac{1}{2^i}\right) \geq 1 - \sum_{i=2}^{d} \frac{1}{2^i} \geq \frac{1}{2},
         \qquad
         \prod_{i=1}^{d} \left(1 - \frac{1}{2^i}\right) = \frac{1}{2} \prod_{i=2}^{d} \left(1 - \frac{1}{2^i}\right) \geq \frac{1}{4}.\]
-    For Simon's algorithm: in the $2$-to-$1$ case each $y_i$ is uniform over the $2^{n-1}$ strings with
-    $s \cdot y = 0$ (computed above), the solution set of one nontrivial homogeneous linear equation
-    and hence a subspace of dimension $d = n - 1$, and we take $n - 1 = d$ samples; in the $1$-to-$1$
-    case each $y_i$ is uniform over $\set{0,1}^n$ (\cref{ex:simon-11-1001}), $d = n$, and we take
-    $d - 1$ samples.
+    In the $2$-to-$1$ case each $y_i$ is uniform over the $2^{n-1}$ strings with $s \cdot y = 0$
+    (\cref{thm:simon-run-0929}). They are the solution set of one nontrivial homogeneous linear
+    equation, so they form a subspace of dimension $d = n - 1$, and we take $n - 1 = d$ samples. In
+    the $1$-to-$1$ case each $y_i$ is uniform over $\set{0,1}^n$ (\cref{ex:simon-11-1001}), $d = n$,
+    and we take $d - 1$ samples.
 \end{proof}
