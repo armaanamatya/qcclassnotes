@@ -3,22 +3,35 @@
 
 \section{Search and Satisfiability}
 
-A \emph{query} in Grover's algorithm asks for the element at one index of the input.
-
-The \emph{SAT problem} asks for an assignment of the variables of a boolean function
-$f(x_1, x_2, \dots, x_n)$ that makes $f = 1$. No polynomial-time algorithm is known. In \emph{3-SAT}
-the function is given in conjunctive normal form,
-\[f = C_1 \wedge C_2 \wedge \dots \wedge C_m,\]
-and a clause such as $C_1 = (x_2 \vee \bar{x}_3)$ contains at most three variables. There is a
-randomized algorithm for 3-SAT with running time $\bigO{\left(\sfrac{4}{3}\right)^n}$.
-
-SAT is a search over the $2^n$ assignments, so Grover's algorithm solves it with
-$\bigO{\sqrt{2^n}} = \bigO{2^{n/2}}$ queries, where $2^{n/2} = (\sqrt{2})^n$ and
-$\sqrt{2} \approx 1.41$. In the same way Grover's algorithm applies to every
-problem that is a search for an input with a given function value.
-
-A quantum advantage has to be shown against randomized algorithms, so we need lower bounds for them
-and not only for deterministic algorithms.
+% Commented out: paragraph form of the list below.
+% A \emph{query} in Grover's algorithm asks for the element at one index of the input.
+%
+% The \emph{SAT problem} asks for an assignment of the variables of a boolean function
+% $f(x_1, x_2, \dots, x_n)$ that makes $f = 1$. No polynomial-time algorithm is known. In \emph{3-SAT}
+% the function is given in conjunctive normal form,
+% \[f = C_1 \wedge C_2 \wedge \dots \wedge C_m,\]
+% and a clause such as $C_1 = (x_2 \vee \bar{x}_3)$ contains at most three variables. There is a
+% randomized algorithm for 3-SAT with running time $\bigO{\left(\sfrac{4}{3}\right)^n}$.
+%
+% SAT is a search over the $2^n$ assignments, so Grover's algorithm solves it with
+% $\bigO{\sqrt{2^n}} = \bigO{2^{n/2}}$ queries, where $2^{n/2} = (\sqrt{2})^n$ and
+% $\sqrt{2} \approx 1.41$. In the same way Grover's algorithm applies to every
+% problem that is a search for an input with a given function value.
+%
+% A quantum advantage has to be shown against randomized algorithms, so we need lower bounds for them
+% and not only for deterministic algorithms.
+\begin{itemize}
+    \item \textbf{Query} (in Grover's algorithm): returns the element at one index of the input.
+    \item \textbf{SAT:} find an assignment with $f(x_1, \dots, x_n) = 1$ for a boolean function
+          $f$. No polynomial-time algorithm is known.
+    \item \textbf{3-SAT:} $f = C_1 \wedge C_2 \wedge \dots \wedge C_m$, at most three variables per
+          clause, for example $C_1 = (x_2 \vee \bar{x}_3)$. A randomized algorithm takes
+          $\bigO{\left(\sfrac{4}{3}\right)^n}$ time.
+    \item \textbf{Grover:} $\bigO{\sqrt{2^n}} = \bigO{2^{n/2}}$ queries ($\sqrt{2} \approx 1.41$),
+          and the same for every problem that is a search for an input with a given function value.
+    \item A quantum advantage needs lower bounds for \emph{randomized} algorithms, not only for
+          deterministic ones.
+\end{itemize}
 
 \section{Random Sampling and Expectation}
 
