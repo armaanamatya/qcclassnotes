@@ -153,14 +153,14 @@ where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. By linearity of expec
     = \frac{m(m-1)}{2n} \sim \frac{m^2}{2n} = \bigTh{\frac{m^2}{n}}.\]
 For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$.
 
-\begin{lemma}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
+\begin{claim}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
     The $X_{ij}$ are \emph{pairwise independent}: for any two different pairs
     $\set{i,j} \neq \set{k,l}$,
     \[\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}} = \frac{1}{n^2}.\]
     So
     \[\variance{X} = \sum_{i \neq j} \variance{X_{ij}}
         = \binom{m}{2} \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \expectation{X}.\]
-\end{lemma}
+\end{claim}
 
 \begin{proof}
 % Commented out: longer wording of the text that follows.

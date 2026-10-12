@@ -84,32 +84,43 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
         = \braket{x}{x} = \norm{\ket{x}}^2$.
     Norms are non-negative, so $\norm{U \ket{x}} = \norm{\ket{x}}$.
 
-    \emph{Norm preserving implies unitary.} Assume $\norm{U \ket{x}} = \norm{\ket{x}}$ for all
-    $\ket{x}$, and let $M = U^\dagger U - I$.
-    \begin{enumerate}
-        \item $M$ is Hermitian:
-              $M^\dagger = (U^\dagger U)^\dagger - I^\dagger = U^\dagger (U^\dagger)^\dagger - I = M$.
-        \item Every matrix $U$ has $\norm{U \ket{x}}^2 = \bra{x} U^\dagger U \ket{x}$. So for every $\ket{x}$,
-              $\bra{x} M \ket{x} = \bra{x} U^\dagger U \ket{x} - \braket{x}{x}
-                  = \norm{U \ket{x}}^2 - \norm{\ket{x}}^2 = 0$.
-    \end{enumerate}
-    Fix $\ket{x}, \ket{y} \in \mathbb{C}^n$ and let $z = \bra{x} M \ket{y}$. A number is its own
-    transpose, so its conjugate equals its dagger. By property 1,
-    $\overline{z} = \left(\bra{x} M \ket{y}\right)^\dagger = \bra{y} M^\dagger \ket{x} = \bra{y} M \ket{x}$.
-    Apply property 2 to $\ket{x} + \ket{y}$, whose bra is $\bra{x} + \bra{y}$, and to
-    $\ket{x} + i \ket{y}$, whose bra is $\bra{x} - i \bra{y}$ because the dagger conjugates. The
-    terms $\bra{x} M \ket{x}$ and $\bra{y} M \ket{y}$ are $0$ by property 2, so
-    \begin{align*}
-        0 & = \left(\bra{x} + \bra{y}\right) M \left(\ket{x} + \ket{y}\right)
-        = \bra{x} M \ket{y} + \bra{y} M \ket{x} = z + \overline{z} = 2 \operatorname{Re} z, \\
-        0 & = \left(\bra{x} - i \bra{y}\right) M \left(\ket{x} + i \ket{y}\right)
-        = i \bra{x} M \ket{y} - i \bra{y} M \ket{x} = i \left(z - \overline{z}\right)
-        = - 2 \operatorname{Im} z.
-    \end{align*}
-    So $\bra{x} M \ket{y} = z = 0$ for all $\ket{x}, \ket{y}$. Take $\ket{x} = e_j$ and
-    $\ket{y} = e_k$, the $\nth{j}$ and $\nth{k}$ standard basis vectors. Then $M e_k$ is the $\nth{k}$
-    column of $M$ and $e_j^\dagger$ picks out its $\nth{j}$ entry, so $0 = e_j^\dagger M e_k = M_{jk}$
-    for all $j, k$. Then $M = 0$, which is $U^\dagger U = I$.
+% Commented out: longer wording of the text that follows.
+%     \emph{Norm preserving implies unitary.} Assume $\norm{U \ket{x}} = \norm{\ket{x}}$ for all
+%     $\ket{x}$, and let $M = U^\dagger U - I$.
+%     \begin{enumerate}
+%         \item $M$ is Hermitian:
+%               $M^\dagger = (U^\dagger U)^\dagger - I^\dagger = U^\dagger (U^\dagger)^\dagger - I = M$.
+%         \item Every matrix $U$ has $\norm{U \ket{x}}^2 = \bra{x} U^\dagger U \ket{x}$. So for every $\ket{x}$,
+%               $\bra{x} M \ket{x} = \bra{x} U^\dagger U \ket{x} - \braket{x}{x}
+%                   = \norm{U \ket{x}}^2 - \norm{\ket{x}}^2 = 0$.
+%     \end{enumerate}
+%     Fix $\ket{x}, \ket{y} \in \mathbb{C}^n$ and let $z = \bra{x} M \ket{y}$. A number is its own
+%     transpose, so its conjugate equals its dagger. By property 1,
+%     $\overline{z} = \left(\bra{x} M \ket{y}\right)^\dagger = \bra{y} M^\dagger \ket{x} = \bra{y} M \ket{x}$.
+%     Apply property 2 to $\ket{x} + \ket{y}$, whose bra is $\bra{x} + \bra{y}$, and to
+%     $\ket{x} + i \ket{y}$, whose bra is $\bra{x} - i \bra{y}$ because the dagger conjugates. The
+%     terms $\bra{x} M \ket{x}$ and $\bra{y} M \ket{y}$ are $0$ by property 2, so
+%     \begin{align*}
+%         0 & = \left(\bra{x} + \bra{y}\right) M \left(\ket{x} + \ket{y}\right)
+%         = \bra{x} M \ket{y} + \bra{y} M \ket{x} = z + \overline{z} = 2 \operatorname{Re} z, \\
+%         0 & = \left(\bra{x} - i \bra{y}\right) M \left(\ket{x} + i \ket{y}\right)
+%         = i \bra{x} M \ket{y} - i \bra{y} M \ket{x} = i \left(z - \overline{z}\right)
+%         = - 2 \operatorname{Im} z.
+%     \end{align*}
+%     So $\bra{x} M \ket{y} = z = 0$ for all $\ket{x}, \ket{y}$. Take $\ket{x} = e_j$ and
+%     $\ket{y} = e_k$, the $\nth{j}$ and $\nth{k}$ standard basis vectors. Then $M e_k$ is the $\nth{k}$
+%     column of $M$ and $e_j^\dagger$ picks out its $\nth{j}$ entry, so $0 = e_j^\dagger M e_k = M_{jk}$
+%     for all $j, k$. Then $M = 0$, which is $U^\dagger U = I$.
+    \emph{Norm preserving implies unitary.} Let $M = U^\dagger U - I$. Then $M^\dagger = M$, and for
+    every $\ket{x}$,
+    \[\bra{x} M \ket{x} = \norm{U \ket{x}}^2 - \norm{\ket{x}}^2 = 0.\]
+    Let $z = \bra{x} M \ket{y}$, so that $\bra{y} M \ket{x} = \overline{z}$. Applying the last
+    equation to $\ket{x} + \ket{y}$ and to $\ket{x} + i \ket{y}$ gives
+    \[0 = z + \overline{z} = 2 \operatorname{Re} z,
+        \qquad
+        0 = i \left(z - \overline{z}\right) = -2 \operatorname{Im} z.\]
+    So $\bra{x} M \ket{y} = 0$ for all $\ket{x}, \ket{y}$. For the basis vectors $e_j$ and $e_k$ this
+    says $M_{jk} = 0$. So $M = 0$, which is $U^\dagger U = I$.
 \end{proof}
 \end{exercisebox}
 

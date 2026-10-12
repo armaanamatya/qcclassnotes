@@ -32,10 +32,10 @@ is the \emph{column space} of $A$:
     linearly independent rows of $A$.
 \end{definition}
 
-\begin{lemma}[More Vectors Than a Spanning Set]\label{lem:span-0917}
+\begin{claim}[More Vectors Than a Spanning Set]\label{lem:span-0917}
     Let $W = \operatorname{span}(z_1, \dots, z_r)$. Then any $r + 1$ vectors $y_1, \dots, y_{r+1}$ of $W$
     are linearly dependent.
-\end{lemma}
+\end{claim}
 
 \begin{proof}
     A homogeneous system of $r$ linear equations in more than $r$ unknowns has a
@@ -52,11 +52,11 @@ is the \emph{column space} of $A$:
 So all bases of $W$ have the same size (a larger one would have more vectors than a set spanning $W$),
 the \emph{dimension} $\dim(W)$.
 
-\begin{lemma}[Column Rank Is the Dimension of the Image]\label{lem:colbasis-0917}
+\begin{claim}[Column Rank Is the Dimension of the Image]\label{lem:colbasis-0917}
     Let $A$ be an $m \times n$ matrix with $r = \operatorname{rank}_c(A) \geq 1$. Then any $r$ linearly
     independent columns of $A$ form a basis of $\operatorname{Im}(A)$. So
     \[\operatorname{rank}_c(A) = \dim(\operatorname{Im}(A)).\]
-\end{lemma}
+\end{claim}
 
 \begin{proof}
     Let $w_1, \dots, w_r$ be independent columns and $a$ any column of $A$. By the definition of $r$,

@@ -187,10 +187,10 @@ $\expectation{X} = np = 2 \log n$.
 A pair of different nodes $\set{u,v}$ is a \emph{bad pair} if both are candidates and they have no
 common referee: $C_u = C_v = 1$ and $R_u \cap R_v = \emptyset$.
 
-\begin{lemma}[Two Leaders Form a Bad Pair]\label{lem:badpair-0908}
+\begin{claim}[Two Leaders Form a Bad Pair]\label{lem:badpair-0908}
     If two candidates have a common referee, then at most one of them is a leader. So if
     there is more than one leader, then there is a bad pair.
-\end{lemma}
+\end{claim}
 
 \begin{proof}
     Let $u \neq v$ be candidates with a common referee $r$, where the id of $u$ is smaller than the
@@ -200,11 +200,11 @@ common referee: $C_u = C_v = 1$ and $R_u \cap R_v = \emptyset$.
     candidates without a common referee, which is a bad pair.
 \end{proof}
 
-\begin{lemma}[Two Referee Sets Rarely Miss Each Other]\label{lem:disjoint-0908}
+\begin{claim}[Two Referee Sets Rarely Miss Each Other]\label{lem:disjoint-0908}
     For any two different nodes $u$ and $v$,
     \[\prob{R_u \cap R_v = \emptyset} \leq \left(1 - \frac{k}{n}\right)^{k}
         \leq e^{-\sfrac{k^2}{n}} \leq \frac{1}{n}.\]
-\end{lemma}
+\end{claim}
 
 \begin{proof}
     Condition on $R_u = S$, where $S$ is any set of $k$ nodes. By independence, $R_v$ is still a
