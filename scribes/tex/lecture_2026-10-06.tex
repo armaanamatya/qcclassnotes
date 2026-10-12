@@ -236,8 +236,9 @@ $\ket{B}$ towards $\ket{A}$.
 
 \begin{exercisebox}
 \begin{exercise}\label{ex:grover-rotation-1006}
-    Compute $G\ket{h} = \sqrt{\sfrac{a}{N}}\, G\ket{A} + \sqrt{\sfrac{b}{N}}\, G\ket{B}$, and verify that
-    the matrix of $G$ in \cref{eq:gmatrix-1006} is the rotation $R_{2\theta}$.
+    Compute $G\ket{h} = \sqrt{\sfrac{a}{N}}\, G\ket{A} + \sqrt{\sfrac{b}{N}}\, G\ket{B}$ and
+    $G^k\ket{h}$ for $k \geq 0$, and verify that the matrix of $G$ in \cref{eq:gmatrix-1006} is the
+    rotation $R_{2\theta}$.
 \end{exercise}
 \tcblower
 \begin{wsolution}
@@ -259,6 +260,11 @@ $\ket{B}$ towards $\ket{A}$.
     \[G\ket{h} = \sqrt{\frac{a}{N}}\left(3 - \frac{4a}{N}\right)\ket{A} + \sqrt{\frac{b}{N}}\left(1 - \frac{4a}{N}\right)\ket{B}.\]
     The state starts at the angle $\theta$ from $\ket{B}$ and the iteration adds $2\theta$
     (\cref{fig:rotation-1006}).
+
+    \emph{The state $G^k\ket{h}$.} The same computation with any angle $\beta$ in place of $\theta$ gives
+    $G\left(\sin\beta \ket{A} + \cos\beta \ket{B}\right) = \sin(\beta + 2\theta) \ket{A} + \cos(\beta + 2\theta) \ket{B}$.
+    So by induction on $k$, starting from the angle $\theta$ of $\ket{h}$,
+    \[G^k\ket{h} = \sin\left((2k+1)\theta\right) \ket{A} + \cos\left((2k+1)\theta\right) \ket{B}.\]
 \end{wsolution}
 \end{exercisebox}
 
