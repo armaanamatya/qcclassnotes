@@ -18,12 +18,9 @@ about $f$ except what the queries tell us.
 
 \section{Grover's Algorithm on Two Qubits}
 
-% Commented out: longer wording of the text that follows.
-% Let $n = 2$, $N = 4$, and suppose that the unique solution is $x^* = 10$. We write a state of the two
-% qubits as its vector of four amplitudes $(a_{00}, a_{01}, a_{10}, a_{11})$. The algorithm has four
-% steps (\cref{fig:grover4-1006}).
-Let $n = 2$, $N = 4$, and let the unique solution be $x^* = 10$. A state is its amplitude vector
-$(a_{00}, a_{01}, a_{10}, a_{11})$. The algorithm has four steps (\cref{fig:grover4-1006}).
+Let $n = 2$, $N = 4$, and suppose that the unique solution is $x^* = 10$. We write a state of the two
+qubits as its vector of four amplitudes $(a_{00}, a_{01}, a_{10}, a_{11})$. The algorithm has four
+steps (\cref{fig:grover4-1006}).
 
 \begin{enumerate}
     \item \emph{Uniform superposition with Hadamard gates:}
@@ -88,23 +85,14 @@ $(a_{00}, a_{01}, a_{10}, a_{11})$. The algorithm has four steps (\cref{fig:grov
 \FloatBarrier
 \section{Grover's Algorithm on \texorpdfstring{$n$}{n} Qubits}
 
-% Commented out: longer wording of the text that follows.
-% For $n$ qubits and a unique solution $x^*$ the same steps apply to the $N$ amplitudes. After the
-% Hadamard gates every amplitude is $\sfrac{1}{\sqrt{N}}$. The phase flip makes the amplitude of
-% $x^*$ equal to $-\sfrac{1}{\sqrt{N}}$. So the mean is
-% $\mu = \sfrac{(N-2)}{(N\sqrt{N})} \approx \sfrac{1}{\sqrt{N}}$ and the diffusion operator maps the
-% amplitude of $x^*$ to $2\mu + \sfrac{1}{\sqrt{N}} \approx \sfrac{3}{\sqrt{N}}$. As long as this
-% amplitude is small, the mean stays close to $\sfrac{1}{\sqrt{N}}$ and each iteration adds about
-% $\sfrac{2}{\sqrt{N}}$ to it. So after about $\sqrt{N}$ iterations it is a constant and a measurement
-% finds $x^*$ with constant probability.
-For $n$ qubits and a unique solution $x^*$ the same steps apply to the $N$ amplitudes. The Hadamard
-gates make every amplitude $\sfrac{1}{\sqrt{N}}$, and the phase flip makes the amplitude of $x^*$
-equal to $-\sfrac{1}{\sqrt{N}}$. The mean, and the amplitude of $x^*$ after the diffusion, are
-\[\mu = \frac{N-2}{N\sqrt{N}} \approx \frac{1}{\sqrt{N}}, \qquad
-    2\mu + \frac{1}{\sqrt{N}} \approx \frac{3}{\sqrt{N}}.\]
-While this amplitude is small, the mean stays close to $\sfrac{1}{\sqrt{N}}$ and each iteration adds
-about $\sfrac{2}{\sqrt{N}}$ to the amplitude. After about $\sqrt{N}$ iterations it is a constant, and
-a measurement finds $x^*$ with constant probability.
+For $n$ qubits and a unique solution $x^*$ the same steps apply to the $N$ amplitudes. After the
+Hadamard gates every amplitude is $\sfrac{1}{\sqrt{N}}$. The phase flip makes the amplitude of
+$x^*$ equal to $-\sfrac{1}{\sqrt{N}}$. So the mean is
+$\mu = \sfrac{(N-2)}{(N\sqrt{N})} \approx \sfrac{1}{\sqrt{N}}$ and the diffusion operator maps the
+amplitude of $x^*$ to $2\mu + \sfrac{1}{\sqrt{N}} \approx \sfrac{3}{\sqrt{N}}$. As long as this
+amplitude is small, the mean stays close to $\sfrac{1}{\sqrt{N}}$ and each iteration adds about
+$\sfrac{2}{\sqrt{N}}$ to it. So after about $\sqrt{N}$ iterations it is a constant and a measurement
+finds $x^*$ with constant probability.
 
 \subsection{The Operators \texorpdfstring{$Z_f$}{Zf}, \texorpdfstring{$Z_0$}{Z0} and \texorpdfstring{$D$}{D}}
 
@@ -205,13 +193,9 @@ Let $f$ have $a$ solutions, $1 \leq a \leq N - 1$, and let $b = N - a$. Let
 \[\ket{A} = \frac{1}{\sqrt{a}} \sum_{\substack{x \in \set{0,1}^n \\ f(x) = 1}} \ket{x},
     \qquad
     \ket{B} = \frac{1}{\sqrt{b}} \sum_{\substack{x \in \set{0,1}^n \\ f(x) = 0}} \ket{x}\]
-% Commented out: longer wording of the text that follows.
-% be the uniform superpositions of the solutions and of the non-solutions. They are unit vectors, and
-% they are orthogonal since no basis state appears in both. The whole computation stays in the plane
-% they span. The initial state is
-be the uniform superpositions of the solutions and of the non-solutions. They are unit vectors,
-orthogonal since no basis state appears in both. The computation stays in their plane. The initial
-state is
+be the uniform superpositions of the solutions and of the non-solutions. They are unit vectors, and
+they are orthogonal since no basis state appears in both. The whole computation stays in the plane
+they span. The initial state is
 \begin{equation}\label{eq:h-AB-1006}
     \ket{h} = \frac{1}{\sqrt{N}} \sum_{x \in \set{0,1}^n} \ket{x}
     = \frac{1}{\sqrt{N}} \left(\sqrt{a} \ket{A} + \sqrt{b} \ket{B}\right)
@@ -233,54 +217,33 @@ $\ket{h}$ is almost $\ket{B}$ (\cref{fig:rotation-1006}).
 \end{lemma}
 
 \begin{proof}
-    % Commented out: longer wording of the text that follows.
-    % By the definition of $Z_f$, $Z_f\ket{A} = -\ket{A}$ and $Z_f\ket{B} = \ket{B}$. By
-    % \cref{eq:h-AB-1006} and orthonormality, $\braket{h}{A} = \sqrt{a/N}$ and
-    % $\braket{h}{B} = \sqrt{b/N}$. With $D = 2\ket{h}\bra{h} - I$ (\cref{lem:diffusion-1006}),
-    % substituting \cref{eq:h-AB-1006} for $\ket{h}$ in the last step of each line,
-    We have $Z_f\ket{A} = -\ket{A}$ and $Z_f\ket{B} = \ket{B}$. By \cref{eq:h-AB-1006} and
-    orthonormality, $\braket{h}{A} = \sqrt{a/N}$ and $\braket{h}{B} = \sqrt{b/N}$. With
-    $D = 2\ket{h}\bra{h} - I$ (\cref{lem:diffusion-1006}) and \cref{eq:h-AB-1006} in the last step,
+    By the definition of $Z_f$, $Z_f\ket{A} = -\ket{A}$ and $Z_f\ket{B} = \ket{B}$. By
+    \cref{eq:h-AB-1006} and orthonormality, $\braket{h}{A} = \sqrt{a/N}$ and
+    $\braket{h}{B} = \sqrt{b/N}$. With $D = 2\ket{h}\bra{h} - I$ (\cref{lem:diffusion-1006}),
+    substituting \cref{eq:h-AB-1006} for $\ket{h}$ in the last step of each line,
     \begin{align*}
         G\ket{A} = -D\ket{A} & = \ket{A} - 2\ket{h}\braket{h}{A} = \ket{A} - 2\sqrt{\frac{a}{N}} \ket{h}
         = \left(1 - \frac{2a}{N}\right)\ket{A} - \frac{2\sqrt{ab}}{N}\ket{B}, \\
         G\ket{B} = D\ket{B}  & = 2\ket{h}\braket{h}{B} - \ket{B} = 2\sqrt{\frac{b}{N}} \ket{h} - \ket{B}
         = \frac{2\sqrt{ab}}{N}\ket{A} - \left(1 - \frac{2b}{N}\right)\ket{B}.
     \end{align*}
-    % Commented out: longer wording of the text that follows.
-    % The trigonometric form follows from $\sin^2\theta = \sfrac{a}{N}$, $\cos^2\theta = \sfrac{b}{N}$ and
-    % the double angle formulas: $\cos 2\theta = 1 - 2\sin^2\theta = 1 - \sfrac{2a}{N}$,
-    % $\cos 2\theta = 2\cos^2\theta - 1 = -\left(1 - \sfrac{2b}{N}\right)$ and
-    % $\sin 2\theta = 2\sin\theta\cos\theta = \sfrac{2\sqrt{ab}}{N}$.
     The trigonometric form follows from $\sin^2\theta = \sfrac{a}{N}$, $\cos^2\theta = \sfrac{b}{N}$ and
-    the double angle formulas:
-    \begin{align*}
-        \cos 2\theta & = 1 - 2\sin^2\theta = 1 - \frac{2a}{N},                 \\
-        \cos 2\theta & = 2\cos^2\theta - 1 = -\left(1 - \frac{2b}{N}\right), \\
-        \sin 2\theta & = 2\sin\theta\cos\theta = \frac{2\sqrt{ab}}{N}. \qedhere
-    \end{align*}
+    the double angle formulas: $\cos 2\theta = 1 - 2\sin^2\theta = 1 - \sfrac{2a}{N}$,
+    $\cos 2\theta = 2\cos^2\theta - 1 = -\left(1 - \sfrac{2b}{N}\right)$ and
+    $\sin 2\theta = 2\sin\theta\cos\theta = \sfrac{2\sqrt{ab}}{N}$.
 \end{proof}
 
-% Commented out: longer wording of the text that follows.
-% Since $a + b = N$, both $1 - \sfrac{2a}{N}$ and $\sfrac{2b}{N} - 1$ equal $\sfrac{(b - a)}{N}$. We write a
-% state $\beta\ket{B} + \alpha\ket{A}$ of the plane as the column vector $(\beta, \alpha)^{T}$ in the basis
-% $(\ket{B}, \ket{A})$. Then $G$ acts as the $2 \times 2$ matrix
-Since $a + b = N$, both $1 - \sfrac{2a}{N}$ and $\sfrac{2b}{N} - 1$ equal $\sfrac{(b - a)}{N}$. Write
-$\beta\ket{B} + \alpha\ket{A}$ as the column vector $(\beta, \alpha)^{T}$ in the basis
-$(\ket{B}, \ket{A})$. Then $G$ acts as the matrix
+Since $a + b = N$, both $1 - \sfrac{2a}{N}$ and $\sfrac{2b}{N} - 1$ equal $\sfrac{(b - a)}{N}$. We write a
+state $\beta\ket{B} + \alpha\ket{A}$ of the plane as the column vector $(\beta, \alpha)^{T}$ in the basis
+$(\ket{B}, \ket{A})$. Then $G$ acts as the $2 \times 2$ matrix
 \begin{equation}\label{eq:gmatrix-1006}
     G = \begin{pmatrix} \dfrac{b - a}{N} & -\dfrac{2\sqrt{ab}}{N} \\[2ex] \dfrac{2\sqrt{ab}}{N} & \dfrac{b - a}{N} \end{pmatrix}
     = \begin{pmatrix} \cos 2\theta & -\sin 2\theta \\ \sin 2\theta & \cos 2\theta \end{pmatrix},
 \end{equation}
-% Commented out: longer wording of the text that follows.
-% whose columns are the coordinates of $G\ket{B}$ and $G\ket{A}$. This is the rotation matrix
-% $R_{\phi} = \left(\begin{smallmatrix} \cos\phi & -\sin\phi \\ \sin\phi & \cos\phi \end{smallmatrix}\right)$
-% with $\phi = 2\theta$. So one Grover iteration \emph{rotates} the plane by the angle $2\theta$, from
-% $\ket{B}$ towards $\ket{A}$.
 whose columns are the coordinates of $G\ket{B}$ and $G\ket{A}$. This is the rotation matrix
 $R_{\phi} = \left(\begin{smallmatrix} \cos\phi & -\sin\phi \\ \sin\phi & \cos\phi \end{smallmatrix}\right)$
-with $\phi = 2\theta$: one Grover iteration \emph{rotates} the plane by $2\theta$, from $\ket{B}$
-towards $\ket{A}$.
+with $\phi = 2\theta$. So one Grover iteration \emph{rotates} the plane by the angle $2\theta$, from
+$\ket{B}$ towards $\ket{A}$.
 
 \begin{exercisebox}
 \begin{exercise}\label{ex:grover-rotation-1006}
@@ -290,17 +253,10 @@ towards $\ket{A}$.
 \end{exercise}
 \tcblower
 \begin{wsolution}
-    % Commented out: longer wording of the text that follows.
-    % \emph{The matrix is a rotation.} By \cref{lem:giter-1006} and $\sfrac{(b-a)}{N} = 1 - \sfrac{2a}{N} = \sfrac{2b}{N} - 1$,
-    % the two columns of the matrix in \cref{eq:gmatrix-1006} are the coordinates of
-    % $G\ket{B} = \cos 2\theta \ket{B} + \sin 2\theta \ket{A}$ and $G\ket{A} = -\sin 2\theta \ket{B} + \cos 2\theta \ket{A}$,
-    % which are the columns of $R_{2\theta}$ (not $R_\theta$).
-    \emph{The matrix is a rotation.} By \cref{lem:giter-1006} and
-    $\sfrac{(b-a)}{N} = 1 - \sfrac{2a}{N} = \sfrac{2b}{N} - 1$, the columns of the matrix in
-    \cref{eq:gmatrix-1006} are the coordinates of
-    \[G\ket{B} = \cos 2\theta \ket{B} + \sin 2\theta \ket{A}, \qquad
-        G\ket{A} = -\sin 2\theta \ket{B} + \cos 2\theta \ket{A}.\]
-    These are the columns of $R_{2\theta}$ (not $R_\theta$).
+    \emph{The matrix is a rotation.} By \cref{lem:giter-1006} and $\sfrac{(b-a)}{N} = 1 - \sfrac{2a}{N} = \sfrac{2b}{N} - 1$,
+    the two columns of the matrix in \cref{eq:gmatrix-1006} are the coordinates of
+    $G\ket{B} = \cos 2\theta \ket{B} + \sin 2\theta \ket{A}$ and $G\ket{A} = -\sin 2\theta \ket{B} + \cos 2\theta \ket{A}$,
+    which are the columns of $R_{2\theta}$ (not $R_\theta$).
 
     \emph{The state $G\ket{h}$.} By \cref{eq:h-AB-1006}, $\ket{h} = \sin\theta \ket{A} + \cos\theta \ket{B}$.
     By \cref{lem:giter-1006} and the addition formulas for $\sin(\theta + 2\theta)$ and
@@ -316,13 +272,9 @@ towards $\ket{A}$.
     The state starts at the angle $\theta$ from $\ket{B}$ and the iteration adds $2\theta$
     (\cref{fig:rotation-1006}).
 
-    % Commented out: longer wording of the text that follows.
-    % \emph{The state $G^k\ket{h}$.} The same computation with any angle $\beta$ in place of $\theta$ gives
-    % $G\left(\sin\beta \ket{A} + \cos\beta \ket{B}\right) = \sin(\beta + 2\theta) \ket{A} + \cos(\beta + 2\theta) \ket{B}$.
-    % So by induction on $k$, starting from the angle $\theta$ of $\ket{h}$,
     \emph{The state $G^k\ket{h}$.} The same computation with any angle $\beta$ in place of $\theta$ gives
-    \[G\left(\sin\beta \ket{A} + \cos\beta \ket{B}\right) = \sin(\beta + 2\theta) \ket{A} + \cos(\beta + 2\theta) \ket{B}.\]
-    By induction on $k$, starting from the angle $\theta$ of $\ket{h}$,
+    $G\left(\sin\beta \ket{A} + \cos\beta \ket{B}\right) = \sin(\beta + 2\theta) \ket{A} + \cos(\beta + 2\theta) \ket{B}$.
+    So by induction on $k$, starting from the angle $\theta$ of $\ket{h}$,
     \[G^k\ket{h} = \sin\left((2k+1)\theta\right) \ket{A} + \cos\left((2k+1)\theta\right) \ket{B}.\]
 \end{wsolution}
 \end{exercisebox}

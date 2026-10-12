@@ -3,13 +3,9 @@
 
 \section{Query Complexity for Search}
 
-% Commented out: longer wording of the text that follows.
-% In the search problem of \cref{fig:coinflips-0825}, a \emph{query} to a slot $x$ of an array of $n$
-% slots returns $f(x)$, and the goal is to find the slot $x$ with $f(x) = 1$. The \emph{query complexity}
-% of an algorithm is the number of queries that it makes.
-A \emph{query} to a slot $x$ of the array of $n$ slots (\cref{fig:coinflips-0825}) returns $f(x)$.
-The goal is to find the slot $x$ with $f(x) = 1$. The \emph{query complexity} of an algorithm is
-its number of queries.
+In the search problem of \cref{fig:coinflips-0825}, a \emph{query} to a slot $x$ of an array of $n$
+slots returns $f(x)$, and the goal is to find the slot $x$ with $f(x) = 1$. The \emph{query complexity}
+of an algorithm is the number of queries that it makes.
 
 \begin{definition}[Monte Carlo and Las Vegas Algorithms]\label{def:mclv-0901}
     A \textbf{Monte Carlo} algorithm is a randomized algorithm whose error probability is $> 0$.
@@ -17,20 +13,13 @@ its number of queries.
     A \textbf{Las Vegas} algorithm is a randomized algorithm whose error probability is $= 0$.
 \end{definition}
 
-% Commented out: longer wording of the text that follows.
-% Random sampling \emph{with replacement} queries a slot chosen uniformly at random in every step. Every
-% query succeeds with probability $\sfrac{1}{n}$, so the number of queries until the first success is a
-% \emph{geometric} random variable with parameter $\sfrac{1}{n}$, and
-% $\expectation{\text{queries until find}} = n$ (\cref{thm:geometric-0827}).
-% Stopped after a fixed number of queries, random sampling is a Monte Carlo algorithm, because it
-% can fail to find the slot. Run until the slot is found, it is a Las Vegas algorithm with $n$
-% expected queries.
-Random sampling \emph{with replacement} queries a uniformly random slot in every step. Every query
-succeeds with probability $\sfrac{1}{n}$, so the number of queries until the first success is
-\emph{geometric} with parameter $\sfrac{1}{n}$. By \cref{thm:geometric-0827},
-\[\expectation{\text{queries until find}} = n.\]
-Stopped after a fixed number of queries, it is a Monte Carlo algorithm, because it can fail. Run
-until the slot is found, it is a Las Vegas algorithm with $n$ expected queries.
+Random sampling \emph{with replacement} queries a slot chosen uniformly at random in every step. Every
+query succeeds with probability $\sfrac{1}{n}$, so the number of queries until the first success is a
+\emph{geometric} random variable with parameter $\sfrac{1}{n}$, and
+$\expectation{\text{queries until find}} = n$ (\cref{thm:geometric-0827}).
+Stopped after a fixed number of queries, random sampling is a Monte Carlo algorithm, because it
+can fail to find the slot. Run until the slot is found, it is a Las Vegas algorithm with $n$
+expected queries.
 
 \section{Coupon Collector Problem}
 
@@ -83,44 +72,25 @@ Here $\log$ is the natural logarithm.
 
 \subsection*{Yao's Min-Max Principle}
 
-% Commented out: longer wording of the text that follows.
-% Let $A^{\mathrm{rand}}$ be a randomized algorithm, and let $\expectation{A^{\mathrm{rand}}}$ be its
-% expected number of queries on its worst input. Let $\mu$ be a probability distribution over the inputs,
-% and let $D^{\mathrm{best}}_{\mu}$ be the best deterministic algorithm for inputs chosen
-% according to $\mu$. Then
-% \[\expectation{A^{\mathrm{rand}}}
-%     \geq \max_{\mu} \operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]
-%     \geq \bigOm{n}.\]
-% The quantity $\operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]$ is called the
-% \emph{distributional complexity}. The first inequality is the principle. The second one holds for
-% search and proves \cref{thm:lowerbound}.
-Let $\expectation{A^{\mathrm{rand}}}$ be the expected number of queries of a randomized algorithm
-$A^{\mathrm{rand}}$ on its worst input. Let $\mu$ be a probability distribution over the inputs and
-$D^{\mathrm{best}}_{\mu}$ the best deterministic algorithm for inputs drawn from $\mu$. Then
+Let $A^{\mathrm{rand}}$ be a randomized algorithm, and let $\expectation{A^{\mathrm{rand}}}$ be its
+expected number of queries on its worst input. Let $\mu$ be a probability distribution over the inputs,
+and let $D^{\mathrm{best}}_{\mu}$ be the best deterministic algorithm for inputs chosen
+according to $\mu$. Then
 \[\expectation{A^{\mathrm{rand}}}
     \geq \max_{\mu} \operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]
     \geq \bigOm{n}.\]
-Here $\operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]$ is the
-\emph{distributional complexity}. The first inequality is the principle. The second holds for
+The quantity $\operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]$ is called the
+\emph{distributional complexity}. The first inequality is the principle. The second one holds for
 search and proves \cref{thm:lowerbound}.
 
 \begin{proof}[Proof of \cref{thm:lowerbound}]
-% Commented out: longer wording of the text that follows.
-%     Let $\mu$ choose the slot $x$ with $f(x) = 1$ uniformly at random among the $n$ slots, and let $D$
-%     be a deterministic algorithm that is always correct. As long as all the answers are $0$, $D$
-%     queries a fixed sequence of different slots $s_1, s_2, \dots$, because repeating a query gives no
-%     new information. It cannot stop while all the answers are $0$ and two slots are not yet queried:
-%     either of them could be the solution, and $D$ would be wrong on one of the two inputs. So if the
-%     solution is $s_j$, then $D$ makes at least $\min(j, n-1)$ queries. Every $j$ has probability
-%     $\sfrac{1}{n}$, so
-    Let $\mu$ choose the slot $x$ with $f(x) = 1$ uniformly among the $n$ slots, and let $D$ be a
-    deterministic algorithm that is always correct. While all answers are $0$, $D$ queries a fixed
-    sequence of different slots $s_1, s_2, \dots$, because repeating a query gives no new
-    information.
-
-    $D$ cannot stop while all answers are $0$ and two slots are unqueried: either could be the
-    solution, and $D$ would be wrong on one of the two inputs. So if the solution is $s_j$, then
-    $D$ makes at least $\min(j, n-1)$ queries. Every $j$ has probability $\sfrac{1}{n}$, so
+    Let $\mu$ choose the slot $x$ with $f(x) = 1$ uniformly at random among the $n$ slots, and let $D$
+    be a deterministic algorithm that is always correct. As long as all the answers are $0$, $D$
+    queries a fixed sequence of different slots $s_1, s_2, \dots$, because repeating a query gives no
+    new information. It cannot stop while all the answers are $0$ and two slots are not yet queried:
+    either of them could be the solution, and $D$ would be wrong on one of the two inputs. So if the
+    solution is $s_j$, then $D$ makes at least $\min(j, n-1)$ queries. Every $j$ has probability
+    $\sfrac{1}{n}$, so
     \[\operatorname{\mathbb{E}}_{\mu}\left[D\right] \geq \frac{1}{n} \sum_{j=1}^{n} \min(j, n-1)
         \geq \frac{1}{n} \sum_{j=1}^{n-1} j = \frac{n-1}{2} = \bigOm{n}. \qedhere\]
 \end{proof}
@@ -131,26 +101,16 @@ If a coin gives heads with probability $\frac{1}{2} + \eps$ and is tossed $n$ ti
 $\expectation{\text{Heads}} = \frac{n}{2} + n\eps$. Chernoff bounds show that the number of heads is
 close to its expectation, so $\prob{\text{Heads} < \frac{n}{2}}$ is very small.
 
-% Commented out: longer wording of the text that follows.
-% In general, let
-% \[X = \sum_{i=1}^{n} X_i,
-%     \qquad
-%     X_i = \begin{cases}
-%         1 & \text{with probability } p_i,     \\
-%         0 & \text{with probability } 1 - p_i,
-%     \end{cases}\]
-% where the $X_i$ are independent Bernoulli random variables. If $p_i = p$ for all $i$, then
-% $\expectation{X} = np$ and $\variance{X} = np(1-p)$. \Cref{fig:chernoff-0901} shows the
-% distribution of $X$ around its mean $np$.
-Let
+In general, let
 \[X = \sum_{i=1}^{n} X_i,
     \qquad
     X_i = \begin{cases}
         1 & \text{with probability } p_i,     \\
         0 & \text{with probability } 1 - p_i,
     \end{cases}\]
-with the $X_i$ independent. If $p_i = p$ for all $i$, then $\expectation{X} = np$ and
-$\variance{X} = np(1-p)$ (\cref{fig:chernoff-0901}).
+where the $X_i$ are independent Bernoulli random variables. If $p_i = p$ for all $i$, then
+$\expectation{X} = np$ and $\variance{X} = np(1-p)$. \Cref{fig:chernoff-0901} shows the
+distribution of $X$ around its mean $np$.
 
 \begin{figure}[ht]
     \centering
@@ -192,37 +152,21 @@ $\variance{X} = np(1-p)$ (\cref{fig:chernoff-0901}).
 \end{exercise}
 \tcblower
 \begin{proof}
-% Commented out: longer wording of the text that follows.
-%     Fix a slot $i$ and let $T = 24 n \log n$ be the number of queries. Let
-%     $Y_i = \sum_{t=1}^{T} Z_t$ be the number of times that slot $i$ is accessed, where $Z_t = 1$ if
-%     the $\nth{t}$ query accesses slot $i$ and $Z_t = 0$ otherwise. Sampling is with replacement, so
-%     the queries are independent, and each accesses slot $i$ with probability $\sfrac{1}{n}$. So the
-%     $Z_t$ are independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, as in
-%     \cref{thm:chernoff-0901}, and $\mu = \expectation{Y_i} = \sfrac{T}{n} = 24 \log n$.
-%
-%     The lower tail bound of \cref{thm:chernoff-0901} with $\delta = \sfrac{1}{2}$, for which
-%     $(1 - \delta)\mu = 12 \log n$, gives for every slot $i$
-%     \[\prob{Y_i < 12 \log n} \leq e^{-\frac{\mu \delta^2}{2}}
-%         = e^{-\frac{24 \log n}{8}} = \frac{1}{n^3}.\]
-%     By the union bound over the $n$ slots, some slot has $Y_i < 12 \log n$ with probability at
-%     most $n \cdot \sfrac{1}{n^3} = \sfrac{1}{n^2}$. For $n \geq 2$ we have $\log n > 0$, so
-%     $Y_i \leq 6 \log n$ implies $Y_i < 12 \log n$. So the second event is contained in the first and
-%     also has probability at most $\sfrac{1}{n^2}$.
     Fix a slot $i$ and let $T = 24 n \log n$ be the number of queries. Let
-    $Y_i = \sum_{t=1}^{T} Z_t$ be the number of accesses to slot $i$, where $Z_t = 1$ if the
-    $\nth{t}$ query accesses slot $i$ and $Z_t = 0$ otherwise. Sampling is with replacement, so the
+    $Y_i = \sum_{t=1}^{T} Z_t$ be the number of times that slot $i$ is accessed, where $Z_t = 1$ if
+    the $\nth{t}$ query accesses slot $i$ and $Z_t = 0$ otherwise. Sampling is with replacement, so
+    the queries are independent, and each accesses slot $i$ with probability $\sfrac{1}{n}$. So the
     $Z_t$ are independent Bernoulli random variables with $p_t = \sfrac{1}{n}$, as in
-    \cref{thm:chernoff-0901}, and
-    \[\mu = \expectation{Y_i} = \frac{T}{n} = 24 \log n.\]
-    Take $\delta = \sfrac{1}{2}$, so $(1 - \delta)\mu = 12 \log n$. The lower tail bound of
-    \cref{thm:chernoff-0901} gives, for every slot $i$,
+    \cref{thm:chernoff-0901}, and $\mu = \expectation{Y_i} = \sfrac{T}{n} = 24 \log n$.
+
+    The lower tail bound of \cref{thm:chernoff-0901} with $\delta = \sfrac{1}{2}$, for which
+    $(1 - \delta)\mu = 12 \log n$, gives for every slot $i$
     \[\prob{Y_i < 12 \log n} \leq e^{-\frac{\mu \delta^2}{2}}
         = e^{-\frac{24 \log n}{8}} = \frac{1}{n^3}.\]
     By the union bound over the $n$ slots, some slot has $Y_i < 12 \log n$ with probability at
-    most $n \cdot \sfrac{1}{n^3} = \sfrac{1}{n^2}$.
-
-    For $n \geq 2$, $\log n > 0$, so $Y_i \leq 6 \log n$ implies $Y_i < 12 \log n$. So the second
-    event is contained in the first and has probability at most $\sfrac{1}{n^2}$.
+    most $n \cdot \sfrac{1}{n^3} = \sfrac{1}{n^2}$. For $n \geq 2$ we have $\log n > 0$, so
+    $Y_i \leq 6 \log n$ implies $Y_i < 12 \log n$. So the second event is contained in the first and
+    also has probability at most $\sfrac{1}{n^2}$.
 \end{proof}
 \end{exercisebox}
 
