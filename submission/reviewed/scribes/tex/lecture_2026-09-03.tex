@@ -1,0 +1,237 @@
+
+\section{Markov's Inequality}
+
+Markov's inequality uses only the expectation $\expectation{X}$ of the random variable, which is
+also called the \emph{first moment}. \Cref{fig:markov-0903} shows the bound on the number line.
+
+\begin{theorem}[Markov's Inequality]\label{thm:markov}
+    Let $X \geq 0$ be a random variable with $\expectation{X} > 0$. Then, for any $a > 0$,
+    \[\prob{X \geq a \expectation{X}} \leq \frac{1}{a}.\]
+    Equivalently, for any $b > 0$,
+    \[\prob{X \geq b} \leq \frac{\expectation{X}}{b}.\]
+\end{theorem}
+
+\begin{proof}
+    Let $I = 1$ if $X \geq b$ and $I = 0$ otherwise. Then $I \leq \frac{X}{b}$: if $X \geq b$ then
+    $I = 1 \leq \frac{X}{b}$, and if $X < b$ then $I = 0 \leq \frac{X}{b}$ because $X \geq 0$. So
+    \[\prob{X \geq b} = \prob{I = 1} = \expectation{I} \leq \expectation{\frac{X}{b}} = \frac{\expectation{X}}{b}.\]
+    Taking $b = a \expectation{X} > 0$ gives $\prob{X \geq a \expectation{X}} \leq \frac{1}{a}$.
+\end{proof}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[scale=0.82]
+        \draw (0,0) -- (7,0);
+        \node[below left] at (0,0) {\small $0$};
+        \draw (3.2,0.08) -- (3.2,-0.08);
+        \node[above] at (3.2,0.08) {\small $\mu = \expectation{X}$};
+        \draw (5.8,0.08) -- (5.8,-0.08);
+        \node[below] at (5.8,-0.08) {\small $a\mu$};
+        \node[below] at (5.8,-0.65) {\small $\leq \frac{1}{a}$};
+    \end{tikzpicture}
+    \caption{Markov's inequality: $X$ is at least $a\mu$ with probability at most $\sfrac{1}{a}$.}
+    \label{fig:markov-0903}
+\end{figure}
+
+\section{Chebyshev's Inequality and the Chernoff Bound}
+
+Chebyshev's inequality uses the variance of the random variable, which is also called the
+\emph{second moment}.
+
+\begin{definition}[Variance and Standard Deviation]
+    The \textbf{variance} of a random variable $X$ is
+    $\variance{X} = \expectation{\left(X - \expectation{X}\right)^2}$.
+    The \textbf{standard deviation} of $X$ is $\sigma = \sqrt{\variance{X}}$.
+\end{definition}
+
+\begin{theorem}[Chebyshev's Inequality]\label{thm:chebyshev}
+    For any random variable $X$ and any $a > 0$,
+    \[\prob{\abs{X - \expectation{X}} \geq a} \leq \frac{\variance{X}}{a^2} = \frac{\sigma^2}{a^2}.\]
+\end{theorem}
+
+\begin{proof}
+    Both sides of $\abs{X - \expectation{X}} \geq a$ are nonnegative, so we can square them:
+    \[\prob{\abs{X - \expectation{X}} \geq a}
+        = \prob{\left(X - \expectation{X}\right)^2 \geq a^2}
+        \leq \frac{\expectation{\left(X - \expectation{X}\right)^2}}{a^2}
+        = \frac{\variance{X}}{a^2},\]
+    by Markov's inequality (\cref{thm:markov}) for $\left(X - \expectation{X}\right)^2 \geq 0$.
+\end{proof}
+
+\paragraph{Chernoff bound.}
+
+The Chernoff bounds (\cref{thm:chernoff-0901}) need $X = \sum_{i=1}^{n} X_i$ to be a sum of
+\emph{mutually independent} indicator random variables. Then
+$\mu = \expectation{X} = \sum_{i=1}^{n} p_i$ with $p_i = \prob{X_i = 1}$ by linearity of
+expectation.
+
+\section{Search}
+
+Let $f \colon D \to R$ be a function from a domain $D$ to a range $R$.
+Given $y$, we ask: is there an $x$ such that $f(x) = y$ (\cref{fig:search-0903})? We consider
+$f \colon [1, \dots, N] \to [1, \dots, N]$ and want to find an $x$ such that $f(x) = k$. The
+function is an array with $n$ slots (\cref{fig:coinflips-0825}), where $n$ is the size of the
+domain, and the cost of an algorithm is the number of queries to $f$. A randomized classical
+algorithm needs $\bigTh{n}$ queries, and Grover's algorithm needs $\bigO{\sqrt{n}}$ queries. For
+the random sampling algorithm, $\expectation{\text{queries}} = \bigO{n}$ and one sample has
+$\prob{\text{Success}} = \sfrac{1}{n}$.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[scale=0.82]
+        \draw (0,0) ellipse (0.8 and 1.1);
+        \draw (3.6,0) ellipse (0.8 and 1.1);
+        \node at (-0.5,1.4) {\small $D$};
+        \node at (4.6,1.1) {\small $R$};
+        \node[point] (y) at (3.5,0.1) {};
+        \foreach \h in {0.55, 0, -0.55} {
+                \draw (0.1,\h) -- (y);
+            }
+        \draw[->] (0.9,1.3) to[bend left=20] node[above] {\small $f$} (2.7,1.3);
+    \end{tikzpicture}
+    \caption{A function $f \colon D \to R$; several $x$ can have the same value $y = f(x)$.}
+    \label{fig:search-0903}
+\end{figure}
+
+\paragraph{Probability amplitude amplification.} If the classical success probability is $p$, then
+in the quantum case it becomes $\sqrt{p}$.
+
+\section{Birthday Paradox}
+
+There are $m$ people and $n$ birthdays ($n = 365$), and $f(x)$ is the birthday of person $x$. A
+\emph{collision} is a pair $x \neq y$ with $f(x) = f(y)$.
+
+Let $E_i$ be the event that the $\nth{i}$ birthday is different from the first $i-1$ birthdays.
+By the chain rule and $1 - x \leq e^{-x}$,
+\begin{align*}
+    \prob{\text{all birthdays different}}
+     & = \prob{E_1} \cdot \prob{E_2 \given E_1} \cdot \prob{E_3 \given E_2 \cap E_1} \cdots
+    = \prod_{i=0}^{m-1} \left(1 - \frac{i}{n}\right)                                        \\
+     & \leq \prod_{i=0}^{m-1} e^{-\sfrac{i}{n}}
+    = e^{-\frac{(m-1)m}{2n}}.
+\end{align*}
+For $m = \sqrt{2n} + 1$ we have $(m-1)m \geq 2n$, so this is at most $\sfrac{1}{e} \leq \sfrac{1}{2}$.
+So $\bigO{\sqrt{n}}$ people are enough to have a constant probability of collision.
+
+\subsection{Expected Number of Collisions}
+
+The birthday paradox can be seen as throwing $m$ balls into $n$ bins (\cref{fig:balls-0903}). For
+$m \geq \sqrt{2n} + 1$, $\expectation{\text{\# collisions}} \geq 1$.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[scale=0.82]
+        \draw[rounded corners=2pt] (0,0) rectangle (0.9,2.8);
+        \foreach \y in {0.7, 1.4, 2.1} {
+                \draw (0,\y) -- (0.9,\y);
+            }
+        \node[above] at (0.45,2.8) {\small $n$ bins};
+        \node[above] at (3.6,2.5) {\small $m$ balls};
+        \foreach \b/\y in {1/2.2, 2/1.6, 3/1.0} {
+                \node[point] (ball\b) at (3.6,\y) {};
+            }
+        \draw (ball1) -- (0.9,2.45);
+        \draw (ball2) -- (0.9,1.75);
+        \draw (ball3) -- (0.9,1.05);
+    \end{tikzpicture}
+    \caption{Throwing $m$ balls into $n$ bins.}
+    \label{fig:balls-0903}
+\end{figure}
+
+Let $X$ be the number of collisions. $X$ takes values from $0$ to $\binom{m}{2}$. Write
+\[X = \sum_{i \neq j} X_{ij},
+    \qquad
+    X_{ij} = \begin{cases}
+        1 & \text{if } f(i) = f(j), \\
+        0 & \text{else,}
+    \end{cases}\]
+where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. By linearity of expectation,
+\[\expectation{X} = \sum_{i \neq j} \prob{X_{ij} = 1} = \binom{m}{2} \frac{1}{n}
+    = \frac{m(m-1)}{2n} \sim \frac{m^2}{2n} = \bigTh{\frac{m^2}{n}}.\]
+For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$.
+
+\begin{claim}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
+    The $X_{ij}$ are \emph{pairwise independent}: for any two different pairs
+    $\set{i,j} \neq \set{k,l}$,
+    \[\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}} = \frac{1}{n^2}.\]
+    So
+    \[\variance{X} = \sum_{i \neq j} \variance{X_{ij}}
+        = \binom{m}{2} \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \expectation{X}.\]
+\end{claim}
+
+\begin{proof}
+    We have $\expectation{X_{ij} X_{kl}} = \prob{f(i) = f(j) \text{ and } f(k) = f(l)}$. If the
+    pairs are disjoint, the two events depend on four independent birthdays, so the probability is
+    $\sfrac{1}{n^2}$. If they share one person, say $\set{i,j}$ and $\set{i,k}$, then for every
+    value $b$ of $f(i)$ each of $f(j)$ and $f(k)$ equals $b$ with probability $\sfrac{1}{n}$,
+    independently, so the probability is again $\sfrac{1}{n^2}$. Two indicators with
+    $\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}}$ are independent.
+
+    Expand the square of
+    $X - \expectation{X} = \sum_{i \neq j} \left(X_{ij} - \expectation{X_{ij}}\right)$:
+    \begin{align*}
+        \variance{X}
+         & = \sum_{i \neq j} \expectation{\left(X_{ij} - \expectation{X_{ij}}\right)^2}
+        + \sum_{\set{i,j} \neq \set{k,l}} \expectation{\left(X_{ij} - \expectation{X_{ij}}\right) \left(X_{kl} - \expectation{X_{kl}}\right)} \\
+         & = \sum_{i \neq j} \variance{X_{ij}}
+        + \sum_{\set{i,j} \neq \set{k,l}} \left(\expectation{X_{ij} X_{kl}} - \expectation{X_{ij}} \expectation{X_{kl}}\right)
+        = \sum_{i \neq j} \variance{X_{ij}},
+    \end{align*}
+    because the second sum is zero by the first part. Since $X_{ij}^2 = X_{ij}$,
+    $\variance{X_{ij}} = \expectation{X_{ij}^2} - \expectation{X_{ij}}^2
+        = \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \frac{1}{n}$.
+    Summing over the $\binom{m}{2}$ pairs gives
+    $\variance{X} \leq \binom{m}{2} \frac{1}{n} = \expectation{X}$.
+\end{proof}
+
+\begin{exercisebox}
+\begin{exercise}\label{ex:birthday-0903}\label{thm:birthday-0903}
+    Show that the birthday paradox occurs: with $\bigO{\sqrt{n}}$ people,
+    $\prob{X \geq 1} \geq \bigTh{1}$. Precisely, if $m \geq 2\sqrt{n} + 1$, then
+    \[\prob{X \geq 1} \geq \frac{1}{2}.\]
+\end{exercise}
+\tcblower
+\begin{proof}
+    If $X = 0$ then $\abs{X - \expectation{X}} = \expectation{X}$. So by Chebyshev's inequality
+    (\cref{thm:chebyshev}) with $a = \expectation{X}$, and then \cref{lem:pairwise-0903},
+    \[\prob{X = 0} \leq \prob{\abs{X - \expectation{X}} \geq \expectation{X}}
+        \leq \frac{\variance{X}}{\expectation{X}^2} \leq \frac{1}{\expectation{X}}.\]
+    For $m \geq 2\sqrt{n} + 1$, since $m(m-1)$ grows with $m$,
+    $\expectation{X} = \frac{m(m-1)}{2n} \geq \frac{(2\sqrt{n} + 1) \cdot 2\sqrt{n}}{2n} \geq 2$,
+    so $\prob{X = 0} \leq \sfrac{1}{2}$ and $\prob{X \geq 1} = 1 - \prob{X = 0} \geq \sfrac{1}{2}$.
+\end{proof}
+\end{exercisebox}
+
+\section{Quantum Birthday Paradox}
+
+The \emph{collision problem} is: given query access to a function $f$, find $x \neq y$ with
+$f(x) = f(y)$. By \cref{ex:birthday-0903}, $\bigO{\sqrt{n}}$ classical queries to random points
+are enough. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$, where $x_s$ may depend on the
+earlier answers and on random coins.
+
+As in the birthday paradox, $f \colon D \to [n]$ is a \emph{random function}: every value $f(x)$ is
+uniform in $[n] = \set{1, \dots, n}$ and independent of the others. We assume that the algorithm
+queries the two points that it outputs (at most $2$ extra queries) and never repeats a query.
+
+\begin{exercisebox}
+\begin{exercise}\label{ex:collision-lb-0903}\label{thm:collision-lb-0903}
+    Show a $\sqrt{n}$ lower bound in the classical case: for a random function
+    $f \colon D \to [n]$, every classical algorithm (deterministic or randomized, adaptive) that
+    makes $k$ queries to different points, including the two points that it outputs, finds a
+    collision with probability at most
+    \[\frac{\binom{k}{2}}{n} = \frac{k(k-1)}{2n}.\]
+    So to find a collision with probability at least $\sfrac{1}{2}$ it needs $k > \sqrt{n}$
+    queries, and the classical query complexity of the collision problem is $\bigOm{\sqrt{n}}$.
+\end{exercise}
+\tcblower
+\begin{proof}
+    A collision needs two queried values to agree. Let $E_s$ be the event that
+    $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$. Given the first $s-1$ answers and the random
+    coins, $x_s$ is a fixed point that has not been queried, so $f(x_s)$ is uniform in $[n]$ and
+    independent of the $s-1$ earlier values. So $\prob{E_s} \leq \frac{s-1}{n}$ for every such
+    outcome, and so also without conditioning. By the union bound,
+    \[\prob{\text{collision}} \leq \sum_{s=1}^{k} \prob{E_s} \leq \sum_{s=1}^{k} \frac{s-1}{n} = \frac{k(k-1)}{2n}.\]
+    If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then
+    $\frac{k(k-1)}{2n} \geq \frac{1}{2}$, so $k^2 > k(k-1) \geq n$ and $k > \sqrt{n}$.
+\end{proof}
+\end{exercisebox}

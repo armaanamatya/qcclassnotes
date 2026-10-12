@@ -1,0 +1,498 @@
+\ProvidesPackage{scribe}
+
+% Warn about obsolete commands, classes and packages
+\RequirePackage[l2tabu, orthodox]{nag}
+
+% Layout of document
+\usepackage[a4paper,margin=1in]{geometry}
+\setlength{\marginparwidth}{2cm}
+
+% Improves spacing between words
+\usepackage{microtype}
+
+% ams math stuff, theorem/proof environment, etc.
+\usepackage{mathtools}
+\usepackage{amssymb,amsthm,amsfonts,mathrsfs}
+\usepackage[usenames, dvipsnames]{xcolor}
+
+% Indent first line of paragraph after section, chapter, etc. start
+\usepackage{indentfirst}
+
+% Chess fonts (for n-queens)
+\usepackage{chessfss}
+
+% Show keys of \label when document in draft mode
+% \usepackage[notref, notcite, color]{showkeys}
+
+% Draft mode stuff
+\usepackage{ifdraft, xparse, tocloft}
+\ifdraft{
+    \usepackage{draftwatermark}
+    \SetWatermarkAngle{90}
+    \SetWatermarkFontSize{2cm}
+    \SetWatermarkHorCenter{1cm}
+}{} % sets DRAFT watermark along margins in draft mode
+
+% Table of contents include edits
+\ifdraft{\newcommand{\listofeditsname}{List of Edits}}{}
+\ifdraft{\newlistof[chapter]{edits}{edit}{\listofeditsname}}{}
+
+% update ulem soutthick for copyediting documents
+\usepackage[normalem]{ulem}
+\newcommand\redsout{\bgroup\markoverwith{\textcolor{red}{\rule[0.5ex]{2pt}{2pt}}}\ULon}
+\newcommand{\soutthick}[1]{%
+    \renewcommand{\ULthickness}{1.2pt}%
+    \redsout{#1}%
+    \renewcommand{\ULthickness}{.4pt}% Resetting to ulem default
+}
+
+% define markup command for copyediting
+% \khalid{original text}{optional new text}[optional explanation]
+\ifdraft{\NewDocumentCommand{\khalid}{+m +g o}{%
+\IfValueTF{#3}{%
+    \todo[caption={},color=red!40]{#3}}{}%
+\refstepcounter{edits}\addcontentsline{edit}{edits}{\theedits~Edit:}\soutthick{#1}%
+\IfValueTF{#2}{{\color{red!75}~#2}}{}%
+}}{\NewDocumentCommand{\khalid}{+m +g o}{#1}}
+
+% \gopal{comment}
+\ifdraft{\NewDocumentCommand{\gopal}{+m}{%
+        \textcolor{cyan}{#1}}}{\NewDocumentCommand{\gopal}{+m}{\ignorespaces}}
+
+\usepackage{tocloft}
+\usepackage[final]{minted}
+\usepackage{tcolorbox}
+\usepackage{xparse, xspace}
+\usepackage{setspace}
+\usepackage{ifthen}
+\usepackage[toc,page]{appendix}
+\noappendicestocpagenum
+\usepackage{graphicx}
+\usepackage{lineno}
+\usepackage[inline]{enumitem}
+\usepackage{cancel}
+\usepackage{calc}
+\usepackage{caption, subcaption}
+\usepackage{tabularx}
+\usepackage{booktabs, multicol, multirow, adjustbox, blkarray}
+
+% Horizontal fraction formatting using \sfrac{num}{den}
+\usepackage{xfrac}
+\UseCollection{xfrac}{plainmath}
+
+% Temporary fix until xfrac package is patched
+\renewcommand{\sfrac}[2]{#1/#2}
+
+\usepackage{thmtools}
+
+% Improved formatting for \left ... \right pairs
+\usepackage{mleftright}
+\mleftright
+
+\usepackage{keyval}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{layout}
+
+\usepackage[obeyFinal]{todonotes}
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{shapes, shapes.misc, decorations, fit, backgrounds, positioning, patterns, shadows, calc, arrows, arrows.meta, trees}
+
+% Set boolean to true to externalize tikz images.
+\newboolean{externalize}
+\setboolean{externalize}{true}
+\ifthenelse{\boolean{externalize}}{%
+    \usetikzlibrary{external}%
+    \tikzexternalize[prefix=tikzimages/]%
+    \pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}}
+    \makeatletter%
+    \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}%
+    \makeatother%
+}{\newcommand{\tikzsetnextfilename}[1]{}}
+
+\tikzset{>={Latex[width=2mm,length=2mm]}}
+\newcommand\DoubleLine[7][4pt]{%
+\path(#2)--(#3)coordinate[at start](h1)coordinate[at end](h2);
+\draw[#4]($(h1)!#1!90:(h2)$)-- node [auto=left] {#5} ($(h2)!#1!-90:(h1)$);
+\draw[#6]($(h1)!#1!-90:(h2)$)-- node [auto=right] {#7} ($(h2)!#1!90:(h1)$);
+}
+\tikzset{arrowhead/.style=
+        {sloped,isosceles triangle,anchor=apex,fill=black,inner sep=2pt}}
+\tikzset{
+    point/.style={
+            draw,
+            circle,
+            inner sep=0pt,
+            outer sep=0pt,
+            minimum size=0.1cm,
+            fill
+        }
+}
+
+% \linespread{1.10}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+\newcommand{\msg}[1]{\langle#1\rangle}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
+\newcommand{\add}[1]{{\red{#1}}}
+\newcommand{\del}[1]{\sout{#1}}
+\newcommand{\comp}[1]{\overline{#1}}
+
+% Theorem environment setup
+\usepackage{tcolorbox}
+\usepackage{amssymb}
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{wexercise}{Worked Exercise}
+% \newenvironment{solution}{\begin{proof}[\textnormal{\textbf{Solution}}]}{\end{proof}}
+\newenvironment{wsolution}{\begin{proof}[\textnormal{\textbf{Solution}}]}{\end{proof}}
+\theoremstyle{plain}
+\newtheorem{statement}{Statement}
+\tcbuselibrary{skins, breakable, minted, listings, most}
+\tcbset{shield externalize}
+
+\newtheoremstyle{tcb-drop-in-thm}% 〈name〉
+{}% 〈Space above〉1
+{}% 〈Space below 〉1
+{}% 〈Body font〉
+{}% 〈Indent amount〉2
+{\bfseries\color{white}}% 〈Theorem head font〉
+{}% 〈Punctuation after theorem head 〉
+{\newline}% 〈Space after theorem head 〉3
+{\thmname{#1}\thmnumber{ #2}\thmnote{ $\blacktriangleright$ #3}\\*[-1.5ex]}% 〈Theorem head spec (can be left empty, meaning ‘normal’ )〉
+
+\theoremstyle{tcb-drop-in-thm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{problem}{Problem}
+\newtheorem{definition}{Definition}
+
+\tcolorboxenvironment{theorem}{%
+    colback=gray!25,
+    colframe=gray!90!black,
+    enhanced,
+    top=0mm,
+    overlay={\begin{tcbclipinterior}
+                \fill[gray!90!black] (frame.north west)rectangle ([yshift=-5.5mm]frame.north east);
+            \end{tcbclipinterior}}
+}
+
+\tcolorboxenvironment{lemma}{%
+    colback=gray!25,
+    colframe=gray!90!black,
+    enhanced,
+    top=0mm,
+    overlay={\begin{tcbclipinterior}
+                \fill[gray!90!black] (frame.north west)rectangle ([yshift=-5.5mm]frame.north east);
+            \end{tcbclipinterior}}
+}
+
+\tcolorboxenvironment{corollary}{%
+    colback=gray!25,
+    colframe=gray!90!black,
+    enhanced,
+    top=0mm,
+    overlay={\begin{tcbclipinterior}
+                \fill[gray!90!black] (frame.north west)rectangle ([yshift=-5.5mm]frame.north east);
+            \end{tcbclipinterior}}
+}
+
+\tcolorboxenvironment{proposition}{%
+    colback=gray!25,
+    colframe=gray!90!black,
+    enhanced,
+    top=0mm,
+    overlay={\begin{tcbclipinterior}
+                \fill[gray!90!black] (frame.north west)rectangle ([yshift=-5.5mm]frame.north east);
+            \end{tcbclipinterior}}
+}
+
+\tcolorboxenvironment{problem}{%
+    colback=red!5,
+    colframe=red!60!black,
+    enhanced,
+    top=0mm,
+    overlay={\begin{tcbclipinterior}
+                \fill[red!60!black] (frame.north west)rectangle ([yshift=-5.5mm]frame.north east);
+            \end{tcbclipinterior}}
+}
+
+\tcolorboxenvironment{definition}{%
+    colback=blue!5,
+    colframe=blue!35!black,
+    enhanced,
+    top=0mm,
+    overlay={\begin{tcbclipinterior}
+                \fill[blue!35!black] (frame.north west)rectangle ([yshift=-5.5mm]frame.north east);
+            \end{tcbclipinterior}}
+}
+
+% Footnote stuff for theorem boxes. If footnote in theorem, place \savenotes before
+% environment and \spewnotes after.
+\usepackage{footnote}
+\renewcommand{\thempfootnote}{\arabic{mpfootnote}}
+
+
+% Pseudocode 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\definecolor{algcolor}{HTML}{2979FF}
+\definecolor{inputcolor}{rgb}{1, 0, 0}
+\definecolor{outputcolor}{rgb}{1, 0, 0}
+
+\newboolean{syntaxhighlightedpseudocode}
+\setboolean{syntaxhighlightedpseudocode}{true}
+
+\ifthenelse{\boolean{syntaxhighlightedpseudocode}}{
+    \definecolor{keyword}{HTML}{859900}
+    \definecolor{keyword2}{HTML}{93a1a1}
+    \definecolor{function}{HTML}{268bd2}
+    \definecolor{literal}{HTML}{d33682}
+}{
+    \definecolor{keyword}{gray}{000000}
+    \definecolor{keyword2}{HTML}{000000}
+    \definecolor{function}{HTML}{000000}
+    \definecolor{literal}{HTML}{000000}
+}
+
+
+
+\renewcommand{\algorithmicend}{\textcolor{keyword}{\textbf{end}}}
+\renewcommand{\algorithmicdo}{\textcolor{keyword}{\textbf{do}}}
+\renewcommand{\algorithmicwhile}{\textcolor{keyword}{\textbf{while}}}
+\renewcommand{\algorithmicfor}{\textcolor{keyword}{\textbf{for}}}
+\renewcommand{\algorithmicforall}{\textcolor{keyword}{\textbf{for all}}}
+\renewcommand{\algorithmicloop}{\textcolor{keyword}{\textbf{loop}}}
+\renewcommand{\algorithmicrepeat}{\textcolor{keyword}{\textbf{repeat}}}
+\renewcommand{\algorithmicuntil}{\textcolor{keyword}{\textbf{until}}}
+\renewcommand{\algorithmicprocedure}{\textcolor{keyword2}{\textbf{proc}}}
+\renewcommand{\algorithmicfunction}{\textcolor{keyword2}{\textbf{func}}}
+\renewcommand{\algorithmicif}{\textcolor{keyword}{\textbf{if}}}
+\renewcommand{\algorithmicthen}{\textcolor{keyword}{\textbf{then}}}
+\renewcommand{\algorithmicelse}{\textcolor{keyword}{\textbf{else}}}
+\renewcommand{\algorithmicrequire}{\textcolor{keyword}{\textbf{require}}}
+\renewcommand{\algorithmicensure}{\textcolor{keyword}{\textbf{ensure}}}
+\renewcommand{\algorithmicreturn}{\textcolor{keyword}{\textbf{return}}}
+\algnewcommand\algorithmicto{\textcolor{keyword}{\textbf{to}}}
+\algnewcommand\algorithmicforeach{\textcolor{keyword}{\textbf{for each}}}
+\algnewcommand\algorithmicbreak{\textcolor{keyword}{\textbf{break}}}
+\algnewcommand{\algorithmicand}{\textcolor{keyword}{\textbf{and}}}
+\algnewcommand{\algorithmicor}{\textcolor{keyword}{\textbf{or}}}
+\algnewcommand{\algorithmicnot}{\textcolor{keyword}{\textbf{not}}}
+\algnewcommand{\algorithmicin}{\textcolor{keyword}{\textbf{in}}}
+
+\newcommand{\pseudocodein}{\algorithmicin~}
+\newcommand{\logicaland}{\algorithmicand~}
+\newcommand{\logicalor}{\algorithmicor~}
+\newcommand{\logicalnot}{\algorithmicnot~}
+
+\algrenewtext{For}[1]{\algorithmicfor~#1:}
+\algrenewtext{If}[1]{\algorithmicif~#1:}
+\algrenewtext{While}[1]{\algorithmicwhile~#1:}
+\algrenewtext{ElsIf}[1]{\algorithmicelse~\algorithmicif~#1:}
+\algrenewtext{Else}{\algorithmicelse:}
+\algrenewtext{Loop}{\algorithmicloop:}
+\algrenewtext{Function}[2]{\algorithmicfunction~\textproc{\textcolor{function}{#1}}(#2):}
+\algrenewtext{Procedure}[2]{\algorithmicprocedure~\textproc{\textcolor{function}{#1}}(#2):}
+
+\algblockdefx{ForEach}{EndForEach}[1]{\algorithmicforeach~#1:}{\algorithmicend~\algorithmicfor~\textbf{each}}
+\makeatletter
+\ifthenelse{\equal{\ALG@noend}{t}}{\algtext*{EndForEach}}{}
+\makeatother
+
+\algblockdefx{ForRange}{EndForRange}[3]{\algorithmicfor~#1~$\gets$~#2~\algorithmicto~#3:}{\algorithmicend~\algorithmicfor}
+\makeatletter
+\ifthenelse{\equal{\ALG@noend}{t}}{\algtext*{EndForRange}}{}
+\makeatother
+
+\algblockdefx{ForRangeDown}{EndForRangeDown}[3]{\algorithmicfor~#1~$\gets$~#2~\textcolor{keyword}{\textbf{down}}\algorithmicto~#3:}{\algorithmicend~\algorithmicfor}
+\makeatletter
+\ifthenelse{\equal{\ALG@noend}{t}}{\algtext*{EndForRangeDown}}{}
+\makeatother
+
+\algblockdefx{DoNTimes}{EndDoNTimes}[1]{\algorithmicdo~#1~\textcolor{keyword}{\textbf{times}}:}{\algorithmicend}
+\makeatletter
+\ifthenelse{\equal{\ALG@noend}{t}}{\algtext*{EndDoNTimes}}{}
+\makeatother
+
+% pseudocode comments
+\newcommand{\CommentHelper}[1]{\textcolor{gray}{$\triangleright$ \textit{#1}}} % base comment definition
+
+\algrenewcommand{\algorithmiccomment}[1]{\quad\CommentHelper{#1}}
+
+% LComment used for comment that should be its own line
+% Starred version will indent to current indentation level
+\makeatletter
+\NewDocumentCommand{\LComment}{s m}{%
+    \Statex \IfBooleanF{#1}{\hspace*{\ALG@thistlm}}\CommentHelper{#2}}
+\makeatother
+
+\definecolor{literal}{HTML}{b58900}
+\newcommand{\False}{\textcolor{literal}{\texttt{False}}\xspace}
+\newcommand{\True}{\textcolor{literal}{\texttt{True}}\xspace}
+\newcommand{\Null}{\textcolor{literal}{\texttt{Null}}\xspace}
+\newcommand{\AlgName}[1]{#1}
+\newcommand{\AlgInput}[1]{\\\protect\phantom{\textbf{Algorithm \arabic{algorithm} }}\textcolor{inputcolor}{Input}: #1}
+\newcommand{\AlgOutput}[1]{\\\protect\phantom{\textbf{Algorithm \arabic{algorithm} }}\textcolor{outputcolor}{Output}: #1}
+\renewcommand*\Call[2]{\textproc{#1}\left(#2\right)}
+
+% \Call{reference}{args} \Call*{reference}{args}
+% shorthand for \Call{\nameref{reference}}{args}
+% starred equivalent to \Call{\nameref*{reference}}{args}
+\NewDocumentCommand{\CallRef}{s m m}{
+    \IfBooleanTF{#1}{\Call{\nameref*{#2}}{#3}}{\Call{\nameref{#2}}{#3}}
+}
+
+\newcommand{\AlgInIndent}{\phantom{\textbf{Algorithm \arabic{algorithm} }\textcolor{inputcolor}{Input}:~.}}
+\renewcommand{\gets}{=}
+\newcommand{\plusgets}{\mathrel{+}=}
+\newcommand{\minusgets}{\mathrel{-}=}
+\newcommand{\timesgets}{\mathrel{*}=}
+\newcommand{\equalto}{\mathrel{==}}
+\newcommand{\notequalto}{\neq}
+
+\newcommand{\pres}{\mathcal{P}}
+\newcommand{\I}{\mathcal{I}}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\ge}{\geqslant}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\le}{\leqslant}
+\newcommand{\set}[1]{\left\lbrace#1\right\rbrace}
+\newcommand{\la}{\leftarrow}
+%\newcommand{\bigO}{\mathcal{O}}
+%\renewcommand{\algorithmiccomment}[1]{/\!/ #1}
+\newcommand{\pair}[1]{\langle#1\rangle}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\lel}{{\mathsc{LE}}}
+\newcommand{\dd}{{\mathsc{DD}}}
+\newcommand{\infl}{{\mathsc{Infl}}}
+\newcommand{\Rev}{{\mathsc{Reverse}}}
+%\newcommand{\For}{{\mathsc{Forward}}}
+\newcommand{\val}{{\mathsc{val}}}
+\newcommand{\lo}{{\mathsc{Low}}}
+\newcommand{\hi}{{\mathsc{High}}}
+%\renewcommand{\mid}{{\mathsc{Mid}}}
+\newcommand{\hid}{{\mathsc{Hid}}}
+\newcommand{\A}{{\mathcal{A}}}
+\newcommand{\D}{{\mathcal{D}}}
+\renewcommand{\L}{{\mathcal{L}}}
+% \newcommand{\C}{{\mathcal{C}}}
+\newcommand{\V}{{\mathcal{V}}}
+\newcommand{\R}{{\mathcal{R}}}
+\newcommand{\sa}{{\sc Stable Agreement}}
+\newcommand{\ssa}{{\sc Strong Stable Agreement}}
+\newcommand{\ssd}{{\sc Sufficient Support Detection}}
+\newcommand{\bc}{{\sc Binary Consensus}}
+\renewcommand{\t}{{\sc true}}
+\newcommand{\f}{{\sc false}}
+% \newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\floor}[1]{\mathchoice{\left\lfloor#1\right\rfloor}{\lfloor#1\rfloor}{\lfloor#1\rfloor}{\lfloor#1\rfloor}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\cyclicgroup}[1]{\ensuremath{\left\langle#1\right\rangle}}
+\newcommand{\card}[1]{\left\lvert#1\right\rvert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}\left(#1\right)}}
+\newcommand{\bigOm}[1]{\Omega\left(#1\right)}
+\newcommand{\bigTh}[1]{\Theta\left(#1\right)}
+\newcommand{\littleO}[1]{o\left(#1\right)}
+\newcommand{\littleOm}[1]{\omega\left(#1\right)}
+\newcommand{\littleTh}[1]{\theta\left(#1\right)}
+\newcommand{\bigOName}{Big-$\mathcal{O}$\xspace}
+\newcommand{\bigOmName}{Big-$\Omega$\xspace}
+\newcommand{\bigThName}{Big-$\Theta$\xspace}
+\newcommand{\littleOName}{Little-$o$\xspace}
+\newcommand{\littleOmName}{Little-$\omega$\xspace}
+\newcommand{\littleThName}{Little-$\theta$\xspace}
+\renewcommand{\Pr}{\mathbb{P}}
+\newcommand{\prob}[1]{\operatorname{\Pr}\left(#1\right)}
+\newcommand{\expectation}[1]{\operatorname{\mathbb{E}}\left[#1\right]}
+\newcommand{\variance}[1]{\operatorname{\mathbb{V}}\left[#1\right]}
+\newcommand{\suchthat}{\mid}
+\newcommand{\given}{\mid}
+\newcommand{\divides}{\mid}
+\newcommand{\concat}{+}
+\newcommand{\sign}[1]{\operatorname{sign}\left(#1\right)}
+\newcommand{\ptime}{\textbf{P}}
+
+\DeclareMathOperator{\profit}{profit}
+\DeclareMathOperator{\midindex}{midindex}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\polylog}{polylog}
+\newcommand{\vV}{\vec{V}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\nth}[1]{#1\text{th}}
+\makeatletter
+%\renewcommand{\@chapapp}{}% Not necessary...
+\newenvironment{chapquote}[2][2em]
+{\setlength{\@tempdima}{#1}%
+    \def\chapquote@author{#2}%
+    \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
+    \itshape}
+{\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
+\makeatother
+
+\newcounter{pythoncode}
+\renewcommand\theFancyVerbLine{\textcolor{white}{\arabic{FancyVerbLine}}}
+\usemintedstyle{colorful}
+\ifdraft{\newtcbinputlisting[use counter=pythoncode]{\pythoncode}[2]{listing file={#1},title=Python Implementation of \nameref{alg:#2},colback=blue!5!white,colframe=blue!35!white,fonttitle=\bfseries,listing only,listing engine=minted,minted language=python,
+        minted options = {
+                linenos,
+                numbersep=3mm,
+                python3,
+                autogobble
+            },enhanced,
+        left=5mm,
+        overlay={\begin{tcbclipinterior}\fill[blue!35!white] (frame.south west)rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}}}}{\newcommand{\pythoncode}[2]{}}
+
+\newcommand{\copyrightCC}{\begin{figure}\centering\includegraphics[draft=false]{figures/by-nc-nd.eps}\caption*{\textcopyright~Copyright  Gopal Pandurangan. This work is licensed under a \href{https://creativecommons.org/licenses/by-nc-nd/4.0/}{Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.}}\end{figure}}
+
+
+\usepackage{fancyhdr}
+\fancypagestyle{copyright}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[R]{\textcopyright~Copyright  Gopal Pandurangan. All rights reserved.}}
+
+\usepackage[Glenn]{fncychap}
+
+\usepackage[colorlinks=true, final]{hyperref}
+\usepackage[noabbrev,capitalize]{cleveref}
+\makeatletter
+\if@cref@capitalise
+    % \crefname{line}{line}{lines}
+    \crefname{ineq}{Inequality}{Inequalities}
+    \crefname{exercise}{Exercise}{Exercises}
+    \crefname{wexercise}{Worked Exercise}{Worked Exercises}
+    \crefname{func}{Function}{Functions}
+    \crefname{problem}{Problem}{Problems}
+\else
+    % \crefname{line}{line}{lines}
+    \crefname{ineq}{inequality}{inequalities}
+    \crefname{exercise}{exercise}{exercises}
+    \crefname{wexercise}{worked exercise}{worked exercises}
+    \crefname{problem}{problem}{problems}
+\fi
+\makeatother
+\creflabelformat{ineq}{#2{\upshape(#1)}#3}
+\creflabelformat{func}{#2#1#3}
+\crefname{line}{line}{lines}
+\Crefname{line}{Line}{Lines}
+\Crefname{ineq}{Inequality}{Inequalities}
+\Crefname{wexercise}{Worked Exercise}{Worked Exercises}
+\Crefname{exercise}{Exercise}{Exercises}
+\Crefname{func}{Function}{Functions}
+\Crefname{problem}{Problem}{Problems}
+
+% Make \cref command robust
+\makeatletter
+\ifdraft{\DeclareRobustCommand{\cref}[1]{\mbox{\@cref{cref}{#1}}}}
+\ifdraft{\DeclareRobustCommand{\Cref}[1]{\mbox{\@cref{Cref}{#1}}}}
+\makeatother
+
+\newcommand{\nptime}{\textsc{NP}}
+% \newcommand{\ptime}{\textsc{P}}

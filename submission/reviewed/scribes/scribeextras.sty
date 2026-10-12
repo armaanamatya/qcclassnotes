@@ -1,0 +1,126 @@
+\ProvidesPackage{scribeextras}[2026/09/28 Extras for my lecture scribes]
+
+% Load this AFTER scribe.sty. It only adds to the course style file, so
+% scribe.sty itself stays identical to the one in the course template.
+
+% scribe.sty turns on TikZ externalization, which needs a tikzimages/ folder.
+% Typeset TikZ figures inline instead.
+\tikzexternaldisable
+
+% The scribe is organized by week, and each week has a Tuesday and a Thursday lecture
+% (the first week of class is August 24--28, 2026).
+%
+% \newweek starts a new week. It adds the week to the table of contents and is printed in the
+% header of the lectures of that week.
+% Usage: \newweek{2}{August 31 -- September 4, 2026}
+\newcommand{\scribe@week}{}
+\newcommand{\newweek}[2]{%
+    \clearpage
+    \phantomsection
+    \gdef\scribe@week{#1 (#2)}%
+    \addcontentsline{toc}{part}{Week #1: #2}%
+}
+
+% Starts the notes of a new lecture day inside the current week. A week starts on a new page;
+% the Thursday lecture follows the Tuesday lecture on the same page (after all the figures of
+% the Tuesday lecture), to avoid half-empty pages.
+% Usage: \newlecture{Tuesday, September 1, 2026}{Topic of the lecture}
+\RequirePackage{placeins} % \FloatBarrier
+
+% Links (table of contents, cross-references, citations, URLs) are black instead of the default red.
+\hypersetup{linkcolor=black, citecolor=black, urlcolor=black}
+\newcounter{scribelecture}
+\renewcommand{\theHsection}{\arabic{scribelecture}.\arabic{section}}
+\newcommand{\newlecture}[2]{%
+    \par\FloatBarrier
+    \vspace{0.4in}%
+    \needspace{2.5in}%
+    % Sections are numbered 1, 2, 3, ... inside each lecture. The hyperlink names stay unique
+    % because they carry the number of the lecture.
+    \stepcounter{scribelecture}%
+    \setcounter{section}{0}%
+    \phantomsection
+    \addcontentsline{toc}{lecture}{#1}%
+    \hrule
+    \vspace{0.1in}
+    \noindent\textbf{Week:} \scribe@week\par
+    \vspace{0.1in}
+    \noindent\textbf{Lecture Date:} #1\par
+    \vspace{0.1in}
+    % Commented out for now: the topic line of the lecture header (the topics stay in main.tex).
+    % \noindent\textbf{Lecture Topic:} #2\par
+    % \vspace{0.1in}
+    \hrule
+    \vspace{0.1in}
+}
+
+% Table of contents: weeks are the top level (the `part' entries), the lecture days come below
+% them as bold lines, and the sections of a lecture are indented below their day. Subsections
+% and paragraphs are not listed (scribe.sty sets the depth to 3).
+\setcounter{tocdepth}{1}
+\setlength{\cftbeforepartskip}{1.1em}
+\setlength{\cftbeforesecskip}{0.1em}
+\newcommand*{\l@lecture}[2]{%
+    \addpenalty{-\@highpenalty}%
+    \vskip 0.8em plus 1pt
+    {\parindent 0pt \rightskip \@pnumwidth \parfillskip -\@pnumwidth
+        \leavevmode\bfseries #1\nobreak\hfil\nobreak\hb@xt@\@pnumwidth{\hss #2}\par}%
+    \nobreak
+}
+\newcommand*{\toclevel@lecture}{0}
+% Only the weeks and the lecture days show a page number: the page number of a section is put in a
+% box that is not printed.
+\renewcommand{\cftsecfillnum}[1]{{\cftparfillskip\setbox0\hbox{#1}\par}}
+% In the table of contents the sections are listed without their number: the number is put in a
+% box that is not printed. The section headings in the lectures keep their numbers.
+\renewcommand{\cftsecpresnum}{\begin{lrbox}{\@tempboxa}}
+\renewcommand{\cftsecaftersnum}{\end{lrbox}}
+\setlength{\cftsecnumwidth}{0pt}
+\setlength{\cftsecindent}{1.5em}
+\setlength{\cftsubsecindent}{3.8em}
+\setlength{\cftsubsubsecindent}{7em}
+\setlength{\cftparaindent}{3.8em}
+
+% Exercises given in class (the dashed boxes in my handwritten notes).
+% The exercise and its solution are set together in one dashed box:
+%   \begin{exercisebox} \begin{exercise}...\end{exercise} \tcblower \begin{proof}...\end{proof} \end{exercisebox}
+% \tcblower draws the dashed line between the statement and the solution.
+\newtcolorbox{exercisebox}{%
+    enhanced,
+    breakable,
+    colback=white,
+    frame hidden,
+    boxrule=0pt,
+    borderline={0.8pt}{0pt}{black, dashed},
+    segmentation style={black, dashed, line width=0.4pt},
+    left=3mm, right=3mm, top=1mm, bottom=2mm, middle=2mm,
+    before skip=4mm, after skip=4mm,
+}
+
+% Dirac notation for the quantum lectures (scribe.sty does not define it).
+% Usage: \ket{0}, \bra{x}, \braket{x}{y}
+\newcommand{\ket}[1]{\lvert #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 \rvert}
+\newcommand{\braket}[2]{\langle #1 \vert #2 \rangle}
+
+% Blank space for a solution/proof that still has to be written.
+% Usage: \solutionspace or \solutionspace[10cm]
+% Replace the command with a proof environment once the solution is written.
+\newcommand{\solutionspace}[1][8cm]{%
+    \par\noindent\textbf{Solution.}\par
+    \vspace{#1}}
+
+% \needspace{<length>} starts a new page unless that much space is left on the current one.
+% Used to keep an exercise together with the start of its solution.
+\RequirePackage{needspace}
+
+% Euclidean norm of a vector/state. Usage: \norm{v}, \norm{v}_2^2
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% Probability and expectation with an optional subscript for the random choice.
+% Usage: \prob{A} as before, or \prob[x \sim \mu]{A}; same for \expectation.
+% scribe.sty defines the one-argument versions; these keep that behavior.
+\RenewDocumentCommand{\prob}{o m}{%
+    \IfValueTF{#1}{\operatorname{\Pr}_{#1}\left(#2\right)}{\operatorname{\Pr}\left(#2\right)}}
+\RenewDocumentCommand{\expectation}{o m}{%
+    \IfValueTF{#1}{\operatorname{\mathbb{E}}_{#1}\left[#2\right]}{\operatorname{\mathbb{E}}\left[#2\right]}}
