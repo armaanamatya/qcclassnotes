@@ -74,8 +74,26 @@ By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
     H\ket{a} = \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)
     = \frac{1}{\sqrt{2}} \sum_{b \in \set{0,1}} (-1)^{ab} \ket{b}.
 \end{equation}
-Since $H^2 = I$ (\cref{lem:hh-0915}), applying $H$ to the right-hand side of \cref{eq:hadamard-0924}
-gives back $\ket{a}$.
+
+\begin{exercise}\label{ex:hback-0924}
+    Compute $H \, \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)$ for $a \in \set{0,1}$.
+\end{exercise}
+
+\begin{wsolution}
+    By linearity and \cref{eq:hadamard-0924} for $H\ket{0}$ and $H\ket{1}$,
+    \[H \, \tfrac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)
+        = \tfrac{1}{2}\left(\ket{0} + \ket{1}\right) + \tfrac{(-1)^{a}}{2}\left(\ket{0} - \ket{1}\right)
+        = \tfrac{1 + (-1)^{a}}{2}\ket{0} + \tfrac{1 - (-1)^{a}}{2}\ket{1}.\]
+    For $a = 0$ this is $\ket{0}$ and for $a = 1$ it is $\ket{1}$, so the result is $\ket{a}$. This
+    agrees with $H^2 = I$ (\cref{lem:hh-0915}).
+\end{wsolution}
+
+\begin{exercise}\label{ex:deutsch-0924}
+    In the circuit of \cref{fig:deutsch-0924} the second qubit is measured as $\ket{1}$. What does the
+    measurement of the first qubit give?
+\end{exercise}
+
+The answer is $\ket{0}$ if $f$ is constant and $\ket{1}$ if $f$ is balanced:
 
 \begin{theorem}[Deutsch's Algorithm]\label{thm:deutsch-0924}
     The circuit of \cref{fig:deutsch-0924} makes one query to $f$, and measuring its first qubit gives
@@ -96,7 +114,7 @@ gives back $\ket{a}$.
         \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right).\]
     Since $(-1)^{f(1)} = (-1)^{f(0)} (-1)^{f(0) \oplus f(1)}$, the first qubit is
     $(-1)^{f(0)} \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{f(0) \oplus f(1)}\ket{1}\right)$, i.e., up to the
-    sign $(-1)^{f(0)}$, the right-hand side of \cref{eq:hadamard-0924} with $a = f(0) \oplus f(1)$; the
+    sign $(-1)^{f(0)}$, the state of \cref{ex:hback-0924} with $a = f(0) \oplus f(1)$; the
     second qubit is $H\ket{1}$. So the last two Hadamard gates give
     $\ket{\psi_3} = (-1)^{f(0)} \ket{f(0) \oplus f(1)} \ket{1}$.
     The global phase $(-1)^{f(0)}$ does not affect the measurement: the first qubit gives
@@ -181,7 +199,7 @@ constant error probability, and $\alpha = \bigO{\log N}$ queries give error prob
 \subsection{The Algorithm}
 
 The circuit (\cref{fig:dj-0924}) is Deutsch's circuit with $n$ input qubits: $n$ qubits in $\ket{0}$
-and one qubit in $\ket{1}$ go through Hadamard gates and then $U_f$ (one query); then the $n$ input
+and one qubit in $\ket{1}$ go through Hadamard gates and then $U_f$ (one query); then all the
 qubits go through Hadamard gates again and are measured.
 
 \begin{figure}[ht]
@@ -200,8 +218,8 @@ qubits go through Hadamard gates again and are measured.
         \draw[fill=white] (2.4,-0.7) rectangle (3.6,3.45);
         \node at (3,1.4) {$U_f$};
         % Hadamard gates
-        \foreach \y in {3,2.25,1,-0.25} {\node[gate] at (1.2,\y) {$H$};}
-        \foreach \y in {3,2.25,1} {
+        \foreach \y in {3,2.25,1,-0.25} {
+                \node[gate] at (1.2,\y) {$H$};
                 \node[gate] at (4.8,\y) {$H$};
                 \node[meter] at (6,\y) {$M$};
             }
@@ -209,23 +227,31 @@ qubits go through Hadamard gates again and are measured.
         \node[right] at (7,3) {$y_1$};
         \node[right] at (7,2.25) {$y_2$};
         \node[right] at (7,1) {$y_n$};
+        \node[right] at (7,-0.25) {$\ket{1}$};
         % the n input qubits
         \draw[decorate, decoration={brace, amplitude=5pt}] (-0.9,0.8) -- (-0.9,3.2)
         node[midway, left=6pt] {\small $n$ inputs};
     \end{tikzpicture}
-    \caption{The Deutsch--Jozsa algorithm. The last qubit is not measured.}
+    \caption{The Deutsch--Jozsa algorithm. The last qubit always gives $1$.}
     \label{fig:dj-0924}
 \end{figure}
+
+\begin{exercise}\label{ex:dj-0924}
+    The state of the $n$ input qubits before the measurement is
+    $\frac{1}{2^n} \sum_{y} \sum_{x} (-1)^{f(x) + x \cdot y} \ket{y}$. What do the measurements give if
+    $f$ is constant, and what if $f$ is balanced?
+\end{exercise}
 
 \begin{theorem}[Deutsch--Jozsa Algorithm]\label{thm:dj-0924}
     In the circuit of \cref{fig:dj-0924}, measuring the $n$ input qubits gives $y = 0^n$ with
     probability $1$ if $f$ is constant, and with probability $0$ if $f$ is balanced. Hence, if any
-    measurement gives $1$, then $f$ is balanced; otherwise $f$ is constant.
+    of these $n$ measurements gives $1$, then $f$ is balanced; otherwise $f$ is constant.
 \end{theorem}
 
 \begin{proof}
-    We use the phase flip form of $U_f$: the last qubit is $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$
-    throughout and is dropped. The first layer of Hadamard gates maps the input register
+    We use the phase flip form of $U_f$: the last qubit is
+    $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = H\ket{1}$ before and after the query, so its second
+    Hadamard gate gives $\ket{1}$, and we drop it. The first layer of Hadamard gates maps the input register
     $\ket{00 \cdots 0}$ to $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}$, and the query flips the sign of
     every $\ket{x}$ with $f(x) = 1$. After the second layer of Hadamard gates, by \cref{lem:wh-0924},
     the state is
@@ -238,5 +264,3 @@ qubits go through Hadamard gates again and are measured.
     the amplitude is $0$: the measurement gives $0^n$ with probability $0$, i.e., at least one of the
     $n$ measurements gives $1$.
 \end{proof}
-
-For $n = 1$ this is Deutsch's algorithm.

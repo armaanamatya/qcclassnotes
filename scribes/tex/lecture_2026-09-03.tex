@@ -171,7 +171,7 @@ We compute $\variance{X}$ and use Chebyshev's inequality (\cref{thm:chebyshev}).
 The birthday paradox solves the \emph{collision problem}: given query access
 to a function $f$, find $x \neq y$ with $f(x) = f(y)$. Querying $m = \sqrt{2n} + 1$ random points finds
 a collision with probability at least $\sfrac{1}{2}$, so $\bigO{\sqrt{n}}$ queries suffice classically.
-The quantum version is studied later in the course. Here we show that classically
+Here we show that classically
 $\sqrt{n}$ queries are also necessary. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$,
 where the point $x_s$ may depend on the earlier answers $f(x_1), \dots, f(x_{s-1})$ and on random coins.
 
@@ -209,9 +209,3 @@ repeating a query gives no new information.
     If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then $\frac{k(k-1)}{2n} \geq \frac{1}{2}$,
     i.e., $k^2 > k(k-1) \geq n$, so $k > \sqrt{n}$.
 \end{proof}
-
-\paragraph{Worst case inputs.} \cref{thm:collision-lb-0903} is about a \emph{random} input $f$.
-By Yao's minmax principle from the lecture of September~1, applied to the success probability
-instead of the expected number of queries, the bound $\bigOm{\sqrt{n}}$ also holds for every randomized algorithm on its
-worst case input. With the birthday paradox, the classical query complexity of finding a collision
-is $\bigTh{\sqrt{n}}$.

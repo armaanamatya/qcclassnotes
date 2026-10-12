@@ -310,7 +310,3 @@ $2$-to-$1$ case $s$ itself solves the system, so $s' = s$ and the test would be 
     case each $y_i$ is uniform over $\set{0,1}^n$ (\cref{ex:simon-11-1001}), $d = n$, and we take
     $d - 1$ samples.
 \end{proof}
-
-Together with \cref{thm:simon-0929} this completes the analysis: $n - 1$ runs of the circuit plus two
-classical queries find $s$ with probability at least $\sfrac{1}{4}$, a constant number of repetitions
-gives any constant success probability, and $\bigO{\log n}$ repetitions give $1 - \sfrac{1}{n}$.

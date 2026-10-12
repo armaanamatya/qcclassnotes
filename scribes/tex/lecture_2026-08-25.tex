@@ -125,9 +125,6 @@ input on which the algorithm performs badly.
     algorithm makes at least $n - 1$ queries.
 \end{proof}
 
-The bound is tight: after $n - 1$ queries that were all answered ``no'', only one slot is left and
-$x$ must be there.
-
 \subsection{Randomized and Quantum Algorithms}
 
 The adversary argument breaks down for \emph{randomized} algorithms, because the queries are no
@@ -137,8 +134,7 @@ with $\bigO{\sqrt{n}}$ queries (later in the course).
 
 To show a \emph{quantum advantage} (also called quantum supremacy) for a problem, we have to
 show that it needs $\bigOm{f(n)}$ queries classically but only $\littleO{f(n)}$ queries
-quantumly. Randomized algorithms are the strongest classical algorithms, so we
-need lower bounds for \emph{randomized} algorithms.
+quantumly.
 
 \section{Probability}
 
@@ -151,6 +147,3 @@ $\prob{A_1 \cup A_2 \cup \dots \cup A_n} = \sum_{i=1}^{n} \prob{A_i}$ for pairwi
 $A_1, \dots, A_n$ (i.e., $A_i \cap A_j = \emptyset$ for all $i \neq j$). A \textbf{random variable} is a
 function $X \colon S \to V$ from the sample space to a set of values $V$ (usually $V \subseteq \mathbb{R}$),
 and for a value $r \in V$, $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}$.
-
-For example, in random sampling $S$ is the set of the $n$ outcomes of the $\log n$ coin flips, each
-with $\prob{s} = \sfrac{1}{n}$, and $X$ is the sampled index, with $\prob{X = i} = \sfrac{1}{n}$.

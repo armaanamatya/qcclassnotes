@@ -51,7 +51,8 @@ The solution of the following exercise uses the Chernoff bounds and is given in
 
 \begin{exercise}\label{ex:maxload-0901}
     Show that
-    \[\prob{\text{any slot is accessed} \leq c \log n \text{ times}} \leq \frac{1}{n^2}.\]
+    \[\prob{\text{any slot is accessed} \leq c \log n \text{ times}} \leq \frac{1}{n^2}\]
+    for a constant $c > 0$, if random sampling makes enough queries (a constant times $n \log n$).
 \end{exercise}
 
 With high probability $3 n \log n$ queries are enough. Here $\log$ is the natural logarithm.
@@ -85,14 +86,27 @@ The lower bound is shown using Yao's minmax principle.
 \subsection*{Yao's Minmax Principle}
 
 Let $A^{\mathrm{rand}}$ be a randomized algorithm, and let $\expectation{A^{\mathrm{rand}}}$ be its
-expected number of queries. Let $\mu$ be a probability distribution over the inputs, and let
-$D^{\mathrm{best}}_{\mu}$ be the best deterministic algorithm for inputs that are chosen according
-to $\mu$. Then
+expected number of queries on its worst input. Let $\mu$ be a probability distribution over the inputs,
+and let $D^{\mathrm{best}}_{\mu}$ be the best deterministic algorithm for inputs that are chosen
+according to $\mu$. Then
 \[\expectation{A^{\mathrm{rand}}}
     \geq \max_{\mu} \operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]
     \geq \bigOm{n}.\]
 The quantity $\operatorname{\mathbb{E}}_{\mu}\left[D^{\mathrm{best}}_{\mu}\right]$ is called the
-\emph{distributional complexity}.
+\emph{distributional complexity}. The first inequality is the principle; the second one holds for
+search and proves \cref{thm:lowerbound}:
+
+\begin{proof}[Proof of \cref{thm:lowerbound}]
+    Let $\mu$ choose the slot $x$ with $f(x) = 1$ uniformly at random among the $n$ slots, and let $D$
+    be a deterministic algorithm that is always correct. As long as all the answers are $0$, $D$
+    queries a fixed sequence of different slots $s_1, s_2, \dots$ (repeating a query gives no new
+    information). It cannot stop while all the answers are $0$ and two slots are not yet queried:
+    either of them could be the solution, and $D$ would be wrong on one of the two inputs. So if the
+    solution is $s_j$, then $D$ makes at least $\min(j, n-1)$ queries. Every $j$ has probability
+    $\sfrac{1}{n}$, hence
+    \[\operatorname{\mathbb{E}}_{\mu}\left[D\right] \geq \frac{1}{n} \sum_{j=1}^{n} \min(j, n-1)
+        \geq \frac{1}{n} \sum_{j=1}^{n-1} j = \frac{n-1}{2} = \bigOm{n}. \qedhere\]
+\end{proof}
 
 \section{Chernoff Bounds}
 
@@ -151,11 +165,7 @@ $\mu = \expectation{Y_i} = \sfrac{T}{n}$.
     in the first and has probability at most $\sfrac{1}{n^2}$ as well.
 \end{proof}
 
-The lemma uses $24 n \log n$ queries and not the $3 n \log n$ of \cref{thm:whp}: with
-$\mu = 3 \log n$ the lower tail bound is $n^{-3\delta^2/2} > n^{-3/2}$ per slot, which is too weak
-for the union bound over the $n$ slots. Similarly, still with $24 n \log n$ queries
-($\mu = 24 \log n$), the second Chernoff bound with $R = 6\mu = 144 \log n$ gives
-$\prob{Y_i \geq 144 \log n} \leq 2^{-144 \log n} \leq n^{-3}$, so by the union bound, with
-probability at least $1 - \sfrac{1}{n^2}$ no slot is accessed $144 \log n$ times or more. So the
-exercise also holds with ``$\geq$'' in place of ``$\leq$'' ($c = 144$), and with $24 n \log n$
-queries every slot is accessed $\bigTh{\log n}$ times with probability at least $1 - \sfrac{2}{n^2}$.
+The lemma uses $24 n \log n$ queries and not the $3 n \log n$ of \cref{thm:whp}, because with
+$\mu = 3 \log n$ the lower tail bound is more than $n^{-3/2}$ per slot, which is too weak for the
+union bound over the $n$ slots. The exercise also holds with ``$\geq$'' in place of ``$\leq$'' and a
+larger constant ($c = 144$), by the second bound of \cref{thm:chernoff-0901} with $R = 6\mu$.

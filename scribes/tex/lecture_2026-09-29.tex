@@ -45,8 +45,7 @@ gates is in the state
     for some unknown $n$-bit string $s$, find $s$.
 \end{problem}
 
-This is again a promise problem. Classically, $n$ queries suffice and are needed: querying the unit
-string $e_i$ (a single $1$ in position $i$) returns $f(e_i) = s_i$, one bit of $s$ per query.
+This is again a promise problem.
 
 \subsection{The Algorithm}
 
@@ -68,9 +67,7 @@ The quantum algorithm is the Deutsch--Jozsa circuit (\cref{fig:dj-0924}); it mak
 \end{proof}
 
 \paragraph{Query complexity versus running time.} The query model only counts the calls to $U_f$; the
-running time in the \emph{quantum Turing machine} (or quantum circuit) model counts all the gates. For
-Deutsch--Jozsa and Bernstein--Vazirani the circuit has, besides the single query, only $2n + 1$
-Hadamard gates and $n$ measurements.
+running time in the \emph{quantum Turing machine} (or quantum circuit) model counts all the gates, and the two are not always the same.
 
 \section{Simon's Algorithm}
 
@@ -185,9 +182,6 @@ $\ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$ and not the phase flip form.
     with $s \cdot y' = 1$.
 \end{proof}
 
-The second register \emph{entangles} $x$ with $f(x)$, so that only the two preimages of the same $z$
-interfere. It is never measured.
-
 \subsection{From the Measurements to \texorpdfstring{$s$}{s}}
 
 Each run of the circuit gives a random $y$ with $s \cdot y = 0$, i.e., one linear equation
@@ -221,9 +215,7 @@ hence if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 \begin{theorem}[Simon's Algorithm]\label{thm:simon-0929}
     \cref{alg:simon-0929} makes $n + 1$ queries ($n - 1$ quantum, $2$ classical) and $\bigO{n^3}$ other
     operations. It never outputs a wrong answer, and it outputs the correct $s$ with probability at least
-    $\sfrac{1}{4}$. Repeating it until it does not fail, $t$ repetitions fail with probability at most
-    $(\sfrac{3}{4})^t$; so $\bigO{n}$ queries find $s$ with constant probability and
-    $\bigO{n \log n}$ queries find it with probability $1 - \sfrac{1}{n}$.
+    $\sfrac{1}{4}$.
 \end{theorem}
 
 \begin{proof}
@@ -239,11 +231,7 @@ hence if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
     $s \cdot y = 0$ if $f$ is $2$-to-$1$, and from all of $\set{0,1}^n$ if $f$ is $1$-to-$1$. By
     \cref{thm:indep-1001} (next lecture) they are linearly independent with probability
     \[\left(1 - \frac{1}{2}\right)\left(1 - \frac{1}{2^2}\right)\left(1 - \frac{1}{2^3}\right) \cdots \left(1 - \frac{1}{2^{n-1}}\right) \geq \frac{1}{4}\]
-    in the first case and at least $\sfrac{1}{2}$ in the second. So each repetition succeeds with probability
-    at least $\sfrac{1}{4}$, and $t$ independent repetitions all fail with probability at most
-    $(\sfrac{3}{4})^t$. A constant $t$ gives constant success probability with $t(n+1) = \bigO{n}$
-    queries, and $t = \ceil{\log_{4/3} n}$ gives failure probability at most $\sfrac{1}{n}$ with
-    $t(n+1) = \bigO{n \log n}$ queries.
+    in the first case and at least $\sfrac{1}{2}$ in the second.
 \end{proof}
 
 \subsection{A Deterministic Classical Algorithm}

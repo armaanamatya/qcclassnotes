@@ -6,14 +6,13 @@ eigenvalues of $P$ that the walk on a connected, non-bipartite graph converges t
 \paragraph{Law of large numbers.} The average of independent, identically distributed (i.i.d.)
 samples approaches the expectation.
 
-\begin{theorem}[Strong Law of Large Numbers]\label{thm:slln-0910}
+\begin{theorem}[Law of Large Numbers]\label{thm:slln-0910}
     Let $X_1, X_2, \dots$ be i.i.d.\ random variables distributed as $X$, where $\expectation{X}$ is
     finite. Then, with probability $1$,
     \[\lim_{n \to \infty} \frac{\sum_{i=1}^{n} X_i}{n} = \expectation{X}.\]
 \end{theorem}
 
-We do not prove the strong law. It implies the \emph{weak} law (convergence in probability), which
-we proved in \cref{thm:wlln-0908} assuming that $\variance{X}$ is finite.
+The weak form of the law was proved in \cref{thm:wlln-0908}.
 
 \section{Random Walks on Graphs}
 
@@ -35,9 +34,6 @@ $t = 0, 1, 2, \dots$.
             0                 & \text{otherwise.}
         \end{cases}\]
 \end{definition}
-
-The entries $P_{uv}$ do not depend on $t$, and the next vertex depends only on the current one. A process
-with these two properties is a (time-homogeneous) \emph{Markov chain}.
 
 \subsection{The Triangle}
 
@@ -153,16 +149,16 @@ $\pi = \left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$, the limit in \cre
 
 \section{Convergence to the Stationary Distribution}
 
-Convergence of vectors is entry by entry.
+Convergence of vectors is entry by entry. We state the theorem without proof.
 
-\needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
-\begin{exercise}\label{ex:convergence-0910}
-    Let $G$ be connected and non-bipartite. Prove, by analysing the eigenvalues of the transition
-    matrix $P$, that the random walk on $G$ converges to the stationary distribution: $p_t \to \pi$ as
-    $t \to \infty$, for every starting distribution $p_0$.
-\end{exercise}
-
-The solution is \cref{thm:convergence-0910}, which is proved in \cref{sec:eigen-0910}.
+% Commented out: this proof is not in the lecture notes.
+% \begin{exercise}\label{ex:convergence-0910}
+%     Let $G$ be connected and non-bipartite. Prove, by analysing the eigenvalues of the transition
+%     matrix $P$, that the random walk on $G$ converges to the stationary distribution: $p_t \to \pi$ as
+%     $t \to \infty$, for every starting distribution $p_0$.
+% \end{exercise}
+%
+% The solution is \cref{thm:convergence-0910}, which is proved in \cref{sec:eigen-0910}.
 
 \begin{theorem}[Convergence of Random Walks]\label{thm:convergence-0910}
     Let $G$ be a connected, non-bipartite graph with $m$ edges. Then for every starting distribution
@@ -171,150 +167,140 @@ The solution is \cref{thm:convergence-0910}, which is proved in \cref{sec:eigen-
     In particular, $\pi$ is the only stationary distribution of the walk.
 \end{theorem}
 
-\subsection{Proof by Eigenvalue Analysis}\label{sec:eigen-0910}
-
-Here $p_t$ and $\pi$ are row vectors as before, $x$, $w$ and $z$ are real column vectors with entries
-$x_u$ ($u \in V$), and $\mathbf{1}$ is the column vector with all entries $1$. A nonzero column
-vector $x$ is an \emph{eigenvector} of a matrix $M$ with \emph{eigenvalue} $\lambda$ if $Mx = \lambda x$.
-
-\paragraph{A symmetric matrix with the same eigenvalues.} The matrix $P = D^{-1} A$ is in general not symmetric: for a connected graph it is symmetric only
-if all degrees are equal. Let $D^{1/2}$ be the diagonal matrix with entries
-$\sqrt{d_1}, \dots, \sqrt{d_n}$ and $D^{-1/2}$ its inverse, and put $N = D^{-1/2} A D^{-1/2}$, i.e.,
-$N_{uv} = \sfrac{A_{uv}}{\sqrt{d_u d_v}}$, which is symmetric because $A$ is. Then
-$D^{-1/2} N D^{1/2} = D^{-1} A D^{-1/2} D^{1/2} = P$, and in
-the product of $t$ copies of $D^{-1/2} N D^{1/2}$ every inner pair $D^{1/2} D^{-1/2}$ cancels, so
-\begin{equation}\label{eq:similar-0910}
-    P = D^{-1/2} N D^{1/2}, \qquad P^t = D^{-1/2} N^t D^{1/2} \quad \text{for all } t \geq 0.
-\end{equation}
-If $Nw = \lambda w$ and $w \neq 0$, then $x = D^{-1/2} w \neq 0$ is an eigenvector of $P$ with the
-same eigenvalue:
-\begin{equation}\label{eq:transfer-0910}
-    P x = D^{-1/2} N D^{1/2} D^{-1/2} w = D^{-1/2} N w = \lambda D^{-1/2} w = \lambda x.
-\end{equation}
-
-\paragraph{The spectral theorem.} We use the following theorem of linear algebra without proof.
-
-\begin{theorem}[Spectral Theorem for Real Symmetric Matrices]\label{thm:spectral-0910}
-    Let $N$ be a real symmetric $n \times n$ matrix. Then there are real numbers
-    $\lambda_1, \dots, \lambda_n$ and real column vectors $w_1, \dots, w_n$ such that
-    $N w_i = \lambda_i w_i$ for all $i$, and $w_1, \dots, w_n$ is an orthonormal basis of
-    $\mathbb{R}^n$: $w_i^{T} w_i = 1$, and $w_i^{T} w_j = 0$ for $i \neq j$.
-\end{theorem}
-
-Every real column vector $x$ is $\sum_{i} c_i w_i$ for unique numbers $c_i$, and multiplying from the
-left by $w_j^{T}$ gives $c_j = w_j^{T} x$. Applying $N$ to this expansion $t$ times multiplies the
-$\nth{i}$ term by $\lambda_i^t$, so
-$N^t x = \sum_{i} \lambda_i^t \left(w_i^{T} x\right) w_i = \left(\sum_{i} \lambda_i^t\, w_i w_i^{T}\right) x$
-for every $x$, i.e.,
-\begin{equation}\label{eq:powers-0910}
-    N^t = \sum_{i=1}^{n} \lambda_i^t\, w_i w_i^{T} \qquad \text{for all } t \geq 0,
-\end{equation}
-where $w_i w_i^{T}$ is the $n \times n$ matrix with entries $(w_i)_u (w_i)_v$.
-
-\paragraph{The eigenvalues of $P$.} For a column vector $x$, the $\nth{u}$ entry of $Px$ is the average
-of $x$ over the neighbours of $u$:
-\begin{equation}\label{eq:average-0910}
-    (Px)_u = \sum_{v \in V} P_{uv} x_v = \frac{1}{\deg(u)} \sum_{v \sim u} x_v.
-\end{equation}
-
-\begin{lemma}[Eigenvalues of the Transition Matrix]\label{lem:eigen-0910}
-    Let $G$ be a connected graph with at least two vertices, let $\lambda$ be a real number, and let
-    $x \neq 0$ be a real column vector with $Px = \lambda x$.
-    \begin{enumerate}
-        \item $\abs{\lambda} \leq 1$.
-        \item If $\lambda = 1$, then all entries of $x$ are equal, i.e., $x = c \mathbf{1}$ for some $c \neq 0$.
-        \item If $\lambda = -1$, then $G$ is bipartite.
-    \end{enumerate}
-\end{lemma}
-
-\begin{proof}
-    A connected graph with at least two vertices has no isolated vertices, so $P$ is defined and every
-    vertex has a neighbour. Let $M = \max_{u} \abs{x_u}$; since $x \neq 0$, we have $M > 0$.
-
-    \emph{Part 1.} Let $u$ be a vertex with $\abs{x_u} = M$. By \cref{eq:average-0910} and the triangle
-    inequality,
-    $\abs{\lambda} M = \abs{\lambda x_u} = \abs{(Px)_u}
-        \leq \frac{1}{\deg(u)} \sum_{v \sim u} \abs{x_v} \leq M$,
-    and dividing by $M > 0$ gives $\abs{\lambda} \leq 1$.
-
-    \emph{Part 2.} Let $\lambda = 1$, $K = \max_u x_u$, and $S = \set{u \suchthat x_u = K} \neq \emptyset$.
-    For $u \in S$, by \cref{eq:average-0910}, $K = x_u = (Px)_u$ is the average of the numbers
-    $x_v \leq K$ over the neighbours $v$ of $u$; if one of them were smaller than $K$, the average
-    would be smaller than $K$. So every neighbour of a vertex of $S$ is in $S$. Since $G$ is
-    connected, every vertex is reached from $S$ along a path, so $S = V$ and $x = K \mathbf{1}$, with
-    $K \neq 0$ because $x \neq 0$.
-
-    \emph{Part 3.} Let $\lambda = -1$, $S_+ = \set{u \suchthat x_u = M}$ and
-    $S_- = \set{u \suchthat x_u = -M}$. These sets are disjoint because $M > 0$, and at least one of
-    them is not empty. For $u \in S_+$, by \cref{eq:average-0910}, the average of $x_v$ over the
-    neighbours $v$ of $u$ is $(Px)_u = -x_u = -M$, and each $x_v \geq -M$, so, as in Part 2, all of
-    them equal $-M$: every neighbour of a vertex of $S_+$ is in $S_-$. In the same way (the average is
-    $M$ and each $x_v \leq M$), every neighbour of a vertex of $S_-$ is in $S_+$. Hence
-    $S_+ \cup S_-$ contains all neighbours of its vertices, and since $G$ is connected,
-    $S_+ \cup S_- = V$. So every vertex is in exactly one of $S_+$ and $S_-$, and every edge joins
-    $S_+$ to $S_-$: a bipartition of $G$.
-\end{proof}
-
-\begin{proof}[Proof of \cref{thm:convergence-0910}]
-    A non-bipartite graph contains an odd cycle, so $G$ has at least three vertices, and it is
-    connected, so \cref{lem:eigen-0910} applies. Let $\lambda_1, \dots, \lambda_n$ and $w_1, \dots, w_n$
-    be the eigenvalues and the orthonormal eigenvectors of the symmetric matrix $N$ given by
-    \cref{thm:spectral-0910}. By \cref{eq:transfer-0910}, $x_i = D^{-1/2} w_i$ is a real eigenvector of $P$
-    with eigenvalue $\lambda_i$, so \cref{lem:eigen-0910} applies to every pair $\lambda_i$, $x_i$.
-
-    \emph{Step 1: the eigenvalue $1$ occurs exactly once.} Let $z = D^{1/2} \mathbf{1}$, the column
-    vector with entries $\sqrt{d_u}$. The $\nth{u}$ entry of $A \mathbf{1}$ is the number of neighbours of
-    $u$, so $A \mathbf{1} = D \mathbf{1}$ and
-    \[N z = D^{-1/2} A D^{-1/2} D^{1/2} \mathbf{1} = D^{-1/2} A \mathbf{1} = D^{-1/2} D \mathbf{1} = z,
-        \qquad z^{T} z = \sum_{u} d_u = 2m\]
-    by the handshake lemma. \emph{At least one $\lambda_i$ equals $1$:} write $z = \sum_i c_i w_i$.
-    Then $\sum_i c_i w_i = z = Nz = \sum_i c_i \lambda_i w_i$, and coefficients with respect to a basis
-    are unique, so $c_i = c_i \lambda_i$ for all $i$. Since $z \neq 0$, some $c_i \neq 0$, and for this
-    $i$ we get $\lambda_i = 1$. \emph{At most one:} if $\lambda_i = 1$, then by part 2 of
-    \cref{lem:eigen-0910}, $D^{-1/2} w_i = c \mathbf{1}$ for some $c \neq 0$, i.e., $w_i = c z$. So if
-    $\lambda_i = \lambda_j = 1$ with $i \neq j$, then $w_i = c z$ and $w_j = c' z$ with
-    $c, c' \neq 0$, and $w_i^{T} w_j = c c' \cdot 2m \neq 0$, which contradicts the orthogonality.
-    We number the eigenvalues so that $\lambda_1 = 1$. Then $w_1 = c z$ with
-    $1 = w_1^{T} w_1 = c^2 \cdot 2m$, and therefore
-    \begin{equation}\label{eq:first-0910}
-        w_1 w_1^{T} = c^2 z z^{T} = \frac{1}{2m} z z^{T}.
-    \end{equation}
-
-    \emph{Step 2: all other eigenvalues are smaller than $1$ in absolute value.} Let $i \geq 2$. Then
-    $\abs{\lambda_i} \leq 1$ by part 1 of \cref{lem:eigen-0910}, $\lambda_i \neq 1$ by Step 1, and
-    $\lambda_i \neq -1$ by part 3, because $G$ is not bipartite. Hence
-    $\rho := \max_{2 \leq i \leq n} \abs{\lambda_i} < 1$.
-
-    \emph{Step 3: the limit of $N^t$.} By \cref{eq:powers-0910,eq:first-0910},
-    \[N^t = \frac{1}{2m} z z^{T} + E_t, \qquad \text{where } E_t = \sum_{i=2}^{n} \lambda_i^t\, w_i w_i^{T}.\]
-    Every entry of a vector of length $1$, and hence of $w_i w_i^{T}$, is at most $1$ in absolute
-    value, so $\abs{(E_t)_{uv}} \leq \sum_{i=2}^{n} \abs{\lambda_i}^t \leq (n-1) \rho^t$ for all $u, v$.
-
-    \emph{Step 4: the limit of $p_t$.} By \cref{lem:evolution-0910} and \cref{eq:similar-0910},
-    \[p_t = p_0 P^t = p_0 D^{-1/2} N^t D^{1/2}
-        = \frac{1}{2m}\, p_0 D^{-1/2} z z^{T} D^{1/2} + p_0 D^{-1/2} E_t D^{1/2}.\]
-    In the first term, $D^{-1/2} z = \mathbf{1}$, $p_0 \mathbf{1} = \sum_u p_0^u = 1$ because $p_0$ is a
-    probability vector, and $z^{T} D^{1/2} = \mathbf{1}^{T} D = (d_1, \dots, d_n)$, so the first term is
-    $\frac{1}{2m} (d_1, \dots, d_n) = \pi$ for every $t$ and every $p_0$. The $\nth{v}$ entry of the
-    second term is $\sum_{u} p_0^u\, d_u^{-1/2}\, (E_t)_{uv}\, d_v^{1/2}$. Since $1 \leq d_u$ and
-    $d_v \leq n$, we have $\sqrt{d_v / d_u} \leq \sqrt{n}$, and with Step 3 and $\sum_u p_0^u = 1$,
-    \begin{equation}\label{eq:rate-0910}
-        \abs{p_t^v - \pi_v} \leq \sum_{u} p_0^u \sqrt{\frac{d_v}{d_u}}\, \abs{(E_t)_{uv}}
-        \leq \sqrt{n}\, (n-1)\, \rho^t \leq n^{3/2} \rho^t \qquad \text{for every } v \in V.
-    \end{equation}
-    Since $0 \leq \rho < 1$, the right-hand side tends to $0$ as $t \to \infty$. Hence $p_t \to \pi$.
-
-    \emph{Uniqueness.} If $\pi'$ is any stationary distribution and $p_0 = \pi'$, then $p_t = \pi'$
-    for all $t$, and $p_t \to \pi$ forces $\pi' = \pi$.
-\end{proof}
-
-\paragraph{Both conditions are needed.} If $G$ is bipartite, the walk need not converge: for a
-single edge on the vertices $1, 2$, $(a, b) P = (b, a)$, so from $p_0 = (1, 0)$ the distribution
-alternates between $(1, 0)$ and $(0, 1)$, although $\pi = \left(\sfrac{1}{2}, \sfrac{1}{2}\right)$ is
-stationary. Here $x = (1, -1)^{T}$ satisfies $Px = -x$, the eigenvalue $-1$ that Step~2 excludes. If
-$G$ is not connected, the limit depends on the start: in two disjoint triangles on $\set{1,2,3}$
-and $\set{4,5,6}$ the token never leaves its triangle, so by \cref{lem:triangle-0908} the walk
-started in the first triangle converges to $\left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}, 0, 0, 0\right)$
-and the walk started in the second to $\left(0, 0, 0, \sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$.
-Both are stationary, so the stationary distribution is not unique. Here $x = (1,1,1,0,0,0)^{T}$ and
-$\mathbf{1}$ both satisfy $Px = x$: the eigenvalue $1$ occurs twice, which Step~1 excludes.
+% Commented out: this proof is not in the lecture notes.
+% \subsection{Proof by Eigenvalue Analysis}\label{sec:eigen-0910}
+%
+% Here $p_t$ and $\pi$ are row vectors as before, $x$, $w$ and $z$ are real column vectors with entries
+% $x_u$ ($u \in V$), and $\mathbf{1}$ is the column vector with all entries $1$. A nonzero column
+% vector $x$ is an \emph{eigenvector} of a matrix $M$ with \emph{eigenvalue} $\lambda$ if $Mx = \lambda x$.
+%
+% \paragraph{A symmetric matrix with the same eigenvalues.} The matrix $P = D^{-1} A$ is in general not symmetric: for a connected graph it is symmetric only
+% if all degrees are equal. Let $D^{1/2}$ be the diagonal matrix with entries
+% $\sqrt{d_1}, \dots, \sqrt{d_n}$ and $D^{-1/2}$ its inverse, and put $N = D^{-1/2} A D^{-1/2}$, i.e.,
+% $N_{uv} = \sfrac{A_{uv}}{\sqrt{d_u d_v}}$, which is symmetric because $A$ is. Then
+% $D^{-1/2} N D^{1/2} = D^{-1} A D^{-1/2} D^{1/2} = P$, and in
+% the product of $t$ copies of $D^{-1/2} N D^{1/2}$ every inner pair $D^{1/2} D^{-1/2}$ cancels, so
+% \begin{equation}\label{eq:similar-0910}
+%     P = D^{-1/2} N D^{1/2}, \qquad P^t = D^{-1/2} N^t D^{1/2} \quad \text{for all } t \geq 0.
+% \end{equation}
+% If $Nw = \lambda w$ and $w \neq 0$, then $x = D^{-1/2} w \neq 0$ is an eigenvector of $P$ with the
+% same eigenvalue:
+% \begin{equation}\label{eq:transfer-0910}
+%     P x = D^{-1/2} N D^{1/2} D^{-1/2} w = D^{-1/2} N w = \lambda D^{-1/2} w = \lambda x.
+% \end{equation}
+%
+% \paragraph{The spectral theorem.} We use the following theorem of linear algebra without proof.
+%
+% \begin{theorem}[Spectral Theorem for Real Symmetric Matrices]\label{thm:spectral-0910}
+%     Let $N$ be a real symmetric $n \times n$ matrix. Then there are real numbers
+%     $\lambda_1, \dots, \lambda_n$ and real column vectors $w_1, \dots, w_n$ such that
+%     $N w_i = \lambda_i w_i$ for all $i$, and $w_1, \dots, w_n$ is an orthonormal basis of
+%     $\mathbb{R}^n$: $w_i^{T} w_i = 1$, and $w_i^{T} w_j = 0$ for $i \neq j$.
+% \end{theorem}
+%
+% Every real column vector $x$ is $\sum_{i} c_i w_i$ for unique numbers $c_i$, and multiplying from the
+% left by $w_j^{T}$ gives $c_j = w_j^{T} x$. Applying $N$ to this expansion $t$ times multiplies the
+% $\nth{i}$ term by $\lambda_i^t$, so
+% $N^t x = \sum_{i} \lambda_i^t \left(w_i^{T} x\right) w_i = \left(\sum_{i} \lambda_i^t\, w_i w_i^{T}\right) x$
+% for every $x$, i.e.,
+% \begin{equation}\label{eq:powers-0910}
+%     N^t = \sum_{i=1}^{n} \lambda_i^t\, w_i w_i^{T} \qquad \text{for all } t \geq 0,
+% \end{equation}
+% where $w_i w_i^{T}$ is the $n \times n$ matrix with entries $(w_i)_u (w_i)_v$.
+%
+% \paragraph{The eigenvalues of $P$.} For a column vector $x$, the $\nth{u}$ entry of $Px$ is the average
+% of $x$ over the neighbours of $u$:
+% \begin{equation}\label{eq:average-0910}
+%     (Px)_u = \sum_{v \in V} P_{uv} x_v = \frac{1}{\deg(u)} \sum_{v \sim u} x_v.
+% \end{equation}
+%
+% \begin{lemma}[Eigenvalues of the Transition Matrix]\label{lem:eigen-0910}
+%     Let $G$ be a connected graph with at least two vertices, let $\lambda$ be a real number, and let
+%     $x \neq 0$ be a real column vector with $Px = \lambda x$.
+%     \begin{enumerate}
+%         \item $\abs{\lambda} \leq 1$.
+%         \item If $\lambda = 1$, then all entries of $x$ are equal, i.e., $x = c \mathbf{1}$ for some $c \neq 0$.
+%         \item If $\lambda = -1$, then $G$ is bipartite.
+%     \end{enumerate}
+% \end{lemma}
+%
+% \begin{proof}
+%     A connected graph with at least two vertices has no isolated vertices, so $P$ is defined and every
+%     vertex has a neighbour. Let $M = \max_{u} \abs{x_u}$; since $x \neq 0$, we have $M > 0$.
+%
+%     \emph{Part 1.} Let $u$ be a vertex with $\abs{x_u} = M$. By \cref{eq:average-0910} and the triangle
+%     inequality,
+%     $\abs{\lambda} M = \abs{\lambda x_u} = \abs{(Px)_u}
+%         \leq \frac{1}{\deg(u)} \sum_{v \sim u} \abs{x_v} \leq M$,
+%     and dividing by $M > 0$ gives $\abs{\lambda} \leq 1$.
+%
+%     \emph{Part 2.} Let $\lambda = 1$, $K = \max_u x_u$, and $S = \set{u \suchthat x_u = K} \neq \emptyset$.
+%     For $u \in S$, by \cref{eq:average-0910}, $K = x_u = (Px)_u$ is the average of the numbers
+%     $x_v \leq K$ over the neighbours $v$ of $u$; if one of them were smaller than $K$, the average
+%     would be smaller than $K$. So every neighbour of a vertex of $S$ is in $S$. Since $G$ is
+%     connected, every vertex is reached from $S$ along a path, so $S = V$ and $x = K \mathbf{1}$, with
+%     $K \neq 0$ because $x \neq 0$.
+%
+%     \emph{Part 3.} Let $\lambda = -1$, $S_+ = \set{u \suchthat x_u = M}$ and
+%     $S_- = \set{u \suchthat x_u = -M}$. These sets are disjoint because $M > 0$, and at least one of
+%     them is not empty. For $u \in S_+$, by \cref{eq:average-0910}, the average of $x_v$ over the
+%     neighbours $v$ of $u$ is $(Px)_u = -x_u = -M$, and each $x_v \geq -M$, so, as in Part 2, all of
+%     them equal $-M$: every neighbour of a vertex of $S_+$ is in $S_-$. In the same way (the average is
+%     $M$ and each $x_v \leq M$), every neighbour of a vertex of $S_-$ is in $S_+$. Hence
+%     $S_+ \cup S_-$ contains all neighbours of its vertices, and since $G$ is connected,
+%     $S_+ \cup S_- = V$. So every vertex is in exactly one of $S_+$ and $S_-$, and every edge joins
+%     $S_+$ to $S_-$: a bipartition of $G$.
+% \end{proof}
+%
+% \begin{proof}[Proof of \cref{thm:convergence-0910}]
+%     A non-bipartite graph contains an odd cycle, so $G$ has at least three vertices, and it is
+%     connected, so \cref{lem:eigen-0910} applies. Let $\lambda_1, \dots, \lambda_n$ and $w_1, \dots, w_n$
+%     be the eigenvalues and the orthonormal eigenvectors of the symmetric matrix $N$ given by
+%     \cref{thm:spectral-0910}. By \cref{eq:transfer-0910}, $x_i = D^{-1/2} w_i$ is a real eigenvector of $P$
+%     with eigenvalue $\lambda_i$, so \cref{lem:eigen-0910} applies to every pair $\lambda_i$, $x_i$.
+%
+%     \emph{Step 1: the eigenvalue $1$ occurs exactly once.} Let $z = D^{1/2} \mathbf{1}$, the column
+%     vector with entries $\sqrt{d_u}$. The $\nth{u}$ entry of $A \mathbf{1}$ is the number of neighbours of
+%     $u$, so $A \mathbf{1} = D \mathbf{1}$ and
+%     \[N z = D^{-1/2} A D^{-1/2} D^{1/2} \mathbf{1} = D^{-1/2} A \mathbf{1} = D^{-1/2} D \mathbf{1} = z,
+%         \qquad z^{T} z = \sum_{u} d_u = 2m\]
+%     by the handshake lemma. \emph{At least one $\lambda_i$ equals $1$:} write $z = \sum_i c_i w_i$.
+%     Then $\sum_i c_i w_i = z = Nz = \sum_i c_i \lambda_i w_i$, and coefficients with respect to a basis
+%     are unique, so $c_i = c_i \lambda_i$ for all $i$. Since $z \neq 0$, some $c_i \neq 0$, and for this
+%     $i$ we get $\lambda_i = 1$. \emph{At most one:} if $\lambda_i = 1$, then by part 2 of
+%     \cref{lem:eigen-0910}, $D^{-1/2} w_i = c \mathbf{1}$ for some $c \neq 0$, i.e., $w_i = c z$. So if
+%     $\lambda_i = \lambda_j = 1$ with $i \neq j$, then $w_i = c z$ and $w_j = c' z$ with
+%     $c, c' \neq 0$, and $w_i^{T} w_j = c c' \cdot 2m \neq 0$, which contradicts the orthogonality.
+%     We number the eigenvalues so that $\lambda_1 = 1$. Then $w_1 = c z$ with
+%     $1 = w_1^{T} w_1 = c^2 \cdot 2m$, and therefore
+%     \begin{equation}\label{eq:first-0910}
+%         w_1 w_1^{T} = c^2 z z^{T} = \frac{1}{2m} z z^{T}.
+%     \end{equation}
+%
+%     \emph{Step 2: all other eigenvalues are smaller than $1$ in absolute value.} Let $i \geq 2$. Then
+%     $\abs{\lambda_i} \leq 1$ by part 1 of \cref{lem:eigen-0910}, $\lambda_i \neq 1$ by Step 1, and
+%     $\lambda_i \neq -1$ by part 3, because $G$ is not bipartite. Hence
+%     $\rho := \max_{2 \leq i \leq n} \abs{\lambda_i} < 1$.
+%
+%     \emph{Step 3: the limit of $N^t$.} By \cref{eq:powers-0910,eq:first-0910},
+%     \[N^t = \frac{1}{2m} z z^{T} + E_t, \qquad \text{where } E_t = \sum_{i=2}^{n} \lambda_i^t\, w_i w_i^{T}.\]
+%     Every entry of a vector of length $1$, and hence of $w_i w_i^{T}$, is at most $1$ in absolute
+%     value, so $\abs{(E_t)_{uv}} \leq \sum_{i=2}^{n} \abs{\lambda_i}^t \leq (n-1) \rho^t$ for all $u, v$.
+%
+%     \emph{Step 4: the limit of $p_t$.} By \cref{lem:evolution-0910} and \cref{eq:similar-0910},
+%     \[p_t = p_0 P^t = p_0 D^{-1/2} N^t D^{1/2}
+%         = \frac{1}{2m}\, p_0 D^{-1/2} z z^{T} D^{1/2} + p_0 D^{-1/2} E_t D^{1/2}.\]
+%     In the first term, $D^{-1/2} z = \mathbf{1}$, $p_0 \mathbf{1} = \sum_u p_0^u = 1$ because $p_0$ is a
+%     probability vector, and $z^{T} D^{1/2} = \mathbf{1}^{T} D = (d_1, \dots, d_n)$, so the first term is
+%     $\frac{1}{2m} (d_1, \dots, d_n) = \pi$ for every $t$ and every $p_0$. The $\nth{v}$ entry of the
+%     second term is $\sum_{u} p_0^u\, d_u^{-1/2}\, (E_t)_{uv}\, d_v^{1/2}$. Since $1 \leq d_u$ and
+%     $d_v \leq n$, we have $\sqrt{d_v / d_u} \leq \sqrt{n}$, and with Step 3 and $\sum_u p_0^u = 1$,
+%     \begin{equation}\label{eq:rate-0910}
+%         \abs{p_t^v - \pi_v} \leq \sum_{u} p_0^u \sqrt{\frac{d_v}{d_u}}\, \abs{(E_t)_{uv}}
+%         \leq \sqrt{n}\, (n-1)\, \rho^t \leq n^{3/2} \rho^t \qquad \text{for every } v \in V.
+%     \end{equation}
+%     Since $0 \leq \rho < 1$, the right-hand side tends to $0$ as $t \to \infty$. Hence $p_t \to \pi$.
+%
+%     \emph{Uniqueness.} If $\pi'$ is any stationary distribution and $p_0 = \pi'$, then $p_t = \pi'$
+%     for all $t$, and $p_t \to \pi$ forces $\pi' = \pi$.
+% \end{proof}
