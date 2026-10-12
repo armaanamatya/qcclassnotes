@@ -1,5 +1,5 @@
-In this lecture, we study \emph{Grover's search algorithm} for unstructured search over $N = 2^n$
-inputs. Every Grover iteration is a rotation by the angle $2\theta$ in a two-dimensional plane.
+% In this lecture, we study \emph{Grover's search algorithm} for unstructured search over $N = 2^n$
+% inputs. Every Grover iteration is a rotation by the angle $2\theta$ in a two-dimensional plane.
 
 \begin{problem}[Unstructured Search]
     Given $f \colon \set{0,1}^n \to \set{0,1}$ as a black box, find an $x$ with $f(x) = 1$.
@@ -79,6 +79,7 @@ steps (\cref{fig:grover4-1006}).
     \label{fig:grover4-1006}
 \end{figure}
 
+\FloatBarrier
 \section{Grover's Algorithm on \texorpdfstring{$n$}{n} Qubits}
 
 For $n$ qubits and a unique solution $x^*$ the same steps apply to the $N$ amplitudes. After the
@@ -287,3 +288,5 @@ $\ket{B}$ towards $\ket{A}$.
 \end{figure}
 
 The number of iterations is computed in the next lecture (\cref{sec:iterations-1008}).
+
+\FloatBarrier

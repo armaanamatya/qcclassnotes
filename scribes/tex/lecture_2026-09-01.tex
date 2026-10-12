@@ -1,5 +1,5 @@
-This lecture covers the query complexity of search for classical randomized algorithms: random
-sampling, the coupon collector problem, a lower bound by Yao's minmax principle, and Chernoff bounds.
+% This lecture covers the query complexity of search for classical randomized algorithms: random
+% sampling, the coupon collector problem, a lower bound by Yao's minmax principle, and Chernoff bounds.
 
 \section{Query Complexity for Search}
 
@@ -7,7 +7,7 @@ In the search problem of \cref{fig:coinflips-0825}, a \emph{query} to a slot $x$
 slots returns $f(x)$, and the goal is to find the slot $x$ with $f(x) = 1$. The \emph{query complexity}
 of an algorithm is the number of queries that it makes.
 
-\begin{definition}[Monte Carlo and Las Vegas Algorithms]
+\begin{definition}[Monte Carlo and Las Vegas Algorithms]\label{def:mclv-0901}
     A \textbf{Monte Carlo} algorithm is a randomized algorithm whose error probability is $> 0$.
 
     A \textbf{Las Vegas} algorithm is a randomized algorithm whose error probability is $= 0$.
@@ -16,7 +16,7 @@ of an algorithm is the number of queries that it makes.
 Random sampling \emph{with replacement} queries a slot chosen uniformly at random in every step. Every
 query succeeds with probability $\sfrac{1}{n}$, so the number of queries until the first success is a
 \emph{geometric} random variable with parameter $\sfrac{1}{n}$, and
-$\expectation{\text{queries until find}} = n$.
+$\expectation{\text{queries until find}} = n$ (\cref{thm:geometric-0827}).
 Stopped after a fixed number of queries, random sampling is a Monte Carlo algorithm, because it
 can fail to find the slot. Run until the slot is found, it is a Las Vegas algorithm with $n$
 expected queries.
@@ -70,7 +70,7 @@ Here $\log$ is the natural logarithm.
     Any Las Vegas randomized algorithm for search needs $\bigOm{n}$ expected queries.
 \end{theorem}
 
-\subsection*{Yao's Minmax Principle}
+\subsection*{Yao's Min-Max Principle}
 
 Let $A^{\mathrm{rand}}$ be a randomized algorithm, and let $\expectation{A^{\mathrm{rand}}}$ be its
 expected number of queries on its worst input. Let $\mu$ be a probability distribution over the inputs,
@@ -109,7 +109,25 @@ In general, let
         0 & \text{with probability } 1 - p_i,
     \end{cases}\]
 where the $X_i$ are independent Bernoulli random variables. If $p_i = p$ for all $i$, then
-$\expectation{X} = np$ and $\variance{X} = np(1-p)$.
+$\expectation{X} = np$ and $\variance{X} = np(1-p)$. \Cref{fig:chernoff-0901} shows the
+distribution of $X$ around its mean $np$.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[scale=0.82]
+        \draw[->] (-0.4,0) -- (8.6,0);
+        \draw[->] (0,0) -- (0,2.9);
+        \foreach \x/\l in {0.55/{\tfrac{1}{3}np}, 2.6/{np}, 5.2/{3np}, 7.9/{n}} {
+                \draw (\x,0.08) -- (\x,-0.08) node[below] {\small $\l$};
+            }
+        \node[below left] at (0,0) {\small $0$};
+        \draw[thick] plot[smooth] coordinates
+            {(0,0.7) (1.2,1.7) (2.6,2.5) (3.9,1.9) (5.2,0.9) (6.6,0.45) (7.9,0.25)};
+        \draw[dashed] (5.2,0) -- (5.2,0.9);
+    \end{tikzpicture}
+    \caption{The distribution of $X$, with mean $np$.}
+    \label{fig:chernoff-0901}
+\end{figure}
 
 \begin{theorem}[Chernoff Bounds]\label{thm:chernoff-0901}
     Let $X = \sum_{i=1}^{n} X_i$ be as above and let $\mu = \expectation{X}$.

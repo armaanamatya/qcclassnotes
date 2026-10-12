@@ -1,6 +1,6 @@
-In this first lecture, we look at two basic problems, primality/factoring and search, introduce
-random sampling, prove a lower bound of $n-1$ queries for deterministic search, and review the basics
-of probability.
+% In this first lecture, we look at two basic problems, primality/factoring and search, introduce
+% random sampling, prove a lower bound of $n-1$ queries for deterministic search, and review the basics
+% of probability.
 
 \section{Efficient Algorithms: Primes and Factoring}
 
@@ -47,7 +47,7 @@ $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac
                 \node (b\x) at (2.6+0.4*\x,-1.1) {$\b$};
             }
         \draw[->] (b4.south) ++(0,-0.9) -- (b4.south);
-        \node[below] at (4.2,-2.0) {\small coin flip};
+        \node[below] at (4.2,-2.25) {\small coin flip};
         \draw[decorate, decoration={brace, amplitude=5pt}] (2.4,-0.8) -- (6.0,-0.8)
         node[midway, above=6pt] {\small $\log n$ bits per index};
     \end{tikzpicture}

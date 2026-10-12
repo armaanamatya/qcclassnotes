@@ -1,6 +1,6 @@
-In this lecture, we show that the \emph{classical} query complexity of Simon's problem is
-$\bigTh{\sqrt{N}}$, where $N = 2^n$, and that the strings measured by Simon's quantum algorithm are
-linearly independent with probability at least $\sfrac{1}{4}$.
+% In this lecture, we show that the \emph{classical} query complexity of Simon's problem is
+% $\bigTh{\sqrt{N}}$, where $N = 2^n$, and that the strings measured by Simon's quantum algorithm are
+% linearly independent with probability at least $\sfrac{1}{4}$.
 
 \section{Simon's Problem, Classically}
 
@@ -71,7 +71,7 @@ We query random inputs and wait for a collision.
     some input. So every such algorithm needs $\bigOm{\sqrt{N}} = \bigOm{\sqrt{2^n}}$ queries.
 \end{theorem}
 
-\begin{lemma}[Yao's Minmax Principle, Easy Direction]\label{lem:yao-1001}
+\begin{lemma}[Yao's Min-Max Principle, Easy Direction]\label{lem:yao-1001}
     Let $\mu$ be a probability distribution on the inputs. If every deterministic algorithm that makes at
     most $k$ queries errs with probability greater than $\delta$ on an input drawn from $\mu$, then every
     randomized algorithm that makes at most $k$ queries errs with probability greater than $\delta$ on
@@ -172,7 +172,7 @@ injective assignment can be built one value at a time, each uniform among the un
 
 \begin{corollary}[Decision Version]\label{cor:simon-decision-1001}
     Let $n \geq 2$. Every randomized classical algorithm that decides, with success probability at
-    least $\sfrac{2}{3}$ on every input, whether $f$ is $1$-to-$1$ or $2$-to-$1$ makes more than
+    least $\sfrac{2}{3}$ on every input, whether $f$ is $1$-to-$1$ or $2$-to-$1$, makes more than
     $\sfrac{\sqrt{N}}{2}$ queries on some input.
 \end{corollary}
 
@@ -221,7 +221,7 @@ injective assignment can be built one value at a time, each uniform among the un
 
 \section{Simon's Algorithm Revisited}
 
-In the state \cref{eq:simon-final-0929} just before the measurement, the probability of measuring
+In the state of \cref{eq:simon-final-0929} just before the measurement, the probability of measuring
 $y$ in the control register is the sum of the squared amplitudes of all basis states
 $\ket{y}\ket{z}$ with this $y$. This is the squared norm of the vector that multiplies $\ket{y}$:
 \[\prob{y} = \norm{\frac{1}{2^n} \sum_{x \in \set{0,1}^n} (-1)^{x \cdot y} \ket{f(x)}}_2^2.\]

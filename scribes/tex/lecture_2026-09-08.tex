@@ -1,6 +1,6 @@
-We define the synchronous complete network model and analyze a randomized algorithm that elects a
-leader in $\bigO{1}$ rounds with $\bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$ messages. We then define
-random walks on undirected graphs and prove the weak law of large numbers with Chebyshev's inequality.
+% We define the synchronous complete network model and analyze a randomized algorithm that elects a
+% leader in $\bigO{1}$ rounds with $\bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$ messages. We then define
+% random walks on undirected graphs and prove the weak law of large numbers with Chebyshev's inequality.
 
 \section{Distributed Computing in a Complete Network}
 
@@ -224,16 +224,17 @@ common referee: $C_u = C_v = 1$ and $R_u \cap R_v = \emptyset$.
 \end{proof}
 \end{exercisebox}
 
-\begin{theorem}[Exactly One Leader]\label{thm:leader-0908}
-    The algorithm elects exactly one leader with probability at least
-    \[1 - \frac{1}{n^2} - \frac{2 \log^2 n}{n}.\]
-\end{theorem}
-
-\begin{proof}
-    The algorithm fails if there is no leader or more than one leader. By the union bound and
-    \cref{thm:leader-atleast-0908,thm:leader-atmost-0908}, this has probability at most
-    $\frac{1}{n^2} + \frac{2 \log^2 n}{n}$.
-\end{proof}
+% Commented out: this theorem is not in the lecture notes.
+% \begin{theorem}[Exactly One Leader]\label{thm:leader-0908}
+%     The algorithm elects exactly one leader with probability at least
+%     \[1 - \frac{1}{n^2} - \frac{2 \log^2 n}{n}.\]
+% \end{theorem}
+% 
+% \begin{proof}
+%     The algorithm fails if there is no leader or more than one leader. By the union bound and
+%     \cref{thm:leader-atleast-0908,thm:leader-atmost-0908}, this has probability at most
+%     $\frac{1}{n^2} + \frac{2 \log^2 n}{n}$.
+% \end{proof}
 
 \subsection{Messages and Rounds}
 
@@ -294,7 +295,7 @@ $\frac{1}{\deg(j)}$. So by the law of total probability,
     \label{fig:walks-0908}
 \end{figure}
 
-\begin{example}
+\begin{example}\label{exa:walks-0908}
     In the graph on the left of \cref{fig:walks-0908}, a walker that starts at node $1$ has
     $p_0 = (1, 0, 0, 0, 0, 0)$ and, since node $1$ has the $4$ neighbours $2$, $3$, $5$, $6$,
     $p_1 = \left(0, \tfrac{1}{4}, \tfrac{1}{4}, 0, \tfrac{1}{4}, \tfrac{1}{4}\right)$. In the triangle
@@ -303,25 +304,26 @@ $\frac{1}{\deg(j)}$. So by the law of total probability,
     $p_2 = \left(\tfrac{1}{2}, \tfrac{1}{4}, \tfrac{1}{4}\right)$.
 \end{example}
 
-\begin{exercisebox}
-\begin{exercise}\label{ex:triangle-0908}\label{lem:triangle-0908}
-    Show that for the random walk on the triangle that starts at node $1$, for all $t \geq 0$,
-    \[p_t^1 = \frac{1}{3} + \frac{2}{3} \left(-\frac{1}{2}\right)^{t},
-        \qquad
-        p_t^2 = p_t^3 = \frac{1}{3} - \frac{1}{3} \left(-\frac{1}{2}\right)^{t},\]
-    so $p_t$ converges to $\left(\frac{1}{3}, \frac{1}{3}, \frac{1}{3}\right)$ as $t \to \infty$.
-\end{exercise}
-\tcblower
-\begin{proof}
-    Let $i$ be any of the three nodes, and let $j$ and $l$ be the other two. Both are neighbours of
-    $i$ and have degree $2$. By \cref{eq:walkstep-0908} and $p_t^i + p_t^j + p_t^l = 1$,
-    $p_{t+1}^i = \frac{1}{2} \left(p_t^j + p_t^l\right) = \frac{1}{2} \left(1 - p_t^i\right)$, so
-    $p_{t+1}^i - \frac{1}{3} = -\frac{1}{2} \left(p_t^i - \frac{1}{3}\right)$.
-    By induction on $t$, $p_t^i = \frac{1}{3} + \left(p_0^i - \frac{1}{3}\right) \left(-\frac{1}{2}\right)^{t}$.
-    With $p_0^1 = 1$ and $p_0^2 = p_0^3 = 0$ this gives the two formulas, and
-    $\left(-\frac{1}{2}\right)^{t} \to 0$ gives the limit.
-\end{proof}
-\end{exercisebox}
+% Commented out: this exercise is not in the lecture notes.
+% \begin{exercisebox}
+% \begin{exercise}\label{ex:triangle-0908}\label{lem:triangle-0908}
+%     Show that for the random walk on the triangle that starts at node $1$, for all $t \geq 0$,
+%     \[p_t^1 = \frac{1}{3} + \frac{2}{3} \left(-\frac{1}{2}\right)^{t},
+%         \qquad
+%         p_t^2 = p_t^3 = \frac{1}{3} - \frac{1}{3} \left(-\frac{1}{2}\right)^{t},\]
+%     so $p_t$ converges to $\left(\frac{1}{3}, \frac{1}{3}, \frac{1}{3}\right)$ as $t \to \infty$.
+% \end{exercise}
+% \tcblower
+% \begin{proof}
+%     Let $i$ be any of the three nodes, and let $j$ and $l$ be the other two. Both are neighbours of
+%     $i$ and have degree $2$. By \cref{eq:walkstep-0908} and $p_t^i + p_t^j + p_t^l = 1$,
+%     $p_{t+1}^i = \frac{1}{2} \left(p_t^j + p_t^l\right) = \frac{1}{2} \left(1 - p_t^i\right)$, so
+%     $p_{t+1}^i - \frac{1}{3} = -\frac{1}{2} \left(p_t^i - \frac{1}{3}\right)$.
+%     By induction on $t$, $p_t^i = \frac{1}{3} + \left(p_0^i - \frac{1}{3}\right) \left(-\frac{1}{2}\right)^{t}$.
+%     With $p_0^1 = 1$ and $p_0^2 = p_0^3 = 0$ this gives the two formulas, and
+%     $\left(-\frac{1}{2}\right)^{t} \to 0$ gives the limit.
+% \end{proof}
+% \end{exercisebox}
 
 \section{The Law of Large Numbers}
 

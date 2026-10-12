@@ -1,0 +1,175 @@
+% In this lecture, we look at search and satisfiability, define the expectation of a random variable,
+% and compute it for the Bernoulli, binomial and geometric random variables.
+
+\section{Search and Satisfiability}
+
+A \emph{query} in Grover's algorithm asks for the element at one index of the input.
+
+The \emph{SAT problem} asks for an assignment of the variables of a boolean function
+$f(x_1, x_2, \dots, x_n)$ that makes $f = 1$. No polynomial-time algorithm is known. In \emph{3-SAT}
+the function is given in conjunctive normal form,
+\[f = C_1 \wedge C_2 \wedge \dots \wedge C_m,\]
+and a clause such as $C_1 = (x_2 \vee \bar{x}_3)$ contains at most three variables. There is a
+randomized algorithm for 3-SAT with running time $\bigO{\left(\sfrac{4}{3}\right)^n}$.
+
+SAT is a search over the $2^n$ assignments, so Grover's algorithm solves it with
+$\bigO{\sqrt{2^n}} = \bigO{2^{n/2}}$ queries, where $2^{n/2} = (\sqrt{2})^n$ and
+$\sqrt{2} \approx 1.41$. In the same way Grover's algorithm applies to every
+problem that is a search for an input with a given function value.
+
+A quantum advantage has to be shown against randomized algorithms, so we need lower bounds for them
+and not only for deterministic algorithms.
+
+\section{Random Sampling and Expectation}
+
+Random sampling is the basis of many randomized algorithms. Unless another distribution is given, the
+samples are uniform, so one sample from an array of $n$ elements hits a fixed element with
+probability $\sfrac{1}{n}$.
+
+Let $S$ be a sample space with probability function $\Pr$ as in the lecture of August 25, except
+that $S$ may now be countably infinite. For random sampling we take $X$ to be the number of queries until the element is found.
+Its values are $1, 2, 3, \dots$ when we sample with replacement and $1, \dots, n$ when we sample
+without replacement.
+
+\begin{definition}[Expectation]\label{def:expectation-0827}
+    The \textbf{expectation} of a random variable $X$, also called its \emph{first moment}, is
+    \[\expectation{X} = \sum_{x \in \operatorname{range}(X)} x \cdot \prob{X = x}.\]
+\end{definition}
+
+All random variables in this lecture are nonnegative, so every sum below has nonnegative terms and
+can be reordered.
+
+\begin{theorem}[Linearity of Expectation]\label{thm:linearity-0827}
+    Let $X = \sum_{i=1}^{n} X_i$, where the $X_i$ are nonnegative random variables on the same
+    sample space. Then
+    \[\expectation{X} = \sum_{i=1}^{n} \expectation{X_i}.\]
+\end{theorem}
+
+\begin{proof}
+    Grouping the simple events $s$ by the value $X(s)$ gives
+    $\expectation{X} = \sum_{s \in S} X(s) \prob{s}$. So
+    \[\expectation{X} = \sum_{s \in S} \sum_{i=1}^{n} X_i(s) \prob{s}
+        = \sum_{i=1}^{n} \sum_{s \in S} X_i(s) \prob{s} = \sum_{i=1}^{n} \expectation{X_i}.\]
+\end{proof}
+
+The $X_i$ do not have to be independent.
+
+\paragraph{Independence.} Two events $A$ and $B$ are \textbf{independent} if
+$\prob{A \cap B} = \prob{A} \prob{B}$, and \textbf{mutually exclusive} if $A \cap B = \emptyset$.
+The two notions are not the same. Two random variables $X$ and $Y$ are independent if
+$\prob{X = x \text{ and } Y = y} = \prob{X = x} \prob{Y = y}$ for all $x$ and $y$. Random variables
+$X_1, \dots, X_n$ are independent if
+$\prob{X_1 = x_1 \text{ and } \dots \text{ and } X_n = x_n} = \prod_{i=1}^{n} \prob{X_i = x_i}$ for
+all values $x_1, \dots, x_n$.
+
+\section{Bernoulli, Binomial and Geometric Random Variables}
+
+Three random variables appear again and again in the analysis of randomized algorithms.
+
+\begin{definition}[Bernoulli Random Variable]\label{def:bernoulli-0827}
+    A random variable is \textbf{Bernoulli} (or $0$-$1$, or an \emph{indicator}) with parameter $p$
+    if it is $1$ with probability $p$ and $0$ with probability $1 - p$.
+\end{definition}
+
+Its expectation is $1 \cdot p + 0 \cdot (1 - p) = p$.
+
+\begin{definition}[Binomial Random Variable]\label{def:binomial-0827}
+    A \textbf{binomial} random variable is a sum of $n$ independent Bernoulli random variables with
+    the same parameter $p$,
+    \[B(n, p) = \sum_{i=1}^{n} X_i.\]
+    It counts the successes among $n$ independent trials with success probability $p$.
+\end{definition}
+
+A fixed pattern with $k$ successes and $n - k$ failures has probability $p^k (1 - p)^{n - k}$ by
+independence, and there are $\binom{n}{k}$ such patterns, so
+$\prob{B(n, p) = k} = \binom{n}{k} p^k (1 - p)^{n - k}$.
+
+\begin{theorem}\label{thm:binomial-0827}
+    $\expectation{B(n, p)} = \sum_{k=0}^{n} k \cdot \prob{B(n, p) = k} = np$.
+\end{theorem}
+
+\begin{proof}
+    The first equality is \cref{def:expectation-0827}. By linearity of expectation
+    (\cref{thm:linearity-0827}),
+    \[\expectation{B(n, p)} = \expectation{\sum_{i=1}^{n} X_i} = \sum_{i=1}^{n} \expectation{X_i}
+        = \sum_{i=1}^{n} p = np.\]
+\end{proof}
+
+\begin{definition}[Geometric Random Variable]\label{def:geometric-0827}
+    Consider a sequence of independent Bernoulli trials that each succeed with probability $p > 0$.
+    The number of trials up to and including the first success is a \textbf{geometric} random
+    variable, $X \sim G(p)$.
+\end{definition}
+
+The first success is in trial $k$ if the first $k - 1$ trials fail and trial $k$ succeeds, so
+$\prob{G(p) = k} = (1 - p)^{k - 1} p$ and
+\[\expectation{G(p)} = \sum_{k=1}^{\infty} k \, (1 - p)^{k - 1} p.\]
+We compute this sum with conditional expectation.
+
+\section{Conditional Probability and Conditional Expectation}
+
+\begin{definition}[Conditional Probability]\label{def:condprob-0827}
+    For events $A$ and $B$ with $\prob{B} > 0$,
+    \[\prob{A \given B} = \frac{\prob{A \cap B}}{\prob{B}}.\]
+\end{definition}
+
+This is the probability of $A$ once $B$ is known to have happened.
+
+\begin{definition}[Conditional Expectation]\label{def:condexp-0827}
+    For random variables $X$ and $Y$ and a value $y$ with $\prob{Y = y} > 0$,
+    \[\expectation{X \given Y = y} = \sum_{x \in \operatorname{range}(X)} x \cdot \prob{X = x \given Y = y}.\]
+    The \textbf{conditional expectation} $\expectation{X \given Y}$ takes the value
+    $\expectation{X \given Y = y}$ when $Y = y$.
+\end{definition}
+
+An expectation is a number, but $\expectation{X \given Y}$ is a random variable. It is a function
+$f(Y)$ of $Y$.
+
+\begin{theorem}\label{thm:tower-0827}
+    $\expectation{\expectation{X \given Y}} = \expectation{X}$.
+\end{theorem}
+
+\begin{proof}
+    Let $f(y) = \expectation{X \given Y = y}$. Grouping the simple events by the value of $Y$, as in
+    the proof of \cref{thm:linearity-0827}, gives
+    $\expectation{f(Y)} = \sum_{y} f(y) \prob{Y = y}$, where the sums over $y$ are over the values
+    with $\prob{Y = y} > 0$. By \cref{def:condexp-0827,def:condprob-0827},
+    \begin{align*}
+        \expectation{\expectation{X \given Y}}
+         & = \sum_{y} \prob{Y = y} \sum_{x} x \cdot \prob{X = x \given Y = y}
+        = \sum_{x} x \sum_{y} \prob{X = x \text{ and } Y = y}                  \\
+         & = \sum_{x} x \cdot \prob{X = x} = \expectation{X},
+    \end{align*}
+    because the events $Y = y$ are mutually exclusive, one of them occurs, and the values $y$ with
+    $\prob{Y = y} = 0$ add nothing to the sum.
+\end{proof}
+
+\begin{theorem}[Expectation of a Geometric Random Variable]\label{thm:geometric-0827}
+    $\expectation{G(p)} = \sfrac{1}{p}$.
+\end{theorem}
+
+\begin{proof}
+    Let $X \sim G(p)$. If $p = 1$, then $X = 1$ always and $\expectation{X} = 1$. Let $p < 1$, and
+    let $X_1 = 1$ if the first trial succeeds and $X_1 = 0$ otherwise. We condition on $X_1$. If
+    $X_1 = 1$, then $X = 1$. If $X_1 = 0$, then $X \geq 2$, and for $k \geq 2$,
+    \[\prob{X = k \given X_1 = 0} = \frac{(1-p)^{k-1} p}{1 - p} = (1-p)^{k-2} p = \prob{X = k - 1}.\]
+    So $\expectation{X \given X_1 = 0} = \sum_{j \geq 1} (j + 1) \prob{X = j} = \expectation{X} + 1$.
+    By \cref{thm:tower-0827},
+    \begin{align*}
+        \expectation{X}
+         & = \expectation{X \given X_1 = 1} \prob{X_1 = 1} + \expectation{X \given X_1 = 0} \prob{X_1 = 0} \\
+         & = p + (1 - p)\left(\expectation{X} + 1\right)
+        = (1 - p)\expectation{X} + 1.
+    \end{align*}
+    The sum for $\expectation{X}$ converges by the ratio test, since consecutive terms have ratio
+    $\frac{(k+1)(1-p)}{k} \to 1 - p < 1$. So $\expectation{X}$ is finite and we can subtract
+    $(1 - p)\expectation{X}$ on both sides. This gives $p \, \expectation{X} = 1$ and
+    $\expectation{X} = \sfrac{1}{p}$.
+\end{proof}
+
+For random sampling with replacement, $X \sim G\left(\sfrac{1}{n}\right)$, so
+$\expectation{X} = n$.
+
+\paragraph{Two classes of randomized algorithms.} Randomized algorithms are either \emph{Las Vegas}
+or \emph{Monte Carlo} algorithms (\cref{def:mclv-0901}). A lower bound for randomized search
+(\cref{thm:lowerbound}) is shown with Yao's min-max principle.
