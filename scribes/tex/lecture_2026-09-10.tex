@@ -65,12 +65,13 @@ The transition matrix of a random walk on any graph is row stochastic: row $u$ h
 equal to $\sfrac{1}{\deg(u)}$, and its other entries are $0$.
 
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
+\begin{exercisebox}
 \begin{exercise}\label{ex:probvec-0910}\label{thm:probvec-0910}
     Let $P$ be a row stochastic $n \times n$ matrix and let $p$ be a probability vector. Show that
     $pP$ is a probability vector. So if $p_0$ is a probability vector and $p_{t+1} = p_t P$ for all
     $t \geq 0$, then $p_t = p_0 P^t$ is a probability vector for every $t \geq 0$.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     Let $q = pP$, so $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$. Every term is a product of
     two nonnegative numbers, so $q^v \geq 0$. Every row of $P$ and the entries of $p$ sum to $1$, so
@@ -79,6 +80,7 @@ equal to $\sfrac{1}{\deg(u)}$, and its other entries are $0$.
     So $pP$ is a probability vector. The vector $p_0$ is one by assumption, and if $p_t$ is one,
     then so is $p_t P = p_{t+1}$. By induction on $t$, every $p_t$ is a probability vector.
 \end{proof}
+\end{exercisebox}
 
 \subsection{The Transition Matrix of a General Graph}
 

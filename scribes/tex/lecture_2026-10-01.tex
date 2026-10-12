@@ -228,11 +228,12 @@ $\ket{y}\ket{z}$ with this $y$. This is the squared norm of the vector that mult
 
 \subsection{The \texorpdfstring{$1$}{1}-to-\texorpdfstring{$1$}{1} Case}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:simon-11-1001}
     Suppose that $f$ is $1$-to-$1$. What is the probability of measuring a given string $y$ in Simon's
     circuit, and do these probabilities add up to $1$?
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     If $f$ is $1$-to-$1$, the $2^n$ vectors $\ket{f(x)}$ are distinct basis states, so they are
     orthonormal. The vector multiplying $\ket{y}$ then has $2^n$ orthogonal components, each of
@@ -241,6 +242,7 @@ $\ket{y}\ket{z}$ with this $y$. This is the squared norm of the vector that mult
     So the measured $y$ is uniformly distributed over $\set{0,1}^n$, and the probabilities add up to
     $2^n \cdot \sfrac{1}{2^n} = 1$.
 \end{wsolution}
+\end{exercisebox}
 
 \subsection{The \texorpdfstring{$2$}{2}-to-\texorpdfstring{$1$}{1} Case}
 
@@ -259,6 +261,7 @@ algorithm then tests $f(0^n) = f(s')$ with two classical queries. If $f$ is $2$-
 solves the system, so $s' = s$ and the test is true. If $f$ is $1$-to-$1$, the test is false because
 $s' \neq 0^n$ (\cref{thm:simon-0929}).
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:indep-1001}\label{thm:indep-1001}
     Let $V$ be a subspace of $\set{0,1}^n$ of dimension $d \geq 1$, so $\abs{V} = 2^d$, and let
     $y_1, y_2, \dots$ be independent uniformly random elements of $V$. Show that
@@ -275,7 +278,7 @@ $s' \neq 0^n$ (\cref{thm:simon-0929}).
     ($V = \set{y \suchthat s \cdot y = 0}$, $d = n - 1$) and at least $\sfrac{1}{2}$ in the
     $1$-to-$1$ case ($V = \set{0,1}^n$, $d = n$).
 \end{exercise}
-
+\tcblower
 \begin{proof}
     Suppose that $y_1, \dots, y_j$ are linearly independent, $0 \leq j < d$. Their span consists of the
     $2^j$ vectors $\sum_{i \leq j} c_i y_i$ with $c_i \in \set{0,1}$, all different by independence,
@@ -296,3 +299,4 @@ $s' \neq 0^n$ (\cref{thm:simon-0929}).
     the $1$-to-$1$ case each $y_i$ is uniform over $\set{0,1}^n$ (\cref{ex:simon-11-1001}), $d = n$,
     and we take $d - 1$ samples.
 \end{proof}
+\end{exercisebox}

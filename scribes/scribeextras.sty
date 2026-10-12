@@ -81,16 +81,18 @@
 \setlength{\cftparaindent}{3.8em}
 
 % Exercises given in class (the dashed boxes in my handwritten notes).
-% Reuses the `exercise' environment from scribe.sty and draws a dashed frame
-% around it.
-\tcolorboxenvironment{exercise}{%
+% The exercise and its solution are set together in one dashed box:
+%   \begin{exercisebox} \begin{exercise}...\end{exercise} \tcblower \begin{proof}...\end{proof} \end{exercisebox}
+% \tcblower draws the dashed line between the statement and the solution.
+\newtcolorbox{exercisebox}{%
     enhanced,
     breakable,
     colback=white,
     frame hidden,
     boxrule=0pt,
     borderline={0.8pt}{0pt}{black, dashed},
-    left=3mm, right=3mm, top=1mm, bottom=2mm,
+    segmentation style={black, dashed, line width=0.4pt},
+    left=3mm, right=3mm, top=1mm, bottom=2mm, middle=2mm,
     before skip=4mm, after skip=4mm,
 }
 
