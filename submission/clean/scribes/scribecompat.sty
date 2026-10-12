@@ -1,0 +1,10 @@
+\ProvidesPackage{scribecompat}[2026/09/28 Compatibility shims for scribe.sty]
+
+% Load this BEFORE scribe.sty. It lets the unmodified course style file
+% compile on current LaTeX distributions as well as older ones.
+
+% scribe.sty calls \UseCollection{xfrac}{plainmath}, a command that recent
+% releases of xfrac/xtemplate no longer define. scribe.sty redefines \sfrac
+% right afterwards, so an empty fallback changes nothing in the output.
+\RequirePackage{xfrac}
+\providecommand{\UseCollection}[2]{}
