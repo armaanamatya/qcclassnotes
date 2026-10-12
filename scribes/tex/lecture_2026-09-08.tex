@@ -59,10 +59,14 @@ either \emph{labelled} (every node has a unique id) or \emph{anonymous} (no ids)
 first round, and the node with the minimum id becomes the leader. This takes $\bigO{1}$ rounds and
 $n(n-1) = \bigTh{n^2}$ messages.
 
-\paragraph{Anonymous nodes.} A node addresses its edges by $n - 1$ \emph{ports}, numbered
-$1, \dots, n-1$, one per incident edge. It can send a message on a given port and sees on which port
-a message arrives. It does not know which node is at the other end of a port, and the port
-numbering is chosen by an adversary.
+% Commented out: longer wording of the text that follows.
+% \paragraph{Anonymous nodes.} A node addresses its edges by $n - 1$ \emph{ports}, numbered
+% $1, \dots, n-1$, one per incident edge. It can send a message on a given port and sees on which port
+% a message arrives. It does not know which node is at the other end of a port, and the port
+% numbering is chosen by an adversary.
+\paragraph{Anonymous nodes.} A node addresses its $n - 1$ edges by \emph{ports} $1, \dots, n-1$.
+It sees on which port a message arrives, but not which node is at the other end, and an adversary
+chooses the port numbering.
 
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
 \begin{exercisebox}
@@ -74,24 +78,39 @@ numbering is chosen by an adversary.
 \end{exercise}
 \tcblower
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     Fix a deterministic algorithm. Number the nodes by $\mathbb{Z}_n = \set{0, 1, \dots, n-1}$
+%     (addition modulo $n$), and let port $j$ of node $i$ lead to node $i + j$, for $j = 1, \dots, n-1$.
+%     This is a valid port numbering, since $i + 1, \dots, i + (n-1)$ are exactly the nodes other than
+%     $i$. The edge between $i$ and $i + j$ is port $j$ at $i$ and port $n - j$ at $i + j$, since
+%     $(i + j) + (n - j) = i$ in $\mathbb{Z}_n$. So a message sent on port $j$ arrives on port $n - j$.
+%
+%     We show by induction on $t$ that at the end of round $t$ all nodes are in the same state, and
+%     that in round $t$ all nodes send the same message $m_j$ on port $j$, for every $j$ (``no message''
+%     counts as a message). For $t = 0$ all nodes are in the same initial state, and nothing has been
+%     sent. If the claim holds for round $t - 1$, then in round $t$ node $i$ receives on port $q$ the
+%     message that node $i + q$ sent on its port $n - q$, which is the common message $m_{n-q}$ of
+%     round $t - 1$ and does not depend on $i$. So all nodes are in the same state and receive the
+%     same messages on the same ports. The algorithm is deterministic, so they compute the same
+%     new state and send the same messages on the same ports.
+%
+%     Whether a node declares itself the leader depends only on its state. At the end of
+%     every round, either all $n \geq 2$ nodes are leaders or no node is, so there is never exactly
+%     one leader.
     Fix a deterministic algorithm. Number the nodes by $\mathbb{Z}_n = \set{0, 1, \dots, n-1}$
     (addition modulo $n$), and let port $j$ of node $i$ lead to node $i + j$, for $j = 1, \dots, n-1$.
-    This is a valid port numbering, since $i + 1, \dots, i + (n-1)$ are exactly the nodes other than
-    $i$. The edge between $i$ and $i + j$ is port $j$ at $i$ and port $n - j$ at $i + j$, since
-    $(i + j) + (n - j) = i$ in $\mathbb{Z}_n$. So a message sent on port $j$ arrives on port $n - j$.
+    Then the edge between $i$ and $i + j$ is port $j$ at $i$ and port $n - j$ at $i + j$, so a
+    message sent on port $j$ arrives on port $n - j$.
 
-    We show by induction on $t$ that at the end of round $t$ all nodes are in the same state, and
-    that in round $t$ all nodes send the same message $m_j$ on port $j$, for every $j$ (``no message''
-    counts as a message). For $t = 0$ all nodes are in the same initial state, and nothing has been
-    sent. If the claim holds for round $t - 1$, then in round $t$ node $i$ receives on port $q$ the
-    message that node $i + q$ sent on its port $n - q$, which is the common message $m_{n-q}$ of
-    round $t - 1$ and does not depend on $i$. So all nodes are in the same state and receive the
-    same messages on the same ports. The algorithm is deterministic, so they compute the same
-    new state and send the same messages on the same ports.
+    By induction on $t$, at the end of round $t$ all nodes are in the same state, and in round $t$
+    all nodes send the same message $m_j$ on port $j$ (``no message'' counts as a message). This
+    holds for $t = 0$. In round $t$ node $i$ receives on port $q$ the message that node $i + q$ sent
+    on its port $n - q$, which is the common message $m_{n-q}$ of round $t - 1$ for every $i$. So
+    all nodes receive the same messages on the same ports. The algorithm is deterministic, so they
+    move to the same state and send the same messages.
 
-    Whether a node declares itself the leader depends only on its state. At the end of
-    every round, either all $n \geq 2$ nodes are leaders or no node is, so there is never exactly
-    one leader.
+    Whether a node is a leader depends only on its state. So after every round either all
+    $n \geq 2$ nodes are leaders or none is.
 \end{proof}
 \end{exercisebox}
 

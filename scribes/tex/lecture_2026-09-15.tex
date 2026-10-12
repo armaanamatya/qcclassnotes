@@ -239,20 +239,29 @@ probability $\sfrac{1}{2}$ each.
 \end{lemma}
 
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     The columns of the matrix of a gate are the images of the basis states. By \cref{def:cnot-0915},
+%     the images of $\ket{00}, \ket{01}, \ket{10}, \ket{11}$ are
+%     $\ket{00}, \ket{01}, \ket{11}, \ket{10}$, which are
+%     $(1,0,0,0)^T$, $(0,1,0,0)^T$, $(0,0,0,1)^T$, $(0,0,1,0)^T$. These are the four columns of
+%     $U_{\mathrm{CNOT}}$, in this order.
+%
+%     The map $\pi \colon (a, b) \mapsto (a, b \oplus a)$ on $\set{0,1}^2$ is its own inverse, since
+%     $\pi(\pi(a, b)) = (a, b \oplus a \oplus a) = (a, b)$. So $\pi$ is a permutation of the four
+%     basis states, and $U_{\mathrm{CNOT}}$ is a \emph{permutation matrix}: every column is a standard
+%     basis vector, and different columns are different basis vectors.
+%
+%     Every permutation matrix $P$ is unitary. The $(j, k)$ entry of $P^T P$ is the inner product of the
+%     $\nth{j}$ and the $\nth{k}$ column of $P$. These are standard basis vectors, equal if $j = k$ and
+%     different if $j \neq k$. So $P^T P = I$, and since $P$ is real, $P^\dagger P = P^T P = I$.
     The columns of the matrix of a gate are the images of the basis states. By \cref{def:cnot-0915},
-    the images of $\ket{00}, \ket{01}, \ket{10}, \ket{11}$ are
-    $\ket{00}, \ket{01}, \ket{11}, \ket{10}$, which are
-    $(1,0,0,0)^T$, $(0,1,0,0)^T$, $(0,0,0,1)^T$, $(0,0,1,0)^T$. These are the four columns of
-    $U_{\mathrm{CNOT}}$, in this order.
+    $\ket{00}, \ket{01}, \ket{10}, \ket{11}$ go to $\ket{00}, \ket{01}, \ket{11}, \ket{10}$, which
+    are the four columns of $U_{\mathrm{CNOT}}$ in this order. They are the four standard basis
+    vectors, each once, so $U_{\mathrm{CNOT}}$ is a \emph{permutation matrix}.
 
-    The map $\pi \colon (a, b) \mapsto (a, b \oplus a)$ on $\set{0,1}^2$ is its own inverse, since
-    $\pi(\pi(a, b)) = (a, b \oplus a \oplus a) = (a, b)$. So $\pi$ is a permutation of the four
-    basis states, and $U_{\mathrm{CNOT}}$ is a \emph{permutation matrix}: every column is a standard
-    basis vector, and different columns are different basis vectors.
-
-    Every permutation matrix $P$ is unitary. The $(j, k)$ entry of $P^T P$ is the inner product of the
-    $\nth{j}$ and the $\nth{k}$ column of $P$. These are standard basis vectors, equal if $j = k$ and
-    different if $j \neq k$. So $P^T P = I$, and since $P$ is real, $P^\dagger P = P^T P = I$.
+    A permutation matrix $P$ is unitary: the $(j, k)$ entry of $P^T P$ is the inner product of the
+    $\nth{j}$ and the $\nth{k}$ column of $P$, which is $1$ if $j = k$ and $0$ otherwise. So
+    $P^\dagger P = P^T P = I$.
 \end{proof}
 
 In block form, $U_{\mathrm{CNOT}} = \begin{pmatrix} I & 0 \\ 0 & X \end{pmatrix}$. If the control is
@@ -265,20 +274,30 @@ $U^\dagger$ undoes it. Classical gates that take two bits to one bit, such as AN
 \emph{not bijective}, so \emph{not reversible}, and so \emph{not unitary}.
 
 \begin{lemma}[XOR Is Not Reversible]\label{lem:xor-0915}
-    The classical gate $\mathrm{XOR} \colon \set{0,1}^2 \to \set{0,1}$, $(a, b) \mapsto a \oplus b$, is
-    not injective, so its input cannot be recovered from its output. The linear map
+% Commented out: longer wording of the text that follows.
+%     The classical gate $\mathrm{XOR} \colon \set{0,1}^2 \to \set{0,1}$, $(a, b) \mapsto a \oplus b$, is
+%     not injective, so its input cannot be recovered from its output. The linear map
+%     $T \colon \mathbb{C}^4 \to \mathbb{C}^2$ with $T \ket{a b} = \ket{a \oplus b}$ does not preserve
+%     norms, so it is not unitary. The same holds for every gate with two input bits and one output bit.
+    The classical gate $\mathrm{XOR} \colon (a, b) \mapsto a \oplus b$ is not injective, so its
+    input cannot be recovered from its output. The linear map
     $T \colon \mathbb{C}^4 \to \mathbb{C}^2$ with $T \ket{a b} = \ket{a \oplus b}$ does not preserve
-    norms, so it is not unitary. The same holds for every gate with two input bits and one output bit.
+    norms, so it is not unitary. The same holds for AND and OR.
 \end{lemma}
 
 \begin{proof}
-    $\mathrm{XOR}(0,0) = 0 = \mathrm{XOR}(1,1)$, so two different inputs have the same output. For
-    the linear map,
-    $T\left(\ket{00} - \ket{11}\right) = \ket{0} - \ket{0} = 0$, although
-    $\norm{\ket{00} - \ket{11}} = \sqrt{2} \neq 0$. A general gate
-    $g \colon \set{0,1}^2 \to \set{0,1}$ has four inputs and only two outputs, so by the pigeonhole
-    principle two inputs $u \neq v$ have $g(u) = g(v)$. The same argument applies with
-    $\ket{u} - \ket{v}$ (for AND, $u = 00$ and $v = 01$, and for OR, $u = 01$ and $v = 11$).
+% Commented out: longer wording of the text that follows.
+%     $\mathrm{XOR}(0,0) = 0 = \mathrm{XOR}(1,1)$, so two different inputs have the same output. For
+%     the linear map,
+%     $T\left(\ket{00} - \ket{11}\right) = \ket{0} - \ket{0} = 0$, although
+%     $\norm{\ket{00} - \ket{11}} = \sqrt{2} \neq 0$. A general gate
+%     $g \colon \set{0,1}^2 \to \set{0,1}$ has four inputs and only two outputs, so by the pigeonhole
+%     principle two inputs $u \neq v$ have $g(u) = g(v)$. The same argument applies with
+%     $\ket{u} - \ket{v}$ (for AND, $u = 00$ and $v = 01$, and for OR, $u = 01$ and $v = 11$).
+    $\mathrm{XOR}(0,0) = 0 = \mathrm{XOR}(1,1)$, and
+    $T\left(\ket{00} - \ket{11}\right) = \ket{0} - \ket{0} = 0$ although
+    $\norm{\ket{00} - \ket{11}} = \sqrt{2}$. For AND use the inputs $00$ and $01$, and for OR use
+    $01$ and $11$.
 \end{proof}
 
 % Commented out: not in the lecture notes.
