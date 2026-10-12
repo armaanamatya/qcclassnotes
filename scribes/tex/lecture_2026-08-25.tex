@@ -79,18 +79,32 @@ the adversary constructs an input on which the given algorithm performs badly.
     algorithm is wrong on it. So a correct algorithm makes at least $n - 1$ queries.
 \end{proof}
 
-The argument does not apply to \emph{randomized} algorithms, whose queries are not determined by the
-previous answers. Randomized search still needs $\bigOm{n}$ expected queries, by \emph{Yao's min-max
-principle}, and Grover's quantum algorithm needs $\bigO{\sqrt{n}}$ queries. To show a \emph{quantum
-advantage} for a problem, we have to show that it needs $\bigOm{f(n)}$ queries classically but only
-$\littleO{f(n)}$ queries quantumly.
+% Commented out: longer wording of the next three lines.
+% The argument does not apply to \emph{randomized} algorithms, whose queries are not determined by the
+% previous answers. Randomized search still needs $\bigOm{n}$ expected queries, by \emph{Yao's min-max
+% principle}, and Grover's quantum algorithm needs $\bigO{\sqrt{n}}$ queries. To show a \emph{quantum
+% advantage} for a problem, we have to show that it needs $\bigOm{f(n)}$ queries classically but only
+% $\littleO{f(n)}$ queries quantumly.
+Randomized search needs $\bigOm{n}$ expected queries (\emph{Yao's min-max principle}), and Grover's
+quantum algorithm needs $\bigO{\sqrt{n}}$ queries. A \emph{quantum advantage} is a problem with
+$\bigOm{f(n)}$ queries classically and $\littleO{f(n)}$ queries quantumly.
 
 \section{Probability}
 
-A \textbf{sample space} $S$ is a finite set of \emph{simple events}, $\abs{S} = n$. A
-\textbf{probability function} $\Pr \colon S \to [0,1]$ assigns a probability to every simple event.
-An \textbf{event} is a subset $A \subseteq S$, with $\prob{A} = \sum_{a \in A} \prob{a}$. The
-\emph{axioms} are $\prob{A} \geq 0$, $\prob{S} = 1$, and
-$\prob{A_1 \cup \dots \cup A_n} = \sum_{i=1}^{n} \prob{A_i}$ for pairwise disjoint events
-($A_i \cap A_j = \emptyset$ for all $i \neq j$). A \textbf{random variable} is a function
-$X \colon S \to V$ to a set of values $V$, with $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}$.
+% Commented out: paragraph form of the list below.
+% A \textbf{sample space} $S$ is a finite set of \emph{simple events}, $\abs{S} = n$. A
+% \textbf{probability function} $\Pr \colon S \to [0,1]$ assigns a probability to every simple event.
+% An \textbf{event} is a subset $A \subseteq S$, with $\prob{A} = \sum_{a \in A} \prob{a}$. The
+% \emph{axioms} are $\prob{A} \geq 0$, $\prob{S} = 1$, and
+% $\prob{A_1 \cup \dots \cup A_n} = \sum_{i=1}^{n} \prob{A_i}$ for pairwise disjoint events
+% ($A_i \cap A_j = \emptyset$ for all $i \neq j$). A \textbf{random variable} is a function
+% $X \colon S \to V$ to a set of values $V$, with $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}$.
+\begin{itemize}
+    \item \textbf{Sample space:} a finite set $S$ of \emph{simple events}, $\abs{S} = n$.
+    \item \textbf{Probability function:} $\Pr \colon S \to [0,1]$.
+    \item \textbf{Event:} a subset $A \subseteq S$, with $\prob{A} = \sum_{a \in A} \prob{a}$.
+    \item \textbf{Axioms:} $\prob{A} \geq 0$, $\prob{S} = 1$, and
+          $\prob{A_1 \cup \dots \cup A_n} = \sum_{i=1}^{n} \prob{A_i}$ for pairwise disjoint events.
+    \item \textbf{Random variable:} a function $X \colon S \to V$, with
+          $\prob{X = r} = \sum_{s \in S \,:\, X(s) = r} \prob{s}$.
+\end{itemize}

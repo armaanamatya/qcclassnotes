@@ -8,10 +8,13 @@
 Think of $f$ as a Boolean formula and of $x$ as an assignment. In \emph{unique satisfiability} we are
 promised that there is exactly one $x$ with $f(x) = 1$. Let
 \[a = \abs{\set{x \suchthat f(x) = 1}}, \qquad b = \abs{\set{x \suchthat f(x) \neq 1}} = N - a\]
+% Commented out: not in the lecture notes.
+% be the numbers of solutions and of non-solutions. The search is \emph{unstructured}: we know nothing
+% about $f$ except what the queries tell us. For $a = 1$ every classical algorithm, deterministic or
+% randomized, needs $\bigOm{N}$ queries (lectures of September~1 and~3). Grover's algorithm needs
+% $\bigO{\sqrt{N}}$ queries, and $\bigO{\sqrt{N/a}}$ for $a$ solutions.
 be the numbers of solutions and of non-solutions. The search is \emph{unstructured}: we know nothing
-about $f$ except what the queries tell us. For $a = 1$ every classical algorithm, deterministic or
-randomized, needs $\bigOm{N}$ queries (lectures of September~1 and~3). Grover's algorithm needs
-$\bigO{\sqrt{N}}$ queries, and $\bigO{\sqrt{N/a}}$ for $a$ solutions.
+about $f$ except what the queries tell us.
 
 \section{Grover's Algorithm on Two Qubits}
 
@@ -126,10 +129,13 @@ with $f_0(x) = \bar{x}_1 \wedge \bar{x}_2 \wedge \dots \wedge \bar{x}_n$, where 
 so $f_0(x) = 1$ only for $x = 0^n$. Its phase flip is
 \[Z_0 \colon \ket{x} \longmapsto \begin{cases} -\ket{x} & \text{if } x = 0^n, \\ \ket{x} & \text{otherwise}, \end{cases}
     \qquad \text{so} \qquad Z_0 = I - 2 \ket{0^n}\bra{0^n}.\]
+% Commented out: not in the lecture notes.
+% As a matrix, $Z_0$ is the $N \times N$ diagonal matrix with $-1$ in the top left corner and $1$
+% elsewhere. It is implemented like $Z_f$, with an extra qubit in $H\ket{1}$ and the reversible gate
+% $\ket{x}\ket{c} \mapsto \ket{x}\ket{c \oplus (\bar{x}_1 \wedge \dots \wedge \bar{x}_n)}$
+% (a Toffoli gate with $n$ negated controls) in place of the black box. It makes no query to $f$.
 As a matrix, $Z_0$ is the $N \times N$ diagonal matrix with $-1$ in the top left corner and $1$
-elsewhere. It is implemented like $Z_f$, with an extra qubit in $H\ket{1}$ and the reversible gate
-$\ket{x}\ket{c} \mapsto \ket{x}\ket{c \oplus (\bar{x}_1 \wedge \dots \wedge \bar{x}_n)}$
-(a Toffoli gate with $n$ negated controls) in place of the black box. It makes no query to $f$.
+elsewhere.
 
 \paragraph{The diffusion operator $D$.} Let $\ket{h} = H^{\otimes n}\ket{0^n} = \frac{1}{\sqrt{N}} \sum_{x} \ket{x}$
 be the uniform superposition. The diffusion operator is
@@ -150,12 +156,16 @@ be the uniform superposition. The diffusion operator is
     \[D\ket{\psi} = 2\sqrt{N}\mu \ket{h} - \ket{\psi} = 2\mu \sum_{x} \ket{x} - \sum_{x} a_x \ket{x} = \sum_{x} (2\mu - a_x) \ket{x}. \qedhere\]
 \end{proof}
 
-So $D$ is the inversion about the mean of step~3, and it makes no query.
+% Commented out: not in the lecture notes.
+% So $D$ is the inversion about the mean of step~3, and it makes no query.
+So $D$ is the inversion about the mean of step~3.
 
 \paragraph{The Grover iteration.} One iteration of steps 2 and 3 is the operator
 \[G = D Z_f = -H^{\otimes n} Z_0 H^{\otimes n} Z_f.\]
 Grover's algorithm prepares $\ket{h} = H^{\otimes n}\ket{0^n}$, applies $G$ $k$ times and measures
-(\cref{fig:grover-circuit-1006}). It makes $k$ queries, one per iteration.
+% Commented out: not in the lecture notes.
+% (\cref{fig:grover-circuit-1006}). It makes $k$ queries, one per iteration.
+(\cref{fig:grover-circuit-1006}).
 
 \begin{figure}[ht]
     \centering
