@@ -234,11 +234,12 @@ $R_{\phi} = \left(\begin{smallmatrix} \cos\phi & -\sin\phi \\ \sin\phi & \cos\ph
 with $\phi = 2\theta$. So one Grover iteration \emph{rotates} the plane by the angle $2\theta$, from
 $\ket{B}$ towards $\ket{A}$.
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:grover-rotation-1006}
     Compute $G\ket{h} = \sqrt{\sfrac{a}{N}}\, G\ket{A} + \sqrt{\sfrac{b}{N}}\, G\ket{B}$, and verify that
     the matrix of $G$ in \cref{eq:gmatrix-1006} is the rotation $R_{2\theta}$.
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     \emph{The matrix is a rotation.} By \cref{lem:giter-1006} and $\sfrac{(b-a)}{N} = 1 - \sfrac{2a}{N} = \sfrac{2b}{N} - 1$,
     the two columns of the matrix in \cref{eq:gmatrix-1006} are the coordinates of
@@ -259,6 +260,7 @@ $\ket{B}$ towards $\ket{A}$.
     The state starts at the angle $\theta$ from $\ket{B}$ and the iteration adds $2\theta$
     (\cref{fig:rotation-1006}).
 \end{wsolution}
+\end{exercisebox}
 
 \begin{figure}[ht]
     \centering

@@ -233,10 +233,11 @@ are enough: if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
 
 \subsection{A Deterministic Classical Algorithm}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:simon-det-0929}
     Find a deterministic classical algorithm for Simon's problem that makes $\bigO{\sqrt{2^n}}$ queries.
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     We query a set $S$ such that every nonzero string is the XOR of two elements of $S$. A collision
     in $S$ then gives $s$. Let $m = \ceil{n/2}$ and write every $n$-bit string as $x = (u, v)$ with
@@ -262,3 +263,4 @@ are enough: if the $y_i$ are independent and $f$ is $2$-to-$1$, then $s' = s$.
     $x \oplus x' = s$ is correct. If $f$ is $1$-to-$1$ there is no
     collision, and the output $0^n = s$ is correct.
 \end{wsolution}
+\end{exercisebox}

@@ -73,10 +73,11 @@ By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
     = \frac{1}{\sqrt{2}} \sum_{b \in \set{0,1}} (-1)^{ab} \ket{b}.
 \end{equation}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:hback-0924}
     Compute $H \, \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)$ for $a \in \set{0,1}$.
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     By linearity and \cref{eq:hadamard-0924} for $H\ket{0}$ and $H\ket{1}$,
     \[H \, \tfrac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{a}\ket{1}\right)
@@ -85,14 +86,16 @@ By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
     For $a = 0$ this is $\ket{0}$ and for $a = 1$ it is $\ket{1}$, so the result is $\ket{a}$. This
     agrees with $H^2 = I$ (\cref{lem:hh-0915}).
 \end{wsolution}
+\end{exercisebox}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:deutsch-0924}\label{thm:deutsch-0924}
     In the circuit of \cref{fig:deutsch-0924} the second qubit is measured as $\ket{1}$. What does
     the measurement of the first qubit give? Show that the circuit makes one query to $f$ and that
     measuring its first qubit gives $f(0) \oplus f(1)$ with probability $1$. So the outcome is $0$
     if $f$ is constant and $1$ if $f$ is balanced.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     The circuit contains $U_f$ once, so it makes one query.
     After the first two Hadamard gates the state is (by \cref{eq:mixed-0915})
@@ -113,6 +116,7 @@ By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
     The global phase $(-1)^{f(0)}$ does not affect the measurement. The first qubit gives
     $f(0) \oplus f(1)$ with probability $1$, and the second always gives $1$.
 \end{proof}
+\end{exercisebox}
 
 \section{Phase Flip and the \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
@@ -226,6 +230,7 @@ After $U_f$ every qubit gets a second Hadamard gate and is measured. The last qu
     \label{fig:dj-0924}
 \end{figure}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:dj-0924}\label{thm:dj-0924}
     In the circuit of \cref{fig:dj-0924} the state of the $n$ input qubits before the measurement
     is $\frac{1}{2^n} \sum_{y} \sum_{x} (-1)^{f(x) + x \cdot y} \ket{y}$. Show that measuring them
@@ -233,7 +238,7 @@ After $U_f$ every qubit gets a second Hadamard gate and is measured. The last qu
     balanced. So if any of these $n$ measurements gives $1$, then $f$ is balanced; otherwise $f$ is
     constant.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     We use the phase flip form of $U_f$. The last qubit is
     $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = H\ket{1}$ before and after the query. Its second
@@ -250,3 +255,4 @@ After $U_f$ every qubit gets a second Hadamard gate and is measured. The last qu
     the amplitude is $0$. The measurement gives $0^n$ with probability $0$, so at least one of the
     $n$ measurements gives $1$.
 \end{proof}
+\end{exercisebox}

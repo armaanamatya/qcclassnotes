@@ -22,12 +22,13 @@ Let $\ket{h^\perp} = \cos\theta \ket{A} - \sin\theta \ket{B}$. It is a unit vect
 $\braket{h}{h^\perp} = \sin\theta\cos\theta - \cos\theta\sin\theta = 0$, so $\ket{h}$ and
 $\ket{h^\perp}$ are a second orthonormal basis of the plane (\cref{fig:reflections-1008}).
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:diffusion-1008}
     Show that $D = 2\ket{h}\bra{h} - I$, and that for every state
     $\ket{\phi} = c \ket{h} + d \ket{h^\perp}$ of the plane,
     \[D \ket{\phi} = c \ket{h} - d \ket{h^\perp}.\]
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     The first claim is \cref{lem:diffusion-1006}: $H^{\otimes n} H^{\otimes n} = I$ and
     $\bra{0^n} H^{\otimes n} = \bra{h}$ give
@@ -37,6 +38,7 @@ $\ket{h^\perp}$ are a second orthonormal basis of the plane (\cref{fig:reflectio
         = c\ket{h} - d\ket{h^\perp}.\]
     So $D$ is the reflection of the plane about the line of $\ket{h}$.
 \end{wsolution}
+\end{exercisebox}
 
 \paragraph{The sign of $G$.} In class the Grover iteration was also written as
 $G = \left(H^{\otimes n} Z_0 H^{\otimes n}\right)\left(-Z_f\right)$, which is the same operator as
@@ -114,13 +116,14 @@ For Grover's algorithm we take $S = Z_f$, $\ket{\psi} = \ket{h}$ and $T = D = 2\
 Let $M$ be the matrix of the Grover iteration in the basis $(\ket{B}, \ket{A})$
 (\cref{eq:gmatrix-1006}).
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:msquare-1008}
     Show that
     \[M = \begin{pmatrix} \sqrt{\sfrac{b}{N}} & -\sqrt{\sfrac{a}{N}} \\[1ex] \sqrt{\sfrac{a}{N}} & \sqrt{\sfrac{b}{N}} \end{pmatrix}^{2}
         = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}^{2},\]
     that is, the Grover iteration is the rotation by $\theta$ applied twice.
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     Let $R_\theta = \left(\begin{smallmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{smallmatrix}\right)$
     with $\cos\theta = \sqrt{\sfrac{b}{N}}$ and $\sin\theta = \sqrt{\sfrac{a}{N}}$. Multiplying,
@@ -131,6 +134,7 @@ Let $M$ be the matrix of the Grover iteration in the basis $(\ket{B}, \ket{A})$
     This is \cref{cor:hk-1008} in matrix form: $\ket{h}$ is the first column
     $(\cos\theta, \sin\theta)^T$ of $R_\theta$, so $M^k\ket{h}$ is the first column of $R_{(2k+1)\theta}$.
 \end{wsolution}
+\end{exercisebox}
 
 \section{The Number of Iterations}\label{sec:iterations-1008}
 
@@ -139,13 +143,14 @@ $k \approx \frac{\pi}{4\theta} - \frac{1}{2}$. With $\theta \approx \sin\theta =
 we take
 \[k = \floor{\frac{\pi}{4}\sqrt{\frac{N}{a}}}, \qquad \text{for a unique solution} \quad k = \floor{\frac{\pi}{4}\sqrt{N}}.\]
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:iterations-1008}\label{thm:iterations-1008}
     Let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$, and let
     $\kappa = \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$. Show that Grover's algorithm with $k = \floor{\kappa}$
     iterations makes $k \geq 1$ queries and outputs a solution with probability at least
     $1 - \sfrac{2a}{N}$ (at least $1 - \sfrac{2}{N}$ for a unique solution).
 \end{exercise}
-
+\tcblower
 \begin{proof}
     Let $t = \frac{\pi}{4\theta} - \frac{1}{2}$, so that $(2t+1)\theta = \sfrac{\pi}{2}$ and
     $(2k+1)\theta = \frac{\pi}{2} + 2(k-t)\theta$ for every integer $k$. By \cref{cor:hk-1008},
@@ -180,6 +185,7 @@ we take
     \[1 - 4 \cdot \frac{25}{64} \cdot \frac{5a}{4N} = 1 - \frac{125}{64} \cdot \frac{a}{N} \geq 1 - \frac{2a}{N}.\]
     Also $\kappa \geq \frac{\pi}{4}\sqrt{2} > 1$ because $\sfrac{N}{a} \geq 2$, so $k \geq 1$.
 \end{proof}
+\end{exercisebox}
 
 With $\ceil{\kappa}$ instead of $\floor{\kappa}$, the bound fails in general.
 For $a = \sfrac{N}{4}$ we have $\theta = \sfrac{\pi}{6}$ and $\kappa = \sfrac{\pi}{2} \approx 1.57$.
@@ -192,6 +198,7 @@ The number of iterations $\floor{\frac{\pi}{4}\sqrt{\sfrac{N}{a}}}$ depends on t
 solutions, which we may not know. So we choose $k$ \emph{at random}. Since $\sqrt{N}$ need not be an
 integer, the largest value is $\floor{2\sqrt{N}}$.
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:randomk-1008}\label{thm:randomk-1008}
     Let $N = 2^n$, let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$, and let
     $K = \floor{2\sqrt{N}}$. Choose $k$ uniformly at random from $\set{1, \dots, K}$, make $k$ Grover
@@ -202,7 +209,7 @@ integer, the largest value is $\floor{2\sqrt{N}}$.
     \end{equation}
     so that $\prob{\text{success}} = \bigTh{1}$ with at most $2\sqrt{N} = \bigO{\sqrt{N}}$ queries.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     \emph{The average.} Given $k$, the success probability is $\sin^2((2k+1)\theta)$ by
     \cref{cor:hk-1008}, and each value has probability $\sfrac{1}{K}$. By the law of total probability
@@ -227,6 +234,7 @@ integer, the largest value is $\floor{2\sqrt{N}}$.
     and $\prob{\text{success}} \geq \frac{1}{2} - \frac{1}{8} = \frac{3}{8}$. A probability is at most
     $1$, so $\prob{\text{success}} = \bigTh{1}$. The number of queries is $k \leq K \leq 2\sqrt{N}$.
 \end{proof}
+\end{exercisebox}
 
 For the set $\set{1, \dots, \floor{\sqrt{N}}}$ the same proof with
 $K = \floor{\sqrt{N}} \geq \sqrt{\sfrac{N}{2}}$ gives $\prob{\text{success}} \geq \sfrac{1}{4}$.
@@ -248,6 +256,7 @@ the good state, unrelated to the Grover iteration $G$.
 \emph{Classically} we would run $\mathcal{A}$, measure, check the outcome with $f$, and repeat until
 the outcome is good. The number of runs is geometric with mean $\sfrac{1}{p}$.
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:ampamp-1008}\label{thm:ampamp-1008}
     Let $\theta \in (0, \sfrac{\pi}{2})$ with $\sin\theta = \sqrt{p}$, and let
     \[Q = -\mathcal{A} Z_0 \mathcal{A}^{-1} Z_f.\]
@@ -259,7 +268,7 @@ the outcome is good. The number of runs is geometric with mean $\sfrac{1}{p}$.
     $2k + 1 \leq \frac{\pi}{2\sqrt{p}} + 1 = \bigO{\sfrac{1}{\sqrt{p}}}$ applications of $\mathcal{A}$ or
     $\mathcal{A}^{-1}$ and $k$ queries to $f$.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     \emph{The two reflections.} $Z_f$ negates every good basis state and fixes every bad one, so
     $Z_f\ket{G} = -\ket{G}$ and $Z_f\ket{B} = \ket{B}$. Since $\mathcal{A}$ is unitary,
@@ -290,3 +299,4 @@ the outcome is good. The number of runs is geometric with mean $\sfrac{1}{p}$.
     $k \leq \frac{\pi}{4\theta} \leq \frac{\pi}{4\sin\theta} = \frac{\pi}{4\sqrt{p}}$ because
     $\sin\theta \leq \theta$.
 \end{proof}
+\end{exercisebox}

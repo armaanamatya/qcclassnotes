@@ -30,15 +30,17 @@ $\ket{00}, \ket{01}, \ket{10}, \ket{11}$ are the four standard basis column vect
 $\mathbb{C}^4$, in this order.
 
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
+\begin{exercisebox}
 \begin{exercise}\label{ex:basis-0915}
     What is the third entry of the column vector $\ket{00}$?
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     It is $0$. The third entry is the amplitude of $\ket{10}$, and
     $\ket{00} = 1 \cdot \ket{00} + 0 \cdot \ket{01} + 0 \cdot \ket{10} + 0 \cdot \ket{11}$, so
     $\ket{00} = (1, 0, 0, 0)^T$.
 \end{wsolution}
+\end{exercisebox}
 
 Writing a column vector as a combination of the kets $\ket{x}$ is \emph{Dirac notation}. The state
 $\frac{1}{\sqrt{2}} \ket{0000} + \frac{1}{\sqrt{2}} \ket{1111}$ of four qubits is a column vector
@@ -70,11 +72,12 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
     An $n \times n$ complex matrix $U$ is \textbf{unitary} if $U^\dagger U = I$.
 \end{definition}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:unitary-0915}\label{thm:unitary-0915}
     Let $U$ be an $n \times n$ complex matrix. Show that $\norm{U \ket{x}} = \norm{\ket{x}}$ for all
     $\ket{x} \in \mathbb{C}^n$ if and only if $U$ is unitary ($U^\dagger U = I$).
 \end{exercise}
-
+\tcblower
 \begin{proof}
     \emph{Unitary implies norm preserving.} If $U^\dagger U = I$, then for every $\ket{x}$,
     $\norm{U \ket{x}}^2 = \left(U \ket{x}\right)^\dagger U \ket{x} = \bra{x} U^\dagger U \ket{x}
@@ -108,6 +111,7 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
     column of $M$ and $e_j^\dagger$ picks out its $\nth{j}$ entry, so $0 = e_j^\dagger M e_k = M_{jk}$
     for all $j, k$. Then $M = 0$, which is $U^\dagger U = I$.
 \end{proof}
+\end{exercisebox}
 
 \paragraph{Remark.} For a square matrix, $U^\dagger U = I$ also gives $U U^\dagger = I$. If
 $U \ket{x} = 0$ then $\ket{x} = U^\dagger U \ket{x} = 0$, so $U$ is injective and so invertible.
@@ -313,12 +317,13 @@ $\nth{i}$ block of the right-hand side.
     $\ket{\phi_2}$. Otherwise $\ket{\psi}$ is \textbf{entangled}.
 \end{definition}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:bell-0915}\label{thm:bell-0915}
     Show that the \emph{Bell state} $\frac{1}{\sqrt{2}} \ket{00} + \frac{1}{\sqrt{2}} \ket{11}$ is
     entangled: there are no vectors $\ket{\phi_1}, \ket{\phi_2} \in \mathbb{C}^2$ with
     \[\frac{1}{\sqrt{2}} \ket{00} + \frac{1}{\sqrt{2}} \ket{11} = \ket{\phi_1} \otimes \ket{\phi_2}.\]
 \end{exercise}
-
+\tcblower
 \begin{proof}
     Suppose there are, and write $\ket{\phi_1} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ and
     $\ket{\phi_2} = \begin{pmatrix} \gamma \\ \delta \end{pmatrix}$. By \cref{def:tensor-0915},
@@ -328,3 +333,4 @@ $\nth{i}$ block of the right-hand side.
     $\alpha\gamma = 0 \neq \sfrac{1}{\sqrt{2}}$, and if $\delta = 0$ then
     $\beta\delta = 0 \neq \sfrac{1}{\sqrt{2}}$. Both cases are contradictions.
 \end{proof}
+\end{exercisebox}

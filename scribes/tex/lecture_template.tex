@@ -39,12 +39,14 @@ Text of the notes goes here.
 \end{figure}
 
 % An exercise given in class (dashed box, dash, "Show ..." line, or "?" in my notes).
-% Every such question must be followed by its complete solution: either a named
-% lemma/theorem with a proof, or the wsolution environment below.
+% The exercise holds the full statement and sits in one box with its complete solution
+% (proof or wsolution). Lemmas that the solution needs are stated and proved before the box.
+\begin{exercisebox}
 \begin{exercise}
     Statement of the exercise.
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     Full solution of the exercise.
 \end{wsolution}
+\end{exercisebox}

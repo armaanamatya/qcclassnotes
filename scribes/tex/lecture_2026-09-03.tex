@@ -100,12 +100,6 @@ where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. By linearity of expec
     = \frac{m(m-1)}{2n} \sim \frac{m^2}{2n} = \bigTh{\frac{m^2}{n}}.\]
 For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$.
 
-\begin{exercise}\label{ex:birthday-0903}\label{thm:birthday-0903}
-    Show that the birthday paradox occurs: with $\bigO{\sqrt{n}}$ people,
-    $\prob{X \geq 1} \geq \bigTh{1}$. Precisely, if $m \geq 2\sqrt{n} + 1$, then
-    \[\prob{X \geq 1} \geq \frac{1}{2}.\]
-\end{exercise}
-
 \begin{lemma}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
     The $X_{ij}$ are \emph{pairwise independent}: for any two different pairs
     $\set{i,j} \neq \set{k,l}$,
@@ -147,7 +141,14 @@ For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$
     $\variance{X} \leq \binom{m}{2} \frac{1}{n} = \expectation{X}$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{ex:birthday-0903}]
+\begin{exercisebox}
+\begin{exercise}\label{ex:birthday-0903}\label{thm:birthday-0903}
+    Show that the birthday paradox occurs: with $\bigO{\sqrt{n}}$ people,
+    $\prob{X \geq 1} \geq \bigTh{1}$. Precisely, if $m \geq 2\sqrt{n} + 1$, then
+    \[\prob{X \geq 1} \geq \frac{1}{2}.\]
+\end{exercise}
+\tcblower
+\begin{proof}
     If $X = 0$ then $\abs{X - \expectation{X}} = \expectation{X}$. So by Chebyshev's inequality
     (\cref{thm:chebyshev}) with $a = \expectation{X}$, and then \cref{lem:pairwise-0903},
     \[\prob{X = 0} \leq \prob{\abs{X - \expectation{X}} \geq \expectation{X}}
@@ -156,6 +157,7 @@ For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$
     $\expectation{X} = \frac{m(m-1)}{2n} \geq \frac{(2\sqrt{n} + 1) \cdot 2\sqrt{n}}{2n} \geq 2$,
     so $\prob{X = 0} \leq \sfrac{1}{2}$ and $\prob{X \geq 1} = 1 - \prob{X = 0} \geq \sfrac{1}{2}$.
 \end{proof}
+\end{exercisebox}
 
 \section{Quantum Birthday Paradox}
 
@@ -171,6 +173,7 @@ We may assume that it queries the two points that it outputs. This costs at most
 which does not affect the bound $\bigOm{\sqrt{n}}$. We may also assume that the queried points are
 different, because repeating a query gives no new information.
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:collision-lb-0903}\label{thm:collision-lb-0903}
     Show a $\sqrt{n}$ lower bound in the classical case: for a random function
     $f \colon D \to [n]$, every classical algorithm (deterministic or randomized, adaptive) that
@@ -180,7 +183,7 @@ different, because repeating a query gives no new information.
     So to find a collision with probability at least $\sfrac{1}{2}$ it needs $k > \sqrt{n}$
     queries, and the classical query complexity of the collision problem is $\bigOm{\sqrt{n}}$.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     The algorithm queries the points that it outputs, so it can only find a collision if two of
     its queried values agree. Let $E_s$ be the event that
@@ -195,3 +198,4 @@ different, because repeating a query gives no new information.
     If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then
     $\frac{k(k-1)}{2n} \geq \frac{1}{2}$, so $k^2 > k(k-1) \geq n$ and $k > \sqrt{n}$.
 \end{proof}
+\end{exercisebox}

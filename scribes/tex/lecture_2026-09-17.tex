@@ -63,12 +63,13 @@ is the \emph{column space} of $A$:
 %     $\operatorname{rank}_c(A) = r = \dim(\operatorname{Im}(A))$.
 % \end{proof}
 
+\begin{exercisebox}
 \begin{exercise}\label{ex:example-rank-0917}
     For the matrix $A$ of \cref{eq:columns-0917}, find $\operatorname{rank}_c(A)$,
     $\operatorname{Im}(A)$ and $\operatorname{rank}_r(A)$, and express every row of $A$ as a combination
     of $[1\ 0\ 1]$ and $[0\ 1\ 1]$.
 \end{exercise}
-
+\tcblower
 \begin{wsolution}
     \emph{Columns.} $v_1, v_2$ are independent: $a v_1 + b v_2 = 0$ gives $2a + b = 0$ and
     $3a + b = 0$, so $a = 0$ and then $b = 0$. The three columns are dependent, since
@@ -83,6 +84,7 @@ is the \emph{column space} of $A$:
     first two rows are independent: $a\,[2\ 1\ 3] + b\,[3\ 1\ 4] = 0$ gives $a + b = 0$ (second entry)
     and $2a + 3b = 0$ (first entry), so $a = b = 0$. So $\operatorname{rank}_r(A) = 2$.
 \end{wsolution}
+\end{exercisebox}
 
 % Commented out: this proof is not in the lecture notes.
 % \begin{exercise}\label{ex:rank-equal-0917}
@@ -129,12 +131,13 @@ $a = 0$.
 \end{definition}
 
 \needspace{12\baselineskip} % keep the exercise and the start of its solution on one page
+\begin{exercisebox}
 \begin{exercise}\label{ex:orth-ind-0917}\label{thm:orth-ind-0917}
     Let $v_1, \dots, v_k$ be linearly independent vectors in $\mathbb{R}^n$ or $\mathbb{C}^n$, and let
     $v \neq 0$ be orthogonal to each of them. Show that $v, v_1, \dots, v_k$ are linearly independent,
     so $v \notin \operatorname{span}(v_1, \dots, v_k)$.
 \end{exercise}
-
+\tcblower
 \begin{proof}
     Suppose that $c \, v + c_1 v_1 + \dots + c_k v_k = 0$. Take the inner product of $v$ with
     both sides (it is linear in the second argument) and use $\langle v, v_i \rangle = 0$:
@@ -144,6 +147,7 @@ $a = 0$.
     then $1 \cdot v - \sum_{i} \alpha_i v_i = 0$ would be a combination with a nonzero coefficient
     that gives zero, so $v \notin \operatorname{span}(v_1, \dots, v_k)$.
 \end{proof}
+\end{exercisebox}
 
 \paragraph{Remark.} The assumption $v \neq 0$ is needed. The zero vector is orthogonal to every vector,
 but no set containing it is independent ($1 \cdot 0 = 0$ has a nonzero coefficient).
