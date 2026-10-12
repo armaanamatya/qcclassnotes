@@ -35,14 +35,21 @@
 
 \section{Random Sampling and Expectation}
 
-Random sampling is the basis of many randomized algorithms. Unless another distribution is given, the
-samples are uniform, so one sample from an array of $n$ elements hits a fixed element with
-probability $\sfrac{1}{n}$.
+% Commented out: longer wording of the text that follows.
+% Random sampling is the basis of many randomized algorithms. Unless another distribution is given, the
+% samples are uniform, so one sample from an array of $n$ elements hits a fixed element with
+% probability $\sfrac{1}{n}$.
+%
+% Let $S$ be a sample space with probability function $\Pr$ as in the lecture of August 25, except
+% that $S$ may now be countably infinite. For random sampling we take $X$ to be the number of queries until the element is found.
+% Its values are $1, 2, 3, \dots$ when we sample with replacement and $1, \dots, n$ when we sample
+% without replacement.
+Samples are uniform unless another distribution is given. One sample from an array of $n$ elements
+hits a fixed element with probability $\sfrac{1}{n}$.
 
-Let $S$ be a sample space with probability function $\Pr$ as in the lecture of August 25, except
-that $S$ may now be countably infinite. For random sampling we take $X$ to be the number of queries until the element is found.
-Its values are $1, 2, 3, \dots$ when we sample with replacement and $1, \dots, n$ when we sample
-without replacement.
+The sample space $S$ and $\Pr$ are as in the lecture of August 25, but $S$ may be countably
+infinite. For random sampling, $X$ is the number of queries until the element is found. Its values
+are $1, 2, 3, \dots$ with replacement and $1, \dots, n$ without.
 
 \begin{definition}[Expectation]\label{def:expectation-0827}
     The \textbf{expectation} of a random variable $X$, also called its \emph{first moment}, is
@@ -67,17 +74,26 @@ can be reordered.
 
 The $X_i$ do not have to be independent.
 
-\paragraph{Independence.} Two events $A$ and $B$ are \textbf{independent} if
+% Commented out: longer wording of the text that follows.
+% \paragraph{Independence.} Two events $A$ and $B$ are \textbf{independent} if
+% $\prob{A \cap B} = \prob{A} \prob{B}$, and \textbf{mutually exclusive} if $A \cap B = \emptyset$.
+% The two notions are not the same. Two random variables $X$ and $Y$ are independent if
+% $\prob{X = x \text{ and } Y = y} = \prob{X = x} \prob{Y = y}$ for all $x$ and $y$. Random variables
+% $X_1, \dots, X_n$ are independent if
+% $\prob{X_1 = x_1 \text{ and } \dots \text{ and } X_n = x_n} = \prod_{i=1}^{n} \prob{X_i = x_i}$ for
+% all values $x_1, \dots, x_n$.
+\paragraph{Independence.} Events $A$ and $B$ are \textbf{independent} if
 $\prob{A \cap B} = \prob{A} \prob{B}$, and \textbf{mutually exclusive} if $A \cap B = \emptyset$.
-The two notions are not the same. Two random variables $X$ and $Y$ are independent if
-$\prob{X = x \text{ and } Y = y} = \prob{X = x} \prob{Y = y}$ for all $x$ and $y$. Random variables
-$X_1, \dots, X_n$ are independent if
-$\prob{X_1 = x_1 \text{ and } \dots \text{ and } X_n = x_n} = \prod_{i=1}^{n} \prob{X_i = x_i}$ for
-all values $x_1, \dots, x_n$.
+The two notions are not the same. Random variables $X$ and $Y$ are independent if, for all $x$
+and $y$,
+\[\prob{X = x \text{ and } Y = y} = \prob{X = x} \prob{Y = y}.\]
+Random variables $X_1, \dots, X_n$ are independent if, for all $x_1, \dots, x_n$,
+\[\prob{X_1 = x_1 \text{ and } \dots \text{ and } X_n = x_n} = \prod_{i=1}^{n} \prob{X_i = x_i}.\]
 
 \section{Bernoulli, Binomial and Geometric Random Variables}
 
-Three random variables appear again and again in the analysis of randomized algorithms.
+% Commented out: longer wording of the text that follows.
+% Three random variables appear again and again in the analysis of randomized algorithms.
 
 \begin{definition}[Bernoulli Random Variable]\label{def:bernoulli-0827}
     A random variable is \textbf{Bernoulli} (or $0$-$1$, or an \emph{indicator}) with parameter $p$
@@ -93,9 +109,13 @@ Its expectation is $1 \cdot p + 0 \cdot (1 - p) = p$.
     It counts the successes among $n$ independent trials with success probability $p$.
 \end{definition}
 
+% Commented out: longer wording of the text that follows.
+% A fixed pattern with $k$ successes and $n - k$ failures has probability $p^k (1 - p)^{n - k}$ by
+% independence, and there are $\binom{n}{k}$ such patterns, so
+% $\prob{B(n, p) = k} = \binom{n}{k} p^k (1 - p)^{n - k}$.
 A fixed pattern with $k$ successes and $n - k$ failures has probability $p^k (1 - p)^{n - k}$ by
-independence, and there are $\binom{n}{k}$ such patterns, so
-$\prob{B(n, p) = k} = \binom{n}{k} p^k (1 - p)^{n - k}$.
+independence. There are $\binom{n}{k}$ such patterns, so
+\[\prob{B(n, p) = k} = \binom{n}{k} p^k (1 - p)^{n - k}.\]
 
 \begin{theorem}\label{thm:binomial-0827}
     $\expectation{B(n, p)} = \sum_{k=0}^{n} k \cdot \prob{B(n, p) = k} = np$.
@@ -143,18 +163,32 @@ $f(Y)$ of $Y$.
 \end{theorem}
 
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     Let $f(y) = \expectation{X \given Y = y}$. Grouping the simple events by the value of $Y$, as in
+%     the proof of \cref{thm:linearity-0827}, gives
+%     $\expectation{f(Y)} = \sum_{y} f(y) \prob{Y = y}$, where the sums over $y$ are over the values
+%     with $\prob{Y = y} > 0$. By \cref{def:condexp-0827,def:condprob-0827},
+%     \begin{align*}
+%         \expectation{\expectation{X \given Y}}
+%          & = \sum_{y} \prob{Y = y} \sum_{x} x \cdot \prob{X = x \given Y = y}
+%         = \sum_{x} x \sum_{y} \prob{X = x \text{ and } Y = y}                  \\
+%          & = \sum_{x} x \cdot \prob{X = x} = \expectation{X},
+%     \end{align*}
+%     because the events $Y = y$ are mutually exclusive, one of them occurs, and the values $y$ with
+%     $\prob{Y = y} = 0$ add nothing to the sum.
     Let $f(y) = \expectation{X \given Y = y}$. Grouping the simple events by the value of $Y$, as in
-    the proof of \cref{thm:linearity-0827}, gives
-    $\expectation{f(Y)} = \sum_{y} f(y) \prob{Y = y}$, where the sums over $y$ are over the values
-    with $\prob{Y = y} > 0$. By \cref{def:condexp-0827,def:condprob-0827},
+    the proof of \cref{thm:linearity-0827},
+    \[\expectation{f(Y)} = \sum_{y} f(y) \prob{Y = y},\]
+    with the sums over the $y$ with $\prob{Y = y} > 0$. By
+    \cref{def:condexp-0827,def:condprob-0827},
     \begin{align*}
         \expectation{\expectation{X \given Y}}
          & = \sum_{y} \prob{Y = y} \sum_{x} x \cdot \prob{X = x \given Y = y}
         = \sum_{x} x \sum_{y} \prob{X = x \text{ and } Y = y}                  \\
-         & = \sum_{x} x \cdot \prob{X = x} = \expectation{X},
+         & = \sum_{x} x \cdot \prob{X = x} = \expectation{X}.
     \end{align*}
-    because the events $Y = y$ are mutually exclusive, one of them occurs, and the values $y$ with
-    $\prob{Y = y} = 0$ add nothing to the sum.
+    The third equality holds because the events $Y = y$ are mutually exclusive, one of them
+    occurs, and the $y$ with $\prob{Y = y} = 0$ add nothing.
 \end{proof}
 
 \begin{theorem}[Expectation of a Geometric Random Variable]\label{thm:geometric-0827}
@@ -162,11 +196,29 @@ $f(Y)$ of $Y$.
 \end{theorem}
 
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     Let $X \sim G(p)$. If $p = 1$, then $X = 1$ always and $\expectation{X} = 1$. Let $p < 1$, and
+%     let $X_1 = 1$ if the first trial succeeds and $X_1 = 0$ otherwise. We condition on $X_1$. If
+%     $X_1 = 1$, then $X = 1$. If $X_1 = 0$, then $X \geq 2$, and for $k \geq 2$,
+%     \[\prob{X = k \given X_1 = 0} = \frac{(1-p)^{k-1} p}{1 - p} = (1-p)^{k-2} p = \prob{X = k - 1}.\]
+%     So $\expectation{X \given X_1 = 0} = \sum_{j \geq 1} (j + 1) \prob{X = j} = \expectation{X} + 1$.
+%     By \cref{thm:tower-0827},
+%     \begin{align*}
+%         \expectation{X}
+%          & = \expectation{X \given X_1 = 1} \prob{X_1 = 1} + \expectation{X \given X_1 = 0} \prob{X_1 = 0} \\
+%          & = p + (1 - p)\left(\expectation{X} + 1\right)
+%         = (1 - p)\expectation{X} + 1.
+%     \end{align*}
+%     The sum for $\expectation{X}$ converges by the ratio test, since consecutive terms have ratio
+%     $\frac{(k+1)(1-p)}{k} \to 1 - p < 1$. So $\expectation{X}$ is finite and we can subtract
+%     $(1 - p)\expectation{X}$ on both sides. This gives $p \, \expectation{X} = 1$ and
+%     $\expectation{X} = \sfrac{1}{p}$.
     Let $X \sim G(p)$. If $p = 1$, then $X = 1$ always and $\expectation{X} = 1$. Let $p < 1$, and
-    let $X_1 = 1$ if the first trial succeeds and $X_1 = 0$ otherwise. We condition on $X_1$. If
-    $X_1 = 1$, then $X = 1$. If $X_1 = 0$, then $X \geq 2$, and for $k \geq 2$,
+    let $X_1 = 1$ if the first trial succeeds and $X_1 = 0$ otherwise. If $X_1 = 1$, then $X = 1$.
+    If $X_1 = 0$, then $X \geq 2$, and for $k \geq 2$,
     \[\prob{X = k \given X_1 = 0} = \frac{(1-p)^{k-1} p}{1 - p} = (1-p)^{k-2} p = \prob{X = k - 1}.\]
-    So $\expectation{X \given X_1 = 0} = \sum_{j \geq 1} (j + 1) \prob{X = j} = \expectation{X} + 1$.
+    So
+    \[\expectation{X \given X_1 = 0} = \sum_{j \geq 1} (j + 1) \prob{X = j} = \expectation{X} + 1.\]
     By \cref{thm:tower-0827},
     \begin{align*}
         \expectation{X}
@@ -174,10 +226,9 @@ $f(Y)$ of $Y$.
          & = p + (1 - p)\left(\expectation{X} + 1\right)
         = (1 - p)\expectation{X} + 1.
     \end{align*}
-    The sum for $\expectation{X}$ converges by the ratio test, since consecutive terms have ratio
-    $\frac{(k+1)(1-p)}{k} \to 1 - p < 1$. So $\expectation{X}$ is finite and we can subtract
-    $(1 - p)\expectation{X}$ on both sides. This gives $p \, \expectation{X} = 1$ and
-    $\expectation{X} = \sfrac{1}{p}$.
+    The sum for $\expectation{X}$ converges by the ratio test: consecutive terms have ratio
+    $\frac{(k+1)(1-p)}{k} \to 1 - p < 1$. So $\expectation{X}$ is finite, and subtracting
+    $(1 - p)\expectation{X}$ gives $p \, \expectation{X} = 1$, so $\expectation{X} = \sfrac{1}{p}$.
 \end{proof}
 
 For random sampling with replacement, $X \sim G\left(\sfrac{1}{n}\right)$, so

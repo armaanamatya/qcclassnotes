@@ -14,12 +14,18 @@ Classically we need $2$ queries.
 
 \subsection{The Quantum Query \texorpdfstring{$U_f$}{Uf}}
 
-A quantum circuit is reversible, but $f$ need not be. So we use the reversible
-\emph{quantum version} $U_f$ of $f$, a controlled-$f$ gate like the CNOT gate of
-\cref{def:cnot-0915} (\cref{fig:uf-0924}):
+% Commented out: longer wording of the text that follows.
+% A quantum circuit is reversible, but $f$ need not be. So we use the reversible
+% \emph{quantum version} $U_f$ of $f$, a controlled-$f$ gate like the CNOT gate of
+% \cref{def:cnot-0915} (\cref{fig:uf-0924}):
+A quantum circuit is reversible, but $f$ need not be. So we use its \emph{quantum version} $U_f$,
+a controlled-$f$ gate like CNOT (\cref{def:cnot-0915}, \cref{fig:uf-0924}):
 \[U_f \colon \ket{a}\ket{b} \longmapsto \ket{a}\ket{b \oplus f(a)}.\]
-Applying $U_f$ twice gives back $\ket{a}\ket{b}$, so $U_f$ is reversible. One application of $U_f$
-counts as one query to $f$.
+% Commented out: longer wording of the text that follows.
+% Applying $U_f$ twice gives back $\ket{a}\ket{b}$, so $U_f$ is reversible. One application of $U_f$
+% counts as one query to $f$.
+Applying $U_f$ twice gives back $\ket{a}\ket{b}$, so $U_f$ is reversible. One application is one
+query to $f$.
 
 \begin{figure}[ht]
     \centering
@@ -39,8 +45,11 @@ counts as one query to $f$.
 
 \subsection{The Circuit}
 
-Deutsch's algorithm (\cref{fig:deutsch-0924}) applies a Hadamard gate to each of $\ket{0}$ and
-$\ket{1}$, then $U_f$, then a Hadamard gate to each qubit, and measures.
+% Commented out: longer wording of the text that follows.
+% Deutsch's algorithm (\cref{fig:deutsch-0924}) applies a Hadamard gate to each of $\ket{0}$ and
+% $\ket{1}$, then $U_f$, then a Hadamard gate to each qubit, and measures.
+Deutsch's algorithm (\cref{fig:deutsch-0924}) applies $H$ to each of $\ket{0}$ and $\ket{1}$, then
+$U_f$, then $H$ to each qubit, and measures.
 
 \begin{figure}[ht]
     \centering
@@ -100,22 +109,42 @@ By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
 \end{exercise}
 \tcblower
 \begin{proof}
-    The circuit contains $U_f$ once, so it makes one query.
-    After the first two Hadamard gates the state is (by \cref{eq:mixed-0915})
-    $\ket{\psi_1} = H\ket{0} \otimes H\ket{1}
-        = \frac{1}{2}\left(\ket{0} + \ket{1}\right)\left(\ket{0} - \ket{1}\right)$.
-    For $c \in \set{0,1}$ we have
-    $\ket{0 \oplus c} - \ket{1 \oplus c} = (-1)^{c}\left(\ket{0} - \ket{1}\right)$ (for $c = 1$ the two
-    kets are swapped). So $U_f$ maps $\ket{a}\left(\ket{0} - \ket{1}\right)$ to
+% Commented out: longer wording of the text that follows.
+%     The circuit contains $U_f$ once, so it makes one query.
+%     After the first two Hadamard gates the state is (by \cref{eq:mixed-0915})
+%     $\ket{\psi_1} = H\ket{0} \otimes H\ket{1}
+%         = \frac{1}{2}\left(\ket{0} + \ket{1}\right)\left(\ket{0} - \ket{1}\right)$.
+%     For $c \in \set{0,1}$ we have
+%     $\ket{0 \oplus c} - \ket{1 \oplus c} = (-1)^{c}\left(\ket{0} - \ket{1}\right)$ (for $c = 1$ the two
+%     kets are swapped). So $U_f$ maps $\ket{a}\left(\ket{0} - \ket{1}\right)$ to
+%     $(-1)^{f(a)} \ket{a}\left(\ket{0} - \ket{1}\right)$. By linearity,
+%     \[\ket{\psi_2} = U_f \ket{\psi_1}
+%         = \frac{1}{\sqrt{2}}\left((-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}\right)
+%         \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right).\]
+%     Since $(-1)^{f(1)} = (-1)^{f(0)} (-1)^{f(0) \oplus f(1)}$, the first qubit is
+%     $(-1)^{f(0)} \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{f(0) \oplus f(1)}\ket{1}\right)$. Up to the
+%     sign $(-1)^{f(0)}$, this is the state of \cref{ex:hback-0924} with $a = f(0) \oplus f(1)$. The
+%     second qubit is $H\ket{1}$. So the last two Hadamard gates give
+%     $\ket{\psi_3} = (-1)^{f(0)} \ket{f(0) \oplus f(1)} \ket{1}$.
+%     The global phase $(-1)^{f(0)}$ does not affect the measurement. The first qubit gives
+%     $f(0) \oplus f(1)$ with probability $1$, and the second always gives $1$.
+    The circuit contains $U_f$ once, so it makes one query. After the first two Hadamard gates
+    (\cref{eq:mixed-0915}),
+    \[\ket{\psi_1} = H\ket{0} \otimes H\ket{1}
+        = \frac{1}{2}\left(\ket{0} + \ket{1}\right)\left(\ket{0} - \ket{1}\right).\]
+    For $c \in \set{0,1}$,
+    \[\ket{0 \oplus c} - \ket{1 \oplus c} = (-1)^{c}\left(\ket{0} - \ket{1}\right),\]
+    since $c = 1$ swaps the two kets. So $U_f$ maps $\ket{a}\left(\ket{0} - \ket{1}\right)$ to
     $(-1)^{f(a)} \ket{a}\left(\ket{0} - \ket{1}\right)$. By linearity,
     \[\ket{\psi_2} = U_f \ket{\psi_1}
         = \frac{1}{\sqrt{2}}\left((-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}\right)
         \otimes \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right).\]
+
     Since $(-1)^{f(1)} = (-1)^{f(0)} (-1)^{f(0) \oplus f(1)}$, the first qubit is
-    $(-1)^{f(0)} \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{f(0) \oplus f(1)}\ket{1}\right)$. Up to the
-    sign $(-1)^{f(0)}$, this is the state of \cref{ex:hback-0924} with $a = f(0) \oplus f(1)$. The
-    second qubit is $H\ket{1}$. So the last two Hadamard gates give
-    $\ket{\psi_3} = (-1)^{f(0)} \ket{f(0) \oplus f(1)} \ket{1}$.
+    \[(-1)^{f(0)} \frac{1}{\sqrt{2}}\left(\ket{0} + (-1)^{f(0) \oplus f(1)}\ket{1}\right).\]
+    Up to the sign $(-1)^{f(0)}$, this is the state of \cref{ex:hback-0924} with
+    $a = f(0) \oplus f(1)$. The second qubit is $H\ket{1}$. So the last two Hadamard gates give
+    \[\ket{\psi_3} = (-1)^{f(0)} \ket{f(0) \oplus f(1)} \ket{1}.\]
     The global phase $(-1)^{f(0)}$ does not affect the measurement. The first qubit gives
     $f(0) \oplus f(1)$ with probability $1$, and the second always gives $1$.
 \end{proof}
@@ -123,9 +152,13 @@ By \cref{eq:hadamard-0915}, for $a \in \set{0,1}$,
 
 \section{Phase Flip and the \texorpdfstring{$n$}{n}-Qubit Hadamard Transform}
 
-If the second (target) qubit of $U_f$ is in the state
-$\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then, by the computation in the proof of
-\cref{thm:deutsch-0924}, for every input $x$ (also for $x \in \set{0,1}^n$, where
+% Commented out: longer wording of the text that follows.
+% If the second (target) qubit of $U_f$ is in the state
+% $\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, then, by the computation in the proof of
+% \cref{thm:deutsch-0924}, for every input $x$ (also for $x \in \set{0,1}^n$, where
+% $U_f \colon \ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$),
+If the second (target) qubit of $U_f$ is $\frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$, the
+proof of \cref{thm:deutsch-0924} gives, for every input $x$ (also for $x \in \set{0,1}^n$, where
 $U_f \colon \ket{x}\ket{b} \mapsto \ket{x}\ket{b \oplus f(x)}$),
 \[U_f \, \ket{x} \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = (-1)^{f(x)} \, \ket{x} \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}).\]
 We drop the target qubit and write the query in the \emph{phase flip} form
@@ -144,9 +177,14 @@ For $n = 2$ let $\ket{x} = \ket{x_1 x_2} = \ket{x_1}\ket{x_2}$. By \cref{eq:mixe
      & = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x_1 y_1 + x_2 y_2} \ket{y}
     = \frac{1}{2} \sum_{y \in \set{0,1}^2} (-1)^{x \cdot y} \ket{y},
 \end{align*}
+% Commented out: longer wording of the text that follows.
+% where $x \cdot y = x_1 y_1 \oplus x_2 y_2$, since only the parity of the exponent matters. For
+% example, $(H \otimes H)\ket{01} = \frac{1}{2}\left(\ket{00} - \ket{01} + \ket{10} - \ket{11}\right)$.
+% In general, for $x, y \in \set{0,1}^n$, the inner product of the bit strings modulo $2$ is
 where $x \cdot y = x_1 y_1 \oplus x_2 y_2$, since only the parity of the exponent matters. For
-example, $(H \otimes H)\ket{01} = \frac{1}{2}\left(\ket{00} - \ket{01} + \ket{10} - \ket{11}\right)$.
-In general, for $x, y \in \set{0,1}^n$, the inner product of the bit strings modulo $2$ is
+example,
+\[(H \otimes H)\ket{01} = \frac{1}{2}\left(\ket{00} - \ket{01} + \ket{10} - \ket{11}\right).\]
+For $x, y \in \set{0,1}^n$, the inner product of the bit strings modulo $2$ is
 \[x \cdot y = x_1 y_1 \oplus x_2 y_2 \oplus \dots \oplus x_n y_n.\]
 
 \begin{lemma}[Walsh--Hadamard Transform]\label{lem:wh-0924}
@@ -165,8 +203,12 @@ In general, for $x, y \in \set{0,1}^n$, the inner product of the bit strings mod
     and $(-1)$ to the power $x_1 y_1 + \dots + x_n y_n$ only depends on its parity $x \cdot y$.
 \end{proof}
 
+% Commented out: longer wording of the text that follows.
+% For $x = 0^n = 00 \cdots 0$ we have $x \cdot y = 0$ for every $y$, so
+% $H^{\otimes n} \ket{00 \cdots 0} = \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}$,
+% the uniform superposition.
 For $x = 0^n = 00 \cdots 0$ we have $x \cdot y = 0$ for every $y$, so
-$H^{\otimes n} \ket{00 \cdots 0} = \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x}$,
+\[H^{\otimes n} \ket{00 \cdots 0} = \frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} \ket{x},\]
 the uniform superposition.
 
 \section{Deutsch--Jozsa Algorithm}
@@ -187,19 +229,30 @@ This is a \emph{promise problem}. Let $N = 2^n$ be the number of inputs.
 % that has to succeed with probability $1$.
 \emph{Deterministic:} in the worst case we need $2^{n-1} + 1 = N/2 + 1$ queries.
 
-\emph{Randomized (Monte Carlo):} query $f$ on $\alpha$ independent uniformly random inputs and output
-``balanced'' if two answers differ, ``constant'' otherwise. If $f$ is constant, we are always right. If
-$f$ is balanced, every answer is $0$ or $1$ with probability $\sfrac{1}{2}$ each. We fail only if
-all $\alpha$ answers agree, which has probability
-$2 \cdot (\sfrac{1}{2})^{\alpha} = (\sfrac{1}{2})^{\alpha - 1}$. A constant number of queries gives a
-constant error probability, and $\alpha = \bigO{\log N}$ queries give error probability $\sfrac{1}{N}$.
+% Commented out: longer wording of the text that follows.
+% \emph{Randomized (Monte Carlo):} query $f$ on $\alpha$ independent uniformly random inputs and output
+% ``balanced'' if two answers differ, ``constant'' otherwise. If $f$ is constant, we are always right. If
+% $f$ is balanced, every answer is $0$ or $1$ with probability $\sfrac{1}{2}$ each. We fail only if
+% all $\alpha$ answers agree, which has probability
+% $2 \cdot (\sfrac{1}{2})^{\alpha} = (\sfrac{1}{2})^{\alpha - 1}$. A constant number of queries gives a
+% constant error probability, and $\alpha = \bigO{\log N}$ queries give error probability $\sfrac{1}{N}$.
+\emph{Randomized (Monte Carlo):} query $f$ on $\alpha$ independent uniformly random inputs. Output
+``balanced'' if two answers differ, ``constant'' otherwise. If $f$ is constant, we are always right.
+If $f$ is balanced, every answer is $0$ or $1$ with probability $\sfrac{1}{2}$ each, and we fail
+only if all $\alpha$ answers agree. This has probability
+\[2 \cdot (\sfrac{1}{2})^{\alpha} = (\sfrac{1}{2})^{\alpha - 1}.\]
+A constant number of queries gives a constant error probability, and $\alpha = \bigO{\log N}$
+queries give error probability $\sfrac{1}{N}$.
 
 \emph{Quantum:} the Deutsch--Jozsa algorithm needs $1$ query (and $n$ measurements) and makes no error.
 
 \subsection{The Algorithm}
 
-The circuit (\cref{fig:dj-0924}) is Deutsch's circuit with $n$ input qubits in $\ket{0}$.
-After $U_f$ every qubit gets a second Hadamard gate and is measured. The last qubit always gives $1$.
+% Commented out: longer wording of the text that follows.
+% The circuit (\cref{fig:dj-0924}) is Deutsch's circuit with $n$ input qubits in $\ket{0}$.
+% After $U_f$ every qubit gets a second Hadamard gate and is measured. The last qubit always gives $1$.
+The circuit (\cref{fig:dj-0924}) is Deutsch's circuit with $n$ input qubits in $\ket{0}$. Every
+qubit is measured, and the last one always gives $1$.
 
 \begin{figure}[ht]
     \centering
@@ -247,19 +300,37 @@ After $U_f$ every qubit gets a second Hadamard gate and is measured. The last qu
 \end{exercise}
 \tcblower
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     We use the phase flip form of $U_f$. The last qubit is
+%     $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = H\ket{1}$ before and after the query. Its second
+%     Hadamard gate gives $\ket{1}$, so we drop it. The first layer of Hadamard gates maps the input
+%     register $\ket{00 \cdots 0}$ to $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}$. Then the query flips the
+%     sign of every $\ket{x}$ with $f(x) = 1$. After the second layer of Hadamard gates, by \cref{lem:wh-0924},
+%     the state is
+%     \[\frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} (-1)^{f(x)} H^{\otimes n} \ket{x}
+%         = \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{f(x) + x \cdot y} \ket{y}.\]
+%     Since $x \cdot 0^n = 0$ for every $x$, the amplitude of $\ket{0^n}$ is
+%     $\frac{1}{2^n} \sum_{x} (-1)^{f(x)}$. If $f$ is constant, all $2^n$ terms are equal and the
+%     amplitude is $\pm 1$. The amplitudes squared sum to $1$, so all others are $0$ and the measurement
+%     gives $0^n$ with probability $1$. If $f$ is balanced, half the terms are $+1$ and half are $-1$, so
+%     the amplitude is $0$. The measurement gives $0^n$ with probability $0$, so at least one of the
+%     $n$ measurements gives $1$.
     We use the phase flip form of $U_f$. The last qubit is
     $\frac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = H\ket{1}$ before and after the query. Its second
-    Hadamard gate gives $\ket{1}$, so we drop it. The first layer of Hadamard gates maps the input
-    register $\ket{00 \cdots 0}$ to $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}$. Then the query flips the
-    sign of every $\ket{x}$ with $f(x) = 1$. After the second layer of Hadamard gates, by \cref{lem:wh-0924},
-    the state is
+    Hadamard gate gives $\ket{1}$, so we drop it.
+
+    The first Hadamard layer maps $\ket{00 \cdots 0}$ to $\frac{1}{\sqrt{2^n}} \sum_{x} \ket{x}$.
+    The query flips the sign of every $\ket{x}$ with $f(x) = 1$. By \cref{lem:wh-0924}, the state
+    after the second layer is
     \[\frac{1}{\sqrt{2^n}} \sum_{x \in \set{0,1}^n} (-1)^{f(x)} H^{\otimes n} \ket{x}
         = \frac{1}{2^n} \sum_{y \in \set{0,1}^n} \sum_{x \in \set{0,1}^n} (-1)^{f(x) + x \cdot y} \ket{y}.\]
     Since $x \cdot 0^n = 0$ for every $x$, the amplitude of $\ket{0^n}$ is
-    $\frac{1}{2^n} \sum_{x} (-1)^{f(x)}$. If $f$ is constant, all $2^n$ terms are equal and the
-    amplitude is $\pm 1$. The amplitudes squared sum to $1$, so all others are $0$ and the measurement
-    gives $0^n$ with probability $1$. If $f$ is balanced, half the terms are $+1$ and half are $-1$, so
-    the amplitude is $0$. The measurement gives $0^n$ with probability $0$, so at least one of the
-    $n$ measurements gives $1$.
+    $\frac{1}{2^n} \sum_{x} (-1)^{f(x)}$.
+
+    If $f$ is constant, all $2^n$ terms are equal and the amplitude is $\pm 1$. The amplitudes
+    squared sum to $1$, so all others are $0$ and the measurement gives $0^n$ with probability $1$.
+
+    If $f$ is balanced, half the terms are $+1$ and half are $-1$, so the amplitude is $0$. The
+    measurement gives $0^n$ with probability $0$, so at least one of the $n$ measurements gives $1$.
 \end{proof}
 \end{exercisebox}

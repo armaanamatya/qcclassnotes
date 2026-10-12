@@ -12,22 +12,37 @@ of both.
         = \alpha \begin{pmatrix} 1 \\ 0 \end{pmatrix} + \beta \begin{pmatrix} 0 \\ 1 \end{pmatrix}
         = \alpha \ket{0} + \beta \ket{1},
         \qquad \abs{\alpha}^2 + \abs{\beta}^2 = 1,\]
+% Commented out: longer wording of the text that follows.
+%     where $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ and
+%     $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$ form the \textbf{computational basis}. The
+%     complex numbers $\alpha, \beta$ are the \textbf{amplitudes}. More generally, the state of $n$
+%     qubits is a unit vector in $\mathbb{C}^{2^n}$,
     where $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ and
-    $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$ form the \textbf{computational basis}. The
-    complex numbers $\alpha, \beta$ are the \textbf{amplitudes}. More generally, the state of $n$
-    qubits is a unit vector in $\mathbb{C}^{2^n}$,
+    $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$ form the \textbf{computational basis} and
+    $\alpha, \beta$ are the \textbf{amplitudes}. The state of $n$ qubits is a unit vector in
+    $\mathbb{C}^{2^n}$,
     \[\ket{\phi} = \sum_{x \in \set{0,1}^n} \alpha_x \ket{x},
         \qquad \sum_{x \in \set{0,1}^n} \abs{\alpha_x}^2 = 1,\]
-    where $\ket{x}$ is the standard basis vector with a $1$ in the position indexed by the bit string
-    $x$ (the $2^n$ strings are listed in increasing binary order) and $0$ elsewhere. Measuring the
-    state gives the outcome $x$ with probability $\abs{\alpha_x}^2$.
+% Commented out: longer wording of the text that follows.
+%     where $\ket{x}$ is the standard basis vector with a $1$ in the position indexed by the bit string
+%     $x$ (the $2^n$ strings are listed in increasing binary order) and $0$ elsewhere. Measuring the
+%     state gives the outcome $x$ with probability $\abs{\alpha_x}^2$.
+    where $\ket{x}$ is the standard basis vector with a $1$ in the position indexed by $x$ (the
+    $2^n$ strings in increasing binary order). Measuring gives $x$ with probability
+    $\abs{\alpha_x}^2$.
 \end{definition}
 
-\paragraph{Two qubits.} The state of two qubits has four amplitudes:
-$(\alpha, \beta, \gamma, \delta)^T = \alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11}$
-with $\abs{\alpha}^2 + \abs{\beta}^2 + \abs{\gamma}^2 + \abs{\delta}^2 = 1$, where
-$\ket{00}, \ket{01}, \ket{10}, \ket{11}$ are the four standard basis column vectors of
-$\mathbb{C}^4$, in this order.
+% Commented out: longer wording of the text that follows.
+% \paragraph{Two qubits.} The state of two qubits has four amplitudes:
+% $(\alpha, \beta, \gamma, \delta)^T = \alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11}$
+% with $\abs{\alpha}^2 + \abs{\beta}^2 + \abs{\gamma}^2 + \abs{\delta}^2 = 1$, where
+% $\ket{00}, \ket{01}, \ket{10}, \ket{11}$ are the four standard basis column vectors of
+% $\mathbb{C}^4$, in this order.
+\paragraph{Two qubits.} A two-qubit state has four amplitudes,
+\[(\alpha, \beta, \gamma, \delta)^T = \alpha \ket{00} + \beta \ket{01} + \gamma \ket{10} + \delta \ket{11},
+    \qquad \abs{\alpha}^2 + \abs{\beta}^2 + \abs{\gamma}^2 + \abs{\delta}^2 = 1,\]
+where $\ket{00}, \ket{01}, \ket{10}, \ket{11}$ are the standard basis vectors of $\mathbb{C}^4$, in
+this order.
 
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
 \begin{exercisebox}
@@ -42,29 +57,51 @@ $\mathbb{C}^4$, in this order.
 \end{wsolution}
 \end{exercisebox}
 
-Writing a column vector as a combination of the kets $\ket{x}$ is \emph{Dirac notation}. The state
-$\frac{1}{\sqrt{2}} \ket{0000} + \frac{1}{\sqrt{2}} \ket{1111}$ of four qubits is a column vector
-with $2^4 = 16$ entries: $\sfrac{1}{\sqrt{2}}$ in the first and in the last position and $0$ in the
-other fourteen.
+% Commented out: longer wording of the text that follows.
+% Writing a column vector as a combination of the kets $\ket{x}$ is \emph{Dirac notation}. The state
+% $\frac{1}{\sqrt{2}} \ket{0000} + \frac{1}{\sqrt{2}} \ket{1111}$ of four qubits is a column vector
+% with $2^4 = 16$ entries: $\sfrac{1}{\sqrt{2}}$ in the first and in the last position and $0$ in the
+% other fourteen.
+Writing a column vector as a combination of the kets $\ket{x}$ is \emph{Dirac notation}. The
+four-qubit state $\frac{1}{\sqrt{2}} \ket{0000} + \frac{1}{\sqrt{2}} \ket{1111}$ has $2^4 = 16$
+entries: $\sfrac{1}{\sqrt{2}}$ in the first and last position, $0$ elsewhere.
 
 \subsection{Kets, Bras and the Dagger}
 
-A \emph{ket} $\ket{\phi}$ is a column vector. The corresponding \emph{bra} is the row vector
-$\bra{\phi} = \left(\ket{\phi}\right)^\dagger$, where $\dagger$ (``dagger'') is the
-\emph{conjugate transpose}: transpose and replace every entry by its complex conjugate. For
-$\ket{\phi} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ we get
-$\bra{\phi} = \begin{pmatrix} \overline{\alpha} & \overline{\beta} \end{pmatrix}$. The dagger equals
-the inverse only for unitary matrices (\cref{def:unitary-0915}).
+% Commented out: longer wording of the text that follows.
+% A \emph{ket} $\ket{\phi}$ is a column vector. The corresponding \emph{bra} is the row vector
+% $\bra{\phi} = \left(\ket{\phi}\right)^\dagger$, where $\dagger$ (``dagger'') is the
+% \emph{conjugate transpose}: transpose and replace every entry by its complex conjugate. For
+% $\ket{\phi} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ we get
+% $\bra{\phi} = \begin{pmatrix} \overline{\alpha} & \overline{\beta} \end{pmatrix}$. The dagger equals
+% the inverse only for unitary matrices (\cref{def:unitary-0915}).
+A \emph{ket} $\ket{\phi}$ is a column vector. The \emph{bra}
+$\bra{\phi} = \left(\ket{\phi}\right)^\dagger$ is a row vector, where $\dagger$ (``dagger'') is the
+\emph{conjugate transpose}: transpose and conjugate every entry. For example,
+\[\ket{\phi} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix},
+    \qquad
+    \bra{\phi} = \begin{pmatrix} \overline{\alpha} & \overline{\beta} \end{pmatrix}.\]
+The dagger equals the inverse only for unitary matrices (\cref{def:unitary-0915}).
 
-A bra times a ket is a number, the \emph{inner product}, and it gives the (Euclidean) norm. For
+% Commented out: longer wording of the text that follows.
+% A bra times a ket is a number, the \emph{inner product}, and it gives the (Euclidean) norm. For
+% $\ket{x}, \ket{y} \in \mathbb{C}^n$ with entries $x_i$, $y_i$,
+A bra times a ket is a number, the \emph{inner product}. It gives the Euclidean norm. For
 $\ket{x}, \ket{y} \in \mathbb{C}^n$ with entries $x_i$, $y_i$,
 \[\braket{x}{y} = \bra{x} \ket{y} = \sum_{i=1}^{n} \overline{x_i} \, y_i,
     \qquad
     \norm{\ket{y}}^2 = \braket{y}{y} = \sum_{i=1}^{n} \abs{y_i}^2.\]
-The inner product is linear in the second argument and conjugate-linear in the first, and
-$\braket{y}{x} = \overline{\braket{x}{y}}$. We use two rules for the dagger:
-$(A^\dagger)^\dagger = A$, and $(AB)^\dagger = B^\dagger A^\dagger$ for matrices $A$, $B$ whose
-product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
+% Commented out: longer wording of the text that follows.
+% The inner product is linear in the second argument and conjugate-linear in the first, and
+% $\braket{y}{x} = \overline{\braket{x}{y}}$. We use two rules for the dagger:
+% $(A^\dagger)^\dagger = A$, and $(AB)^\dagger = B^\dagger A^\dagger$ for matrices $A$, $B$ whose
+% product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
+It is linear in the second argument and conjugate-linear in the first, and
+$\braket{y}{x} = \overline{\braket{x}{y}}$.
+
+For matrices $A$, $B$ whose product is defined,
+\[(A^\dagger)^\dagger = A, \qquad (AB)^\dagger = B^\dagger A^\dagger.\]
+So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
 
 \section{Unitary Matrices}
 
@@ -79,9 +116,14 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
 \end{exercise}
 \tcblower
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     \emph{Unitary implies norm preserving.} If $U^\dagger U = I$, then for every $\ket{x}$,
+%     $\norm{U \ket{x}}^2 = \left(U \ket{x}\right)^\dagger U \ket{x} = \bra{x} U^\dagger U \ket{x}
+%         = \braket{x}{x} = \norm{\ket{x}}^2$.
+%     Norms are non-negative, so $\norm{U \ket{x}} = \norm{\ket{x}}$.
     \emph{Unitary implies norm preserving.} If $U^\dagger U = I$, then for every $\ket{x}$,
-    $\norm{U \ket{x}}^2 = \left(U \ket{x}\right)^\dagger U \ket{x} = \bra{x} U^\dagger U \ket{x}
-        = \braket{x}{x} = \norm{\ket{x}}^2$.
+    \[\norm{U \ket{x}}^2 = \left(U \ket{x}\right)^\dagger U \ket{x} = \bra{x} U^\dagger U \ket{x}
+        = \braket{x}{x} = \norm{\ket{x}}^2.\]
     Norms are non-negative, so $\norm{U \ket{x}} = \norm{\ket{x}}$.
 
     \emph{Norm preserving implies unitary.} Assume $\norm{U \ket{x}} = \norm{\ket{x}}$ for all
@@ -93,12 +135,19 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
               $\bra{x} M \ket{x} = \bra{x} U^\dagger U \ket{x} - \braket{x}{x}
                   = \norm{U \ket{x}}^2 - \norm{\ket{x}}^2 = 0$.
     \end{enumerate}
+% Commented out: longer wording of the text that follows.
+%     Fix $\ket{x}, \ket{y} \in \mathbb{C}^n$ and let $z = \bra{x} M \ket{y}$. A number is its own
+%     transpose, so its conjugate equals its dagger. By property 1,
+%     $\overline{z} = \left(\bra{x} M \ket{y}\right)^\dagger = \bra{y} M^\dagger \ket{x} = \bra{y} M \ket{x}$.
+%     Apply property 2 to $\ket{x} + \ket{y}$, whose bra is $\bra{x} + \bra{y}$, and to
+%     $\ket{x} + i \ket{y}$, whose bra is $\bra{x} - i \bra{y}$ because the dagger conjugates. The
+%     terms $\bra{x} M \ket{x}$ and $\bra{y} M \ket{y}$ are $0$ by property 2, so
     Fix $\ket{x}, \ket{y} \in \mathbb{C}^n$ and let $z = \bra{x} M \ket{y}$. A number is its own
-    transpose, so its conjugate equals its dagger. By property 1,
-    $\overline{z} = \left(\bra{x} M \ket{y}\right)^\dagger = \bra{y} M^\dagger \ket{x} = \bra{y} M \ket{x}$.
-    Apply property 2 to $\ket{x} + \ket{y}$, whose bra is $\bra{x} + \bra{y}$, and to
-    $\ket{x} + i \ket{y}$, whose bra is $\bra{x} - i \bra{y}$ because the dagger conjugates. The
-    terms $\bra{x} M \ket{x}$ and $\bra{y} M \ket{y}$ are $0$ by property 2, so
+    transpose, so its conjugate is its dagger. By property 1,
+    \[\overline{z} = \left(\bra{x} M \ket{y}\right)^\dagger = \bra{y} M^\dagger \ket{x} = \bra{y} M \ket{x}.\]
+    Apply property 2 to $\ket{x} + \ket{y}$ and to $\ket{x} + i \ket{y}$. Their bras are
+    $\bra{x} + \bra{y}$ and $\bra{x} - i \bra{y}$, since the dagger conjugates. The terms
+    $\bra{x} M \ket{x}$ and $\bra{y} M \ket{y}$ are $0$ by property 2, so
     \begin{align*}
         0 & = \left(\bra{x} + \bra{y}\right) M \left(\ket{x} + \ket{y}\right)
         = \bra{x} M \ket{y} + \bra{y} M \ket{x} = z + \overline{z} = 2 \operatorname{Re} z, \\
@@ -106,10 +155,16 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
         = i \bra{x} M \ket{y} - i \bra{y} M \ket{x} = i \left(z - \overline{z}\right)
         = - 2 \operatorname{Im} z.
     \end{align*}
-    So $\bra{x} M \ket{y} = z = 0$ for all $\ket{x}, \ket{y}$. Take $\ket{x} = e_j$ and
-    $\ket{y} = e_k$, the $\nth{j}$ and $\nth{k}$ standard basis vectors. Then $M e_k$ is the $\nth{k}$
-    column of $M$ and $e_j^\dagger$ picks out its $\nth{j}$ entry, so $0 = e_j^\dagger M e_k = M_{jk}$
-    for all $j, k$. Then $M = 0$, which is $U^\dagger U = I$.
+% Commented out: longer wording of the text that follows.
+%     So $\bra{x} M \ket{y} = z = 0$ for all $\ket{x}, \ket{y}$. Take $\ket{x} = e_j$ and
+%     $\ket{y} = e_k$, the $\nth{j}$ and $\nth{k}$ standard basis vectors. Then $M e_k$ is the $\nth{k}$
+%     column of $M$ and $e_j^\dagger$ picks out its $\nth{j}$ entry, so $0 = e_j^\dagger M e_k = M_{jk}$
+%     for all $j, k$. Then $M = 0$, which is $U^\dagger U = I$.
+    So $\bra{x} M \ket{y} = z = 0$ for all $\ket{x}, \ket{y}$.
+
+    Take $\ket{x} = e_j$ and $\ket{y} = e_k$, the $\nth{j}$ and $\nth{k}$ standard basis vectors.
+    $M e_k$ is the $\nth{k}$ column of $M$ and $e_j^\dagger$ picks out its $\nth{j}$ entry, so
+    $0 = e_j^\dagger M e_k = M_{jk}$ for all $j, k$. So $M = 0$, which is $U^\dagger U = I$.
 \end{proof}
 \end{exercisebox}
 
@@ -119,9 +174,13 @@ product is defined. So $\left(U \ket{x}\right)^\dagger = \bra{x} U^\dagger$.
 % Multiplying $U^\dagger U = I$ by $U^{-1}$ on the right gives $U^\dagger = U^{-1}$, so
 % $U U^\dagger = I$. So every unitary matrix is invertible, and its inverse $U^\dagger$ is again unitary.
 
-\paragraph{Remark.} A quantum gate is a linear map that sends every state (every unit vector) to a
-state. Every vector is a multiple of a unit vector, so such a map preserves the norm of all vectors.
-By \cref{thm:unitary-0915} it is unitary. Conversely, every unitary matrix maps states to states.
+% Commented out: longer wording of the text that follows.
+% \paragraph{Remark.} A quantum gate is a linear map that sends every state (every unit vector) to a
+% state. Every vector is a multiple of a unit vector, so such a map preserves the norm of all vectors.
+% By \cref{thm:unitary-0915} it is unitary. Conversely, every unitary matrix maps states to states.
+\paragraph{Remark.} A quantum gate is a linear map that sends states (unit vectors) to states.
+Every vector is a multiple of a unit vector, so the map preserves all norms and is unitary by
+\cref{thm:unitary-0915}. Conversely, every unitary matrix maps states to states.
 
 \section{Quantum Circuits and One-Qubit Gates}
 
@@ -204,9 +263,13 @@ probability $\sfrac{1}{2}$ each.
 \begin{definition}[CNOT Gate]\label{def:cnot-0915}
     The \textbf{controlled-NOT gate} (CNOT) is the two-qubit gate that maps the basis states by
     \[\ket{a} \ket{b} \longmapsto \ket{a} \ket{b \oplus a}, \qquad a, b \in \set{0,1},\]
+% Commented out: longer wording of the text that follows.
+%     where $\oplus$ is XOR (addition modulo $2$). The first qubit $\ket{a}$ is the \textbf{control}
+%     qubit and is left unchanged. The second qubit $\ket{b}$ is the \textbf{target} qubit and is flipped
+%     exactly when $a = 1$. See \cref{fig:cnot-0915}.
     where $\oplus$ is XOR (addition modulo $2$). The first qubit $\ket{a}$ is the \textbf{control}
-    qubit and is left unchanged. The second qubit $\ket{b}$ is the \textbf{target} qubit and is flipped
-    exactly when $a = 1$. See \cref{fig:cnot-0915}.
+    and is unchanged. The second qubit $\ket{b}$ is the \textbf{target} and is flipped exactly when
+    $a = 1$ (\cref{fig:cnot-0915}).
 \end{definition}
 
 \begin{figure}[ht]
@@ -269,9 +332,13 @@ $0$ nothing happens, and if it is $1$ the gate $X$ is applied to the target.
 
 \subsection{Classical Gates Are Not Reversible}
 
-By \cref{thm:unitary-0915} and the remark after it, every quantum gate is unitary, so applying
-$U^\dagger$ undoes it. Classical gates that take two bits to one bit, such as AND, OR and XOR, are
-\emph{not bijective}, so \emph{not reversible}, and so \emph{not unitary}.
+% Commented out: longer wording of the text that follows.
+% By \cref{thm:unitary-0915} and the remark after it, every quantum gate is unitary, so applying
+% $U^\dagger$ undoes it. Classical gates that take two bits to one bit, such as AND, OR and XOR, are
+% \emph{not bijective}, so \emph{not reversible}, and so \emph{not unitary}.
+By \cref{thm:unitary-0915} and the remark after it, every quantum gate is unitary, so
+$U^\dagger$ undoes it. The classical two-bit gates AND, OR and XOR have one output bit. They are
+\emph{not bijective}, so \emph{not reversible} and \emph{not unitary}.
 
 \begin{lemma}[XOR Is Not Reversible]\label{lem:xor-0915}
 % Commented out: longer wording of the text that follows.
@@ -320,18 +387,29 @@ $U^\dagger$ undoes it. Classical gates that take two bits to one bit, such as AN
         = \begin{pmatrix} \alpha\gamma \\ \alpha\delta \\ \beta\gamma \\ \beta\delta \end{pmatrix}.\]
 \end{definition}
 
-For example, $\ket{1} \otimes \ket{0} = (0, 0, 1, 0)^T = \ket{10}$, and
-in general $\ket{a} \ket{b} = \ket{a} \otimes \ket{b} = \ket{a b}$ for $a, b \in \set{0,1}$. In terms
-of kets, $\left(\alpha \ket{0} + \beta \ket{1}\right) \otimes \left(\gamma \ket{0} + \delta \ket{1}\right)
-    = \alpha\gamma \ket{00} + \alpha\delta \ket{01} + \beta\gamma \ket{10} + \beta\delta \ket{11}$.
-If $A$ is applied to the first qubit and $B$ to the second, the two-qubit gate is $A \otimes B$, and
+% Commented out: longer wording of the text that follows.
+% For example, $\ket{1} \otimes \ket{0} = (0, 0, 1, 0)^T = \ket{10}$, and
+% in general $\ket{a} \ket{b} = \ket{a} \otimes \ket{b} = \ket{a b}$ for $a, b \in \set{0,1}$. In terms
+% of kets, $\left(\alpha \ket{0} + \beta \ket{1}\right) \otimes \left(\gamma \ket{0} + \delta \ket{1}\right)
+%     = \alpha\gamma \ket{00} + \alpha\delta \ket{01} + \beta\gamma \ket{10} + \beta\delta \ket{11}$.
+% If $A$ is applied to the first qubit and $B$ to the second, the two-qubit gate is $A \otimes B$, and
+For example, $\ket{1} \otimes \ket{0} = (0, 0, 1, 0)^T = \ket{10}$. For $a, b \in \set{0,1}$,
+$\ket{a} \ket{b} = \ket{a} \otimes \ket{b} = \ket{a b}$, and
+\[\left(\alpha \ket{0} + \beta \ket{1}\right) \otimes \left(\gamma \ket{0} + \delta \ket{1}\right)
+    = \alpha\gamma \ket{00} + \alpha\delta \ket{01} + \beta\gamma \ket{10} + \beta\delta \ket{11}.\]
+If $A$ acts on the first qubit and $B$ on the second, the two-qubit gate is $A \otimes B$, and
 \begin{equation}\label{eq:mixed-0915}
     (A \otimes B)\left(\ket{x} \otimes \ket{y}\right) = A \ket{x} \otimes B \ket{y}.
 \end{equation}
-If $x_1, \dots, x_n$ are the entries of $\ket{x}$, then $\ket{x} \otimes \ket{y}$ consists of
-the blocks $x_1 \ket{y}, \dots, x_n \ket{y}$. So the $\nth{i}$ block of the left-hand side is
-$\sum_{j} a_{ij} B \left(x_j \ket{y}\right) = \left(\sum_j a_{ij} x_j\right) B \ket{y}$, which is the
-$\nth{i}$ block of the right-hand side.
+% Commented out: longer wording of the text that follows.
+% If $x_1, \dots, x_n$ are the entries of $\ket{x}$, then $\ket{x} \otimes \ket{y}$ consists of
+% the blocks $x_1 \ket{y}, \dots, x_n \ket{y}$. So the $\nth{i}$ block of the left-hand side is
+% $\sum_{j} a_{ij} B \left(x_j \ket{y}\right) = \left(\sum_j a_{ij} x_j\right) B \ket{y}$, which is the
+% $\nth{i}$ block of the right-hand side.
+Let $x_1, \dots, x_n$ be the entries of $\ket{x}$. Then $\ket{x} \otimes \ket{y}$ consists of the
+blocks $x_1 \ket{y}, \dots, x_n \ket{y}$, so the $\nth{i}$ block of the left-hand side is
+\[\sum_{j} a_{ij} B \left(x_j \ket{y}\right) = \left(\sum_j a_{ij} x_j\right) B \ket{y},\]
+the $\nth{i}$ block of the right-hand side.
 
 \begin{definition}[Product State, Entangled State]
     A two-qubit state $\ket{\psi}$ is a \textbf{product state} if
@@ -348,12 +426,21 @@ $\nth{i}$ block of the right-hand side.
 \end{exercise}
 \tcblower
 \begin{proof}
-    Suppose there are, and write $\ket{\phi_1} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ and
+% Commented out: longer wording of the text that follows.
+%     Suppose there are, and write $\ket{\phi_1} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ and
+%     $\ket{\phi_2} = \begin{pmatrix} \gamma \\ \delta \end{pmatrix}$. By \cref{def:tensor-0915},
+%     comparing the four entries of the two sides gives $\alpha\gamma = \sfrac{1}{\sqrt{2}}$,
+%     $\alpha\delta = 0$, $\beta\gamma = 0$ and $\beta\delta = \sfrac{1}{\sqrt{2}}$.
+%     From $\alpha\delta = 0$ we get $\alpha = 0$ or $\delta = 0$. If $\alpha = 0$ then
+%     $\alpha\gamma = 0 \neq \sfrac{1}{\sqrt{2}}$, and if $\delta = 0$ then
+%     $\beta\delta = 0 \neq \sfrac{1}{\sqrt{2}}$. Both cases are contradictions.
+    Suppose there are, with $\ket{\phi_1} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ and
     $\ket{\phi_2} = \begin{pmatrix} \gamma \\ \delta \end{pmatrix}$. By \cref{def:tensor-0915},
-    comparing the four entries of the two sides gives $\alpha\gamma = \sfrac{1}{\sqrt{2}}$,
-    $\alpha\delta = 0$, $\beta\gamma = 0$ and $\beta\delta = \sfrac{1}{\sqrt{2}}$.
-    From $\alpha\delta = 0$ we get $\alpha = 0$ or $\delta = 0$. If $\alpha = 0$ then
-    $\alpha\gamma = 0 \neq \sfrac{1}{\sqrt{2}}$, and if $\delta = 0$ then
-    $\beta\delta = 0 \neq \sfrac{1}{\sqrt{2}}$. Both cases are contradictions.
+    comparing entries gives
+    \[\alpha\gamma = \sfrac{1}{\sqrt{2}}, \qquad \alpha\delta = 0, \qquad \beta\gamma = 0,
+        \qquad \beta\delta = \sfrac{1}{\sqrt{2}}.\]
+    From $\alpha\delta = 0$, $\alpha = 0$ or $\delta = 0$. If $\alpha = 0$ then
+    $\alpha\gamma = 0 \neq \sfrac{1}{\sqrt{2}}$. If $\delta = 0$ then
+    $\beta\delta = 0 \neq \sfrac{1}{\sqrt{2}}$. Both are contradictions.
 \end{proof}
 \end{exercisebox}

@@ -41,12 +41,19 @@ other entry.
 \end{lemma}
 
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     Fix a vertex $v$. The events $\set{X_t = u}$, $u \in V$, are disjoint and one of them occurs, so
+%     \[p_{t+1}^v = \prob{X_{t+1} = v} = \sum_{u \in V} \prob{X_t = u \text{ and } X_{t+1} = v}
+%         = \sum_{u \in V} p_t^u P_{uv} = (p_t P)_v.\]
+%     Here $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ by the definition of $P_{uv}$ as a
+%     conditional probability when $p_t^u > 0$, and both sides are $0$ when $p_t^u = 0$. So
+%     $p_{t+1} = p_t P$. Induction on $t$ (with $P^0 = I$) gives $p_t = p_0 P^t$.
     Fix a vertex $v$. The events $\set{X_t = u}$, $u \in V$, are disjoint and one of them occurs, so
     \[p_{t+1}^v = \prob{X_{t+1} = v} = \sum_{u \in V} \prob{X_t = u \text{ and } X_{t+1} = v}
         = \sum_{u \in V} p_t^u P_{uv} = (p_t P)_v.\]
-    Here $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ by the definition of $P_{uv}$ as a
-    conditional probability when $p_t^u > 0$, and both sides are $0$ when $p_t^u = 0$. So
-    $p_{t+1} = p_t P$. Induction on $t$ (with $P^0 = I$) gives $p_t = p_0 P^t$.
+    If $p_t^u > 0$, then $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ because $P_{uv}$
+    is a conditional probability. If $p_t^u = 0$, both sides are $0$. So $p_{t+1} = p_t P$, and
+    induction on $t$ (with $P^0 = I$) gives $p_t = p_0 P^t$.
 \end{proof}
 
 Entry by entry, $p_{t+1} = p_t P$ is \cref{eq:walkstep-0908}. For the triangle with $p_0 = (1,0,0)$,
@@ -73,24 +80,39 @@ equal to $\sfrac{1}{\deg(u)}$, and its other entries are $0$.
 \end{exercise}
 \tcblower
 \begin{proof}
+% Commented out: longer wording of the text that follows.
+%     Let $q = pP$, so $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$. Every term is a product of
+%     two nonnegative numbers, so $q^v \geq 0$. Every row of $P$ and the entries of $p$ sum to $1$, so
+%     $\sum_{v} q^v = \sum_{v} \sum_{u} p^u P_{uv} = \sum_{u} p^u \left(\sum_{v} P_{uv}\right)
+%         = \sum_{u} p^u = 1$.
+%     So $pP$ is a probability vector. The vector $p_0$ is one by assumption, and if $p_t$ is one,
+%     then so is $p_t P = p_{t+1}$. By induction on $t$, every $p_t$ is a probability vector.
     Let $q = pP$, so $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$. Every term is a product of
     two nonnegative numbers, so $q^v \geq 0$. Every row of $P$ and the entries of $p$ sum to $1$, so
-    $\sum_{v} q^v = \sum_{v} \sum_{u} p^u P_{uv} = \sum_{u} p^u \left(\sum_{v} P_{uv}\right)
-        = \sum_{u} p^u = 1$.
-    So $pP$ is a probability vector. The vector $p_0$ is one by assumption, and if $p_t$ is one,
-    then so is $p_t P = p_{t+1}$. By induction on $t$, every $p_t$ is a probability vector.
+    \[\sum_{v} q^v = \sum_{v} \sum_{u} p^u P_{uv} = \sum_{u} p^u \left(\sum_{v} P_{uv}\right)
+        = \sum_{u} p^u = 1.\]
+    So $pP$ is a probability vector. By induction on $t$, every $p_t$ is one: $p_0$ is by
+    assumption, and if $p_t$ is, then so is $p_t P = p_{t+1}$.
 \end{proof}
 \end{exercisebox}
 
 \subsection{The Transition Matrix of a General Graph}
 
+% Commented out: longer wording of the text that follows.
+% Let $A$ be the \emph{adjacency matrix} of $G$, with $A_{uv} = 1$ if $u \sim v$ and $A_{uv} = 0$
+% otherwise. Let $D$ be the diagonal matrix with diagonal entries $d_1, \dots, d_n$. Its inverse
+% $D^{-1}$ has diagonal entries $\sfrac{1}{d_1}, \dots, \sfrac{1}{d_n}$ and exists because there are
+% no isolated vertices. Then $(D^{-1} A)_{uv} = \sfrac{A_{uv}}{\deg(u)}$, which is $P_{uv}$ of
+% \cref{def:walk-0910}, so $P = D^{-1} A$.
+% If $G$ is \emph{$d$-regular}, meaning every vertex has the same degree $d$, then $D = d I$ and
+% $P = \sfrac{A}{d}$. The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
 Let $A$ be the \emph{adjacency matrix} of $G$, with $A_{uv} = 1$ if $u \sim v$ and $A_{uv} = 0$
-otherwise. Let $D$ be the diagonal matrix with diagonal entries $d_1, \dots, d_n$. Its inverse
-$D^{-1}$ has diagonal entries $\sfrac{1}{d_1}, \dots, \sfrac{1}{d_n}$ and exists because there are
-no isolated vertices. Then $(D^{-1} A)_{uv} = \sfrac{A_{uv}}{\deg(u)}$, which is $P_{uv}$ of
-\cref{def:walk-0910}, so $P = D^{-1} A$.
-If $G$ is \emph{$d$-regular}, meaning every vertex has the same degree $d$, then $D = d I$ and
-$P = \sfrac{A}{d}$. The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
+otherwise. Let $D$ be the diagonal matrix with diagonal entries $d_1, \dots, d_n$. There are no
+isolated vertices, so $D^{-1}$ exists, with diagonal entries $\sfrac{1}{d_1}, \dots, \sfrac{1}{d_n}$.
+By \cref{def:walk-0910},
+\[(D^{-1} A)_{uv} = \frac{A_{uv}}{\deg(u)} = P_{uv}, \qquad \text{so} \qquad P = D^{-1} A.\]
+If $G$ is \emph{$d$-regular} (every vertex has degree $d$), then $D = d I$ and $P = \sfrac{A}{d}$.
+The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
 
 \section{Stationary Distribution}
 
@@ -101,13 +123,20 @@ $P = \sfrac{A}{d}$. The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
     Then $\pi$ is a left eigenvector of $P$ with eigenvalue $1$.
 \end{definition}
 
+% Commented out: longer wording of the text that follows.
+% By \cref{lem:evolution-0910}, if $p_t = \pi$ then $p_{t+1} = \pi P = \pi$. Only the neighbours $v$
+% of $u$ have $P_{vu} \neq 0$, and for them $P_{vu} = \sfrac{1}{\deg(v)}$, so (as in
+% \cref{eq:walkstep-0908})
+% \begin{equation}\label{eq:piP-0910}
+%     (\pi P)_u = \sum_{v \in V} \pi_v P_{vu} = \sum_{v \sim u} \frac{\pi_v}{\deg(v)}.
+% \end{equation}
+% The sum runs over the neighbours of $u$, as in \cref{fig:star-0910}.
 By \cref{lem:evolution-0910}, if $p_t = \pi$ then $p_{t+1} = \pi P = \pi$. Only the neighbours $v$
-of $u$ have $P_{vu} \neq 0$, and for them $P_{vu} = \sfrac{1}{\deg(v)}$, so (as in
-\cref{eq:walkstep-0908})
+of $u$ (\cref{fig:star-0910}) have $P_{vu} \neq 0$, and for them $P_{vu} = \sfrac{1}{\deg(v)}$. So,
+as in \cref{eq:walkstep-0908},
 \begin{equation}\label{eq:piP-0910}
     (\pi P)_u = \sum_{v \in V} \pi_v P_{vu} = \sum_{v \sim u} \frac{\pi_v}{\deg(v)}.
 \end{equation}
-The sum runs over the neighbours of $u$, as in \cref{fig:star-0910}.
 
 \begin{figure}[ht]
     \centering
@@ -136,9 +165,14 @@ The sum runs over the neighbours of $u$, as in \cref{fig:star-0910}.
     once in $\deg(u)$ and once in $\deg(v)$. So $\sum_{v \in V} \deg(v) = 2m$ (the handshake lemma)
     and $\sum_{v \in V} \pi_v = 1$.
 
+% Commented out: longer wording of the text that follows.
+%     \emph{$\pi P = \pi$.} For every vertex $u$, by \cref{eq:piP-0910} and $\deg(v) \geq 1$,
+%     $(\pi P)_u = \sum_{v \sim u} \frac{\deg(v)}{2m} \cdot \frac{1}{\deg(v)} = \sum_{v \sim u} \frac{1}{2m}
+%         = \frac{\deg(u)}{2m} = \pi_u$,
+%     since $u$ has $\deg(u)$ neighbours.
     \emph{$\pi P = \pi$.} For every vertex $u$, by \cref{eq:piP-0910} and $\deg(v) \geq 1$,
-    $(\pi P)_u = \sum_{v \sim u} \frac{\deg(v)}{2m} \cdot \frac{1}{\deg(v)} = \sum_{v \sim u} \frac{1}{2m}
-        = \frac{\deg(u)}{2m} = \pi_u$,
+    \[(\pi P)_u = \sum_{v \sim u} \frac{\deg(v)}{2m} \cdot \frac{1}{\deg(v)} = \sum_{v \sim u} \frac{1}{2m}
+        = \frac{\deg(u)}{2m} = \pi_u,\]
     since $u$ has $\deg(u)$ neighbours.
 \end{proof}
 

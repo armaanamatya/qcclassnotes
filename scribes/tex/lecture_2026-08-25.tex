@@ -25,11 +25,18 @@
 The input of the primality problem is the binary representation of $n$, of size $N = \log_2 n$
 bits. An algorithm is \textbf{efficient} if it runs in time polynomial in $N$.
 
+% Commented out: longer wording of the text that follows.
+% Trial division takes $\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time, which is exponential. A deterministic
+% polynomial-time algorithm exists ($\tilde{\mathcal{O}}(N^{6})$) but is not used in practice. The
+% \emph{randomized} Miller--Rabin test takes $\bigO{N^3}$ time: a composite $n$ has at least
+% $\sfrac{3}{4}$ of $\set{2, \dots, n-2}$ as \emph{witnesses} and a prime has none, so $k$ independent
+% samples miss a composite with probability at most $\left(\sfrac{1}{4}\right)^k$.
 Trial division takes $\bigTh{\sqrt{n}} = \bigTh{2^{N/2}}$ time, which is exponential. A deterministic
-polynomial-time algorithm exists ($\tilde{\mathcal{O}}(N^{6})$) but is not used in practice. The
-\emph{randomized} Miller--Rabin test takes $\bigO{N^3}$ time: a composite $n$ has at least
-$\sfrac{3}{4}$ of $\set{2, \dots, n-2}$ as \emph{witnesses} and a prime has none, so $k$ independent
-samples miss a composite with probability at most $\left(\sfrac{1}{4}\right)^k$.
+polynomial-time algorithm exists ($\tilde{\mathcal{O}}(N^{6})$) but is not used in practice.
+
+The \emph{randomized} Miller--Rabin test takes $\bigO{N^3}$ time. A composite $n$ has at least
+$\sfrac{3}{4}$ of $\set{2, \dots, n-2}$ as \emph{witnesses}, and a prime has none. So $k$
+independent samples miss a composite with probability at most $\left(\sfrac{1}{4}\right)^k$.
 
 \paragraph{Factoring.} Given $n = pq$ with $p, q$ prime, find $p$ and $q$. Factoring is an
 \emph{encryption primitive}. No polynomial-time classical algorithm is known, but \emph{Shor's
@@ -44,10 +51,15 @@ known that solves \nptime-complete problems such as 3-SAT in polynomial time.
 % of $2$. Every index has $\log n$ bits, so flipping one coin for each bit samples a uniformly random
 % element in $\bigO{\log n}$ time:
 % $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$ for every $i$.
-A randomized algorithm only needs to \emph{sample}, and a (fair) coin flip is an $\bigO{1}$ time
+% Commented out: longer wording of the text that follows.
+% A randomized algorithm only needs to \emph{sample}, and a (fair) coin flip is an $\bigO{1}$ time
+% primitive. In an array with $n$ slots (\cref{fig:coinflips-0825}), $n$ a power of $2$, every index
+% has $\log n$ bits. One coin flip per bit samples a uniformly random element in $\bigO{\log n}$ time,
+% since $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$.
+A randomized algorithm only needs to \emph{sample}. A (fair) coin flip is an $\bigO{1}$ time
 primitive. In an array with $n$ slots (\cref{fig:coinflips-0825}), $n$ a power of $2$, every index
-has $\log n$ bits. One coin flip per bit samples a uniformly random element in $\bigO{\log n}$ time,
-since $\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}$.
+has $\log n$ bits. One coin flip per bit samples a uniformly random element in $\bigO{\log n}$ time:
+\[\prob{\text{index $i$ is chosen}} = \left(\sfrac{1}{2}\right)^{\log n} = \sfrac{1}{n}.\]
 
 \begin{figure}[ht]
     \centering
@@ -99,11 +111,17 @@ an \emph{adversary argument}: the adversary builds an input on which the algorit
 \end{theorem}
 
 \begin{proof}
-    Whenever the algorithm queries a slot $i$, the adversary answers that $A[i] \neq x$. The algorithm
-    is deterministic, so this defines one run. Suppose that it stops after $k \leq n - 2$ queries and
-    outputs an index $j$. At least $2$ slots have not been queried, so the adversary can place $x$ in
-    an unqueried slot different from $j$. This array is consistent with all the answers, and the
-    algorithm is wrong on it. So a correct algorithm makes at least $n - 1$ queries.
+% Commented out: longer wording of the text that follows.
+%     Whenever the algorithm queries a slot $i$, the adversary answers that $A[i] \neq x$. The algorithm
+%     is deterministic, so this defines one run. Suppose that it stops after $k \leq n - 2$ queries and
+%     outputs an index $j$. At least $2$ slots have not been queried, so the adversary can place $x$ in
+%     an unqueried slot different from $j$. This array is consistent with all the answers, and the
+%     algorithm is wrong on it. So a correct algorithm makes at least $n - 1$ queries.
+    The adversary answers $A[i] \neq x$ to every query. The algorithm is deterministic, so this
+    fixes one run. Suppose it stops after $k \leq n - 2$ queries and outputs $j$. At least $2$
+    slots are unqueried, so the adversary puts $x$ in an unqueried slot other than $j$. This array
+    agrees with all the answers, and the algorithm is wrong on it. So a correct algorithm makes at
+    least $n - 1$ queries.
 \end{proof}
 
 % Commented out: longer wording of the next three lines.
