@@ -102,15 +102,10 @@ The solution is \cref{thm:anonymous-0908}.
     one leader.
 \end{proof}
 
-A randomized algorithm can break this symmetry. If every node picks an id uniformly at random in
-$\set{1, \dots, n^4}$, then two given nodes pick the same id with probability $\sfrac{1}{n^4}$, and
-by the union bound over the $\binom{n}{2} \leq \sfrac{n^2}{2}$ pairs, all ids are different with
-probability at least $1 - \frac{1}{2n^2}$. From now on we assume that the nodes have unique ids.
+From now on we assume that the nodes have unique ids.
 
 \paragraph{Complexity classes.} Deterministic, bounded-error probabilistic and bounded-error quantum
-polynomial time satisfy $\mathrm{P} \subseteq \mathrm{BPP} \subseteq \mathrm{BQP}$. The first
-inclusion holds because a deterministic algorithm is a randomized algorithm that ignores its coins.
-We do not prove the second.
+polynomial time satisfy $\mathrm{P} \subseteq \mathrm{BPP} \subseteq \mathrm{BQP}$.
 
 \subsection{Known Bounds}
 
@@ -257,9 +252,7 @@ $R_u \cap R_v = \emptyset$.
 
 \begin{theorem}[Complexity of the Algorithm]\label{thm:complexity-0908}
     The algorithm takes $3$ rounds, and messages are sent only in the first two. The expected number
-    of messages is at most $4 k \log n = \bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$. Moreover, with
-    probability at least $1 - \sfrac{1}{n^8}$, the number of messages is at most
-    $24 k \log n = \bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$.
+    of messages is at most $4 k \log n = \bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$.
 \end{theorem}
 
 \begin{proof}
@@ -269,12 +262,7 @@ $R_u \cap R_v = \emptyset$.
 
     \emph{Messages.} Every candidate sends at most $k$ messages and gets at most $k$ replies, so the
     number of messages is at most $2kX$, with expectation at most $2k \expectation{X} = 4 k \log n$,
-    which is $\bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$ since $k \leq \sqrt{n \log n} + 1$. Moreover,
-    $X$ is a sum of independent indicator random variables with mean $\mu = 2 \log n$, so
-    \cref{thm:chernoff-0901} with $R = 12 \log n = 6\mu$ gives
-    $\prob{X \geq 12 \log n} \leq 2^{-12 \log n} = n^{-12 \log 2} \leq \sfrac{1}{n^8}$,
-    since $12 \log 2 \geq 8.3$. If $X < 12 \log n$, the number of messages is at most
-    $2kX \leq 24 k \log n$.
+    which is $\bigO{\sqrt{n} \log^{\sfrac{3}{2}} n}$ since $k \leq \sqrt{n \log n} + 1$.
 \end{proof}
 
 \section{Markov Chains: Random Walks in Undirected Graphs}
@@ -385,6 +373,3 @@ The solution is \cref{thm:wlln-0908}, the \emph{weak} law of large numbers.
     $\prob{\abs{\overline{X}_n - \mu} \geq \eps} \leq \sfrac{\variance{\overline{X}_n}}{\eps^2}
         = \sfrac{\sigma^2}{(n \eps^2)}$, which tends to $0$ as $n \to \infty$.
 \end{proof}
-
-The statement that $\prob{\abs{\overline{X}_n - \mu} \geq \eps} \to 0$ for every $\eps > 0$ is called
-\emph{convergence in probability} of $\overline{X}_n$ to $\mu$.

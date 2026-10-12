@@ -240,8 +240,8 @@ with $\phi = 2\theta$. So one Grover iteration \emph{rotates} the plane by the a
 $\ket{B}$ towards $\ket{A}$.
 
 \begin{exercise}\label{ex:grover-rotation-1006}
-    Compute $G\ket{h} = \sqrt{\sfrac{a}{N}}\, G\ket{A} + \sqrt{\sfrac{b}{N}}\, G\ket{B}$ and, more generally,
-    $G^k\ket{h}$, and verify that the matrix of $G$ in \cref{eq:gmatrix-1006} is the rotation $R_{2\theta}$.
+    Compute $G\ket{h} = \sqrt{\sfrac{a}{N}}\, G\ket{A} + \sqrt{\sfrac{b}{N}}\, G\ket{B}$, and verify that
+    the matrix of $G$ in \cref{eq:gmatrix-1006} is the rotation $R_{2\theta}$.
 \end{exercise}
 
 \begin{wsolution}
@@ -250,19 +250,19 @@ $\ket{B}$ towards $\ket{A}$.
     $G\ket{B} = \cos 2\theta \ket{B} + \sin 2\theta \ket{A}$ and $G\ket{A} = -\sin 2\theta \ket{B} + \cos 2\theta \ket{A}$,
     which are the columns of $R_{2\theta}$ (not $R_\theta$).
 
-    \emph{$k$ iterations.} We claim that for every $k \geq 0$,
-    \[G^k \ket{h} = \sin\left((2k+1)\theta\right) \ket{A} + \cos\left((2k+1)\theta\right) \ket{B}.\]
-    This holds for $k = 0$ by \cref{eq:h-AB-1006}. If it holds for $k$, then by \cref{lem:giter-1006}
-    and the addition formulas for $\sin(\phi + 2\theta)$ and $\cos(\phi + 2\theta)$, with
-    $\phi = (2k+1)\theta$,
+    \emph{The state $G\ket{h}$.} By \cref{eq:h-AB-1006}, $\ket{h} = \sin\theta \ket{A} + \cos\theta \ket{B}$.
+    By \cref{lem:giter-1006} and the addition formulas for $\sin(\theta + 2\theta)$ and
+    $\cos(\theta + 2\theta)$,
     \begin{align*}
-        G^{k+1}\ket{h}
-         & = \sin\phi \left(\cos 2\theta \ket{A} - \sin 2\theta \ket{B}\right) + \cos\phi \left(\sin 2\theta \ket{A} + \cos 2\theta \ket{B}\right) \\
-         & = \sin(\phi + 2\theta)\ket{A} + \cos(\phi + 2\theta)\ket{B},
+        G\ket{h}
+         & = \sin\theta \left(\cos 2\theta \ket{A} - \sin 2\theta \ket{B}\right) + \cos\theta \left(\sin 2\theta \ket{A} + \cos 2\theta \ket{B}\right) \\
+         & = \sin 3\theta \ket{A} + \cos 3\theta \ket{B}.
     \end{align*}
-    which is the claim for $k + 1$, as $\phi + 2\theta = (2k+3)\theta$. In particular
-    $G\ket{h} = \sin 3\theta \ket{A} + \cos 3\theta \ket{B}$: the state starts at the angle $\theta$
-    from $\ket{B}$ and every iteration adds $2\theta$ (\cref{fig:rotation-1006}).
+    With $\sin 3\theta = 3\sin\theta - 4\sin^3\theta$, $\cos 3\theta = 4\cos^3\theta - 3\cos\theta$ and
+    $\sfrac{4b}{N} - 3 = 1 - \sfrac{4a}{N}$, this is
+    \[G\ket{h} = \sqrt{\frac{a}{N}}\left(3 - \frac{4a}{N}\right)\ket{A} + \sqrt{\frac{b}{N}}\left(1 - \frac{4a}{N}\right)\ket{B}.\]
+    The state starts at the angle $\theta$ from $\ket{B}$ and the iteration adds $2\theta$
+    (\cref{fig:rotation-1006}).
 \end{wsolution}
 
 \begin{figure}[ht]
@@ -273,45 +273,14 @@ $\ket{B}$ towards $\ket{A}$.
         \draw[->, thick] (0,0) -- (16:3.8) node[right] {$\ket{h}$};
         \draw[->, thick] (0,0) -- (48:3.8) node[above right] {$G\ket{h}$};
         \draw[->, thick] (0,0) -- (80:3.8) node[above right] {$G^2\ket{h}$};
-        \draw[->, thick, dashed] (0,0) -- (112:3.8) node[above left] {$G^3\ket{h}$};
         \draw (1.4,0) arc (0:16:1.4) node[midway, right] {$\theta$};
         \draw (16:2.2) arc (16:48:2.2) node[midway, above right] {$2\theta$};
         \draw (48:2.9) arc (48:80:2.9) node[midway, above right] {$2\theta$};
-        \draw[dashed] (3.8,0) arc (0:115:3.8);
+        \draw[dashed] (3.8,0) arc (0:90:3.8);
     \end{tikzpicture}
     \caption{Grover's algorithm in the plane spanned by $\ket{A}$ and $\ket{B}$ for
-        $\theta = 16^\circ$: every iteration rotates the state by $2\theta$, and the third iteration
-        (dashed) overshoots.}
+        $\theta = 16^\circ$: every iteration rotates the state by $2\theta$.}
     \label{fig:rotation-1006}
 \end{figure}
 
-\subsection{How Many Iterations}
-
-Measuring $G^k\ket{h} = \sin((2k+1)\theta)\ket{A} + \cos((2k+1)\theta)\ket{B}$ gives a solution with
-probability $\sin^2((2k+1)\theta)$: each of the $a$ solutions has amplitude
-$\sin((2k+1)\theta) / \sqrt{a}$. We want $(2k+1)\theta$ to be as close to $\sfrac{\pi}{2}$ as possible.
-
-\begin{theorem}[Grover's Algorithm]\label{thm:grover-1006}
-    Let $f$ have $a$ solutions, $1 \leq a \leq \sfrac{N}{2}$, let $\theta \in (0, \sfrac{\pi}{2})$ with
-    $\sin\theta = \sqrt{\sfrac{a}{N}}$, and let $k = \floor{\sfrac{\pi}{4\theta}}$. Then Grover's algorithm with
-    $k$ iterations makes $k \leq \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$ queries and outputs a solution with
-    probability at least $1 - \sfrac{a}{N} \geq \sfrac{1}{2}$. For a unique solution ($a = 1$) it makes
-    about $\frac{\pi}{4}\sqrt{N}$ queries and succeeds with probability at least $1 - \sfrac{1}{N}$.
-\end{theorem}
-
-\begin{proof}
-    By the definition of $k$, $\sfrac{\pi}{4\theta} - 1 < k \leq \sfrac{\pi}{4\theta}$, so
-    $\frac{\pi}{2} - \theta < (2k+1)\theta \leq \frac{\pi}{2} + \theta$. The sine is increasing on
-    $[0, \sfrac{\pi}{2}]$ and decreasing on $[\sfrac{\pi}{2}, \pi]$, so on the interval
-    $[\sfrac{\pi}{2} - \theta, \sfrac{\pi}{2} + \theta] \subseteq [0, \pi]$ it is at least its value at
-    the endpoints, $\sin(\sfrac{\pi}{2} \pm \theta) = \cos\theta$. Hence the success probability is
-    \[\sin^2\left((2k+1)\theta\right) \geq \cos^2\theta = 1 - \frac{a}{N} \geq \frac{1}{2}.\]
-    Since $\theta \geq \sin\theta = \sqrt{\sfrac{a}{N}}$, the number of queries is
-    $k \leq \sfrac{\pi}{4\theta} \leq \frac{\pi}{4}\sqrt{\sfrac{N}{a}}$. For $a = 1$,
-    $\theta \approx \sin\theta = \sfrac{1}{\sqrt{N}}$ and $k \approx \frac{\pi}{4}\sqrt{N}$.
-\end{proof}
-
-\paragraph{Do not overshoot.} More iterations do not help: once $(2k+1)\theta > \sfrac{\pi}{2}$ the
-success probability $\sin^2((2k+1)\theta)$ decreases again (the dashed vector in
-\cref{fig:rotation-1006}), and after about $\sfrac{\pi}{2\theta}$ iterations the state is back near
-$\ket{B}$. So the number of iterations has to be chosen from $a$ and $N$.
+The number of iterations is computed in the next lecture (\cref{sec:iterations-1008}).
