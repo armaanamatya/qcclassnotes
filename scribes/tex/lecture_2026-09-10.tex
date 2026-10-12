@@ -1,33 +1,25 @@
-In this lecture, we state the law of large numbers and return to random walks on graphs. We describe
-a random walk by its transition matrix $P$, show that the distribution of the token evolves as
-$p_{t+1} = p_t P$, find the stationary distribution $\pi = \pi P$, and prove by an analysis of the
-eigenvalues of $P$ that the walk on a connected, non-bipartite graph converges to it.
+We state the law of large numbers. For a random walk on a graph we define the transition matrix
+$P$, show that $p_{t+1} = p_t P$, find the stationary distribution, and state the convergence theorem.
 
-\paragraph{Law of large numbers.} The average of independent, identically distributed (i.i.d.)
-samples approaches the expectation.
+\paragraph{Law of large numbers.} We proved the weak form in \cref{thm:wlln-0908}.
 
 \begin{theorem}[Law of Large Numbers]\label{thm:slln-0910}
-    Let $X_1, X_2, \dots$ be i.i.d.\ random variables distributed as $X$, where $\expectation{X}$ is
-    finite. Then, with probability $1$,
+    Let $X_1, X_2, \dots$ be independent, identically distributed (i.i.d.)\ random variables
+    distributed as $X$, where $\expectation{X}$ is finite. Then, with probability $1$,
     \[\lim_{n \to \infty} \frac{\sum_{i=1}^{n} X_i}{n} = \expectation{X}.\]
 \end{theorem}
 
-The weak form of the law was proved in \cref{thm:wlln-0908}.
-
 \section{Random Walks on Graphs}
 
-We continue with the random walk of the last lecture on a finite undirected graph $G = (V, E)$
-without isolated vertices; the walker is now called the token. We take $V = \set{1, \dots, n}$ and
-write $m = \abs{E}$ for the number of edges, $u \sim v$ if $\set{u,v} \in E$, $\deg(u)$ (or $d_u$)
-for the number of neighbours of $u$, and $X_t$ for the vertex of the token at time
-$t = 0, 1, 2, \dots$.
+Let $G = (V, E)$ be a finite undirected graph without isolated vertices, with
+$V = \set{1, \dots, n}$ and $m = \abs{E}$ edges. We write $u \sim v$ if $\set{u,v} \in E$, and
+$\deg(u)$ (or $d_u$) for the number of neighbours of $u$. The walker is now called the token, and
+$X_t$ is its vertex at time $t = 0, 1, 2, \dots$.
 
 \begin{definition}[Distribution at Time $t$, Transition Matrix]\label{def:walk-0910}
     The \textbf{distribution at time $t$} is the row vector
-    \[p_t = \left(p_t^1, p_t^2, \dots, p_t^n\right), \qquad p_t^i = \prob{X_t = i},\]
-    i.e., $p_t^i$ is the probability that the token is at vertex $i$ at time $t$ (the subscript is the
-    time, the superscript is the vertex). The \textbf{transition matrix} is the $n \times n$ matrix $P$
-    with entries
+    \[p_t = \left(p_t^1, p_t^2, \dots, p_t^n\right), \qquad p_t^i = \prob{X_t = i}.\]
+    The \textbf{transition matrix} is the $n \times n$ matrix $P$ with entries
     \[P_{uv} = \prob{u \to v} = \prob{X_{t+1} = v \given X_t = u}
         = \begin{cases}
             \frac{1}{\deg(u)} & \text{if } u \sim v, \\
@@ -45,21 +37,20 @@ other entry.
 
 \begin{lemma}[Evolution of the Distribution]\label{lem:evolution-0910}
     For every $t \geq 0$,
-    \[p_{t+1} = p_t P, \qquad \text{and hence} \qquad p_t = p_0 P^t.\]
+    \[p_{t+1} = p_t P, \qquad \text{and so} \qquad p_t = p_0 P^t.\]
 \end{lemma}
 
 \begin{proof}
     Fix a vertex $v$. The events $\set{X_t = u}$, $u \in V$, are disjoint and one of them occurs, so
     \[p_{t+1}^v = \prob{X_{t+1} = v} = \sum_{u \in V} \prob{X_t = u \text{ and } X_{t+1} = v}
-        = \sum_{u \in V} p_t^u P_{uv} = (p_t P)_v,\]
-    where $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ by the definition of $P_{uv}$ as a
-    conditional probability when $p_t^u > 0$, and both sides are $0$ when $p_t^u = 0$. Hence
-    $p_{t+1} = p_t P$, and $p_t = p_0 P^t$ follows by induction on $t$ (with $P^0 = I$).
+        = \sum_{u \in V} p_t^u P_{uv} = (p_t P)_v.\]
+    Here $\prob{X_t = u \text{ and } X_{t+1} = v} = p_t^u P_{uv}$ by the definition of $P_{uv}$ as a
+    conditional probability when $p_t^u > 0$, and both sides are $0$ when $p_t^u = 0$. So
+    $p_{t+1} = p_t P$. Induction on $t$ (with $P^0 = I$) gives $p_t = p_0 P^t$.
 \end{proof}
 
 Entry by entry, $p_{t+1} = p_t P$ is \cref{eq:walkstep-0908}. For the triangle with $p_0 = (1,0,0)$,
-the vectors $p_1 = p_0 P$ and $p_2 = p_0 P^2$ and the closed form of $p_t$ are in
-\cref{lem:triangle-0908} and the example before it.
+$p_1$, $p_2$ and the closed form of $p_t$ are in \cref{lem:triangle-0908} and the example before it.
 
 \subsection{Row Stochastic Matrices}
 
@@ -74,39 +65,29 @@ The transition matrix of a random walk on any graph is row stochastic: row $u$ h
 equal to $\sfrac{1}{\deg(u)}$, and its other entries are $0$.
 
 \needspace{9\baselineskip} % keep the exercise and the start of its solution on one page
-\begin{exercise}\label{ex:probvec-0910}
-    Show that $p_{t+1}$ is a probability vector, assuming that $p_t$ is.
+\begin{exercise}\label{ex:probvec-0910}\label{thm:probvec-0910}
+    Let $P$ be a row stochastic $n \times n$ matrix and let $p$ be a probability vector. Show that
+    $pP$ is a probability vector. So if $p_0$ is a probability vector and $p_{t+1} = p_t P$ for all
+    $t \geq 0$, then $p_t = p_0 P^t$ is a probability vector for every $t \geq 0$.
 \end{exercise}
 
-The solution is \cref{thm:probvec-0910}.
-
-\begin{theorem}[A Row Stochastic Matrix Preserves Probability Vectors]\label{thm:probvec-0910}
-    Let $P$ be a row stochastic $n \times n$ matrix and let $p$ be a probability vector. Then $pP$ is a
-    probability vector. Consequently, if $p_0$ is a probability vector and $p_{t+1} = p_t P$ for all
-    $t \geq 0$, then $p_t = p_0 P^t$ is a probability vector for every $t \geq 0$.
-\end{theorem}
-
 \begin{proof}
-    Let $q = pP$, so that $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$. Every term is a product of
-    two nonnegative numbers, since $p$ is a probability vector and $P$ is row stochastic, so
-    $q^v \geq 0$. Exchanging the two finite sums, and using that every row of $P$ and the entries of
-    $p$ sum to $1$,
+    Let $q = pP$, so $q^v = \sum_{u=1}^{n} p^u P_{uv}$ for every $v$. Every term is a product of
+    two nonnegative numbers, so $q^v \geq 0$. Every row of $P$ and the entries of $p$ sum to $1$, so
     $\sum_{v} q^v = \sum_{v} \sum_{u} p^u P_{uv} = \sum_{u} p^u \left(\sum_{v} P_{uv}\right)
         = \sum_{u} p^u = 1$.
-    Hence $pP$ is a probability vector. By induction on $t$, every $p_t$ is a probability vector:
-    $p_0$ is one by assumption, and if $p_t$ is one, then so is $p_t P = p_{t+1}$, which is the
-    statement of \cref{ex:probvec-0910}.
+    So $pP$ is a probability vector. The vector $p_0$ is one by assumption, and if $p_t$ is one,
+    then so is $p_t P = p_{t+1}$. By induction on $t$, every $p_t$ is a probability vector.
 \end{proof}
 
 \subsection{The Transition Matrix of a General Graph}
 
-Let $A$ be the \emph{adjacency matrix} of $G$, i.e., $A_{uv} = 1$ if $u \sim v$ and $A_{uv} = 0$
-otherwise, and let $D$ be the diagonal matrix with diagonal entries $d_1, \dots, d_n$. Its inverse
-$D^{-1}$, the diagonal matrix with entries $\sfrac{1}{d_1}, \dots, \sfrac{1}{d_n}$, exists because
-there are no isolated vertices. Multiplying $A$ from the left by $D^{-1}$ multiplies row $u$ of $A$ by
-$\sfrac{1}{d_u}$, so $(D^{-1} A)_{uv} = \sfrac{A_{uv}}{\deg(u)}$, which is $P_{uv}$ of
-\cref{def:walk-0910}, i.e., $P = D^{-1} A$.
-If $G$ is \emph{$d$-regular}, i.e., every vertex has the same degree $d$, then $D = d I$ and
+Let $A$ be the \emph{adjacency matrix} of $G$, with $A_{uv} = 1$ if $u \sim v$ and $A_{uv} = 0$
+otherwise. Let $D$ be the diagonal matrix with diagonal entries $d_1, \dots, d_n$. Its inverse
+$D^{-1}$ has diagonal entries $\sfrac{1}{d_1}, \dots, \sfrac{1}{d_n}$ and exists because there are
+no isolated vertices. Then $(D^{-1} A)_{uv} = \sfrac{A_{uv}}{\deg(u)}$, which is $P_{uv}$ of
+\cref{def:walk-0910}, so $P = D^{-1} A$.
+If $G$ is \emph{$d$-regular}, meaning every vertex has the same degree $d$, then $D = d I$ and
 $P = \sfrac{A}{d}$. The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
 
 \section{Stationary Distribution}
@@ -114,8 +95,8 @@ $P = \sfrac{A}{d}$. The triangle is $2$-regular, and its $P$ is $\sfrac{A}{2}$.
 \begin{definition}[Stationary Distribution]\label{def:stationary-0910}
     A probability vector $\pi$ is a \textbf{stationary distribution} of the walk with transition matrix $P$
     if
-    \[\pi P = \pi \cdot 1 = \pi,\]
-    i.e., $\pi$ is a left eigenvector of $P$ with eigenvalue $1$.
+    \[\pi P = \pi \cdot 1 = \pi.\]
+    Then $\pi$ is a left eigenvector of $P$ with eigenvalue $1$.
 \end{definition}
 
 By \cref{lem:evolution-0910}, if $p_t = \pi$ then $p_{t+1} = \pi P = \pi$. Only the neighbours $v$
@@ -132,19 +113,19 @@ of $u$ have $P_{vu} \neq 0$, and for them $P_{vu} = \sfrac{1}{\deg(v)}$, so (as 
 \end{theorem}
 
 \begin{proof}
-    \emph{$\pi$ is a probability vector.} Since there are no isolated vertices and $V$ is not empty,
-    $m \geq 1$, so $\pi$ is well defined, and $\pi_v \geq 0$. Every edge $\set{u,v}$ is counted exactly
-    twice in $\sum_{v \in V} \deg(v)$, once in $\deg(u)$ and once in $\deg(v)$, so
-    $\sum_{v \in V} \deg(v) = 2m$ (the handshake lemma) and $\sum_{v \in V} \pi_v = 1$.
+    \emph{$\pi$ is a probability vector.} There are no isolated vertices and $V$ is not empty, so
+    $m \geq 1$. So $\pi$ is well defined, and $\pi_v \geq 0$. Every edge $\set{u,v}$ is counted
+    once in $\deg(u)$ and once in $\deg(v)$. So $\sum_{v \in V} \deg(v) = 2m$ (the handshake lemma)
+    and $\sum_{v \in V} \pi_v = 1$.
 
     \emph{$\pi P = \pi$.} For every vertex $u$, by \cref{eq:piP-0910} and $\deg(v) \geq 1$,
     $(\pi P)_u = \sum_{v \sim u} \frac{\deg(v)}{2m} \cdot \frac{1}{\deg(v)} = \sum_{v \sim u} \frac{1}{2m}
         = \frac{\deg(u)}{2m} = \pi_u$,
-    since the sum has one term for each of the $\deg(u)$ neighbours of $u$.
+    since $u$ has $\deg(u)$ neighbours.
 \end{proof}
 
-For a $d$-regular graph on $n$ vertices, $2m = nd$, so $\pi_v = \sfrac{1}{n}$ and the stationary
-distribution is uniform. For the triangle it is
+For a $d$-regular graph on $n$ vertices, $2m = nd$, so $\pi_v = \sfrac{1}{n}$ is uniform. For the
+triangle it is
 $\pi = \left(\sfrac{1}{3}, \sfrac{1}{3}, \sfrac{1}{3}\right)$, the limit in \cref{lem:triangle-0908}.
 
 \section{Convergence to the Stationary Distribution}
@@ -164,7 +145,7 @@ Convergence of vectors is entry by entry. We state the theorem without proof.
     Let $G$ be a connected, non-bipartite graph with $m$ edges. Then for every starting distribution
     $p_0$,
     \[p_t = p_0 P^t \longrightarrow \pi \qquad \text{as } t \to \infty, \qquad \text{where } \pi_v = \frac{\deg(v)}{2m}.\]
-    In particular, $\pi$ is the only stationary distribution of the walk.
+    So $\pi$ is the only stationary distribution of the walk.
 \end{theorem}
 
 % Commented out: this proof is not in the lecture notes.

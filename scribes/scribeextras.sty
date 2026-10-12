@@ -26,6 +26,9 @@
 % the Tuesday lecture), to avoid half-empty pages.
 % Usage: \newlecture{Tuesday, September 1, 2026}{Topic of the lecture}
 \RequirePackage{placeins} % \FloatBarrier
+
+% Links (table of contents, cross-references, citations, URLs) are black instead of the default red.
+\hypersetup{linkcolor=black, citecolor=black, urlcolor=black}
 \newcounter{scribelecture}
 \renewcommand{\theHsection}{\arabic{scribelecture}.\arabic{section}}
 \newcommand{\newlecture}[2]{%
@@ -64,6 +67,14 @@
     \nobreak
 }
 \newcommand*{\toclevel@lecture}{0}
+% Only the weeks and the lecture days show a page number: the page number of a section is put in a
+% box that is not printed.
+\renewcommand{\cftsecfillnum}[1]{{\cftparfillskip\setbox0\hbox{#1}\par}}
+% In the table of contents the sections are listed without their number: the number is put in a
+% box that is not printed. The section headings in the lectures keep their numbers.
+\renewcommand{\cftsecpresnum}{\begin{lrbox}{\@tempboxa}}
+\renewcommand{\cftsecaftersnum}{\end{lrbox}}
+\setlength{\cftsecnumwidth}{0pt}
 \setlength{\cftsecindent}{1.5em}
 \setlength{\cftsubsecindent}{3.8em}
 \setlength{\cftsubsubsecindent}{7em}

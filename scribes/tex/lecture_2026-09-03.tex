@@ -16,8 +16,7 @@ also called the \emph{first moment}.
 
 \begin{proof}
     Let $I = 1$ if $X \geq b$ and $I = 0$ otherwise. Then $I \leq \frac{X}{b}$: if $X \geq b$ then
-    $I = 1 \leq \frac{X}{b}$, and if $X < b$ then $I = 0 \leq \frac{X}{b}$ because $X \geq 0$.
-    Taking expectations on both sides,
+    $I = 1 \leq \frac{X}{b}$, and if $X < b$ then $I = 0 \leq \frac{X}{b}$ because $X \geq 0$. So
     \[\prob{X \geq b} = \prob{I = 1} = \expectation{I} \leq \expectation{\frac{X}{b}} = \frac{\expectation{X}}{b}.\]
     Taking $b = a \expectation{X} > 0$ gives $\prob{X \geq a \expectation{X}} \leq \frac{1}{a}$.
 \end{proof}
@@ -43,35 +42,34 @@ Chebyshev's inequality uses the variance of the random variable, which is also c
         = \prob{\left(X - \expectation{X}\right)^2 \geq a^2}
         \leq \frac{\expectation{\left(X - \expectation{X}\right)^2}}{a^2}
         = \frac{\variance{X}}{a^2},\]
-    where the inequality is Markov's inequality applied to the random variable
-    $\left(X - \expectation{X}\right)^2 \geq 0$.
+    by Markov's inequality (\cref{thm:markov}) for $\left(X - \expectation{X}\right)^2 \geq 0$.
 \end{proof}
 
 \paragraph{Chernoff bound.}
 
-The Chernoff bounds of the last lecture (\cref{thm:chernoff-0901}) need
-$X = \sum_{i=1}^{n} X_i$ to be a sum of \emph{mutually
-independent} indicator random variables. Then $\mu = \expectation{X} = \sum_{i=1}^{n} p_i$ with
-$p_i = \prob{X_i = 1}$ by linearity of expectation.
+The Chernoff bounds (\cref{thm:chernoff-0901}) need $X = \sum_{i=1}^{n} X_i$ to be a sum of
+\emph{mutually independent} indicator random variables. Then
+$\mu = \expectation{X} = \sum_{i=1}^{n} p_i$ with $p_i = \prob{X_i = 1}$ by linearity of
+expectation.
 
 \section{Search}
 
 Let $f \colon D \to R$ be a function from a domain $D$ to a range $R$.
 Given $y$, we ask: is there an $x$ such that $f(x) = y$? We consider
-$f \colon [1, \dots, N] \to [1, \dots, N]$ and want to find an $x$ such that $f(x) = k$. As in the
-earlier lectures, the function can be seen as an array with $n$ slots (\cref{fig:coinflips-0825}),
-where $n$ is the size of the domain, and the cost of an algorithm is the number of queries to $f$. A
-randomized classical algorithm needs $\bigTh{n}$ queries, and Grover's algorithm needs
-$\bigO{\sqrt{n}}$ queries. For the random sampling algorithm,
-$\expectation{\text{queries}} = \bigO{n}$ and one sample has $\prob{\text{Success}} = \sfrac{1}{n}$.
+$f \colon [1, \dots, N] \to [1, \dots, N]$ and want to find an $x$ such that $f(x) = k$. The
+function is an array with $n$ slots (\cref{fig:coinflips-0825}), where $n$ is the size of the
+domain, and the cost of an algorithm is the number of queries to $f$. A randomized classical
+algorithm needs $\bigTh{n}$ queries, and Grover's algorithm needs $\bigO{\sqrt{n}}$ queries. For
+the random sampling algorithm, $\expectation{\text{queries}} = \bigO{n}$ and one sample has
+$\prob{\text{Success}} = \sfrac{1}{n}$.
 
 \paragraph{Probability amplitude amplification.} If the classical success probability is $p$, then
 in the quantum case it becomes $\sqrt{p}$.
 
 \section{Birthday Paradox}
 
-There are $m$ people and $n$ birthdays ($n = 365$), and $f(x)$ is the birthday of person $x$. We
-are looking for a \emph{collision}, i.e., $x \neq y$ such that $f(x) = f(y)$.
+There are $m$ people and $n$ birthdays ($n = 365$), and $f(x)$ is the birthday of person $x$. A
+\emph{collision} is a pair $x \neq y$ with $f(x) = f(y)$.
 
 Let $E_i$ be the event that the $\nth{i}$ birthday is different from the first $i-1$ birthdays.
 By the chain rule and $1 - x \leq e^{-x}$,
@@ -83,12 +81,11 @@ By the chain rule and $1 - x \leq e^{-x}$,
     = e^{-\frac{(m-1)m}{2n}}.
 \end{align*}
 For $m = \sqrt{2n} + 1$ we have $(m-1)m \geq 2n$, so this is at most $\sfrac{1}{e} \leq \sfrac{1}{2}$.
-Hence $\bigO{\sqrt{n}}$ people are enough to have a constant probability of collision.
+So $\bigO{\sqrt{n}}$ people are enough to have a constant probability of collision.
 
 \subsection{Expected Number of Collisions}
 
-The birthday paradox can be seen as throwing $m$ balls into $n$ bins.
-We show that for $m \geq \sqrt{2n} + 1$,
+The birthday paradox can be seen as throwing $m$ balls into $n$ bins. For $m \geq \sqrt{2n} + 1$,
 $\expectation{\text{\# collisions}} \geq 1$.
 
 Let $X$ be the number of collisions. $X$ takes values from $0$ to $\binom{m}{2}$. Write
@@ -98,42 +95,42 @@ Let $X$ be the number of collisions. $X$ takes values from $0$ to $\binom{m}{2}$
         1 & \text{if } f(i) = f(j), \\
         0 & \text{else,}
     \end{cases}\]
-where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. The random variables $X_{ij}$ are
-\emph{pairwise independent}. By linearity of expectation,
+where the sum is over the $\binom{m}{2}$ pairs $i \neq j$. By linearity of expectation,
 \[\expectation{X} = \sum_{i \neq j} \prob{X_{ij} = 1} = \binom{m}{2} \frac{1}{n}
     = \frac{m(m-1)}{2n} \sim \frac{m^2}{2n} = \bigTh{\frac{m^2}{n}}.\]
+For $m \geq \sqrt{2n} + 1$ we have $m(m-1) \geq 2n$, so $\expectation{X} \geq 1$.
 
-\begin{exercise}\label{ex:birthday-0903}
-    Show that
-    \[\prob{X \geq 1} \geq \bigTh{1},\]
-    i.e., the birthday paradox occurs.
+\begin{exercise}\label{ex:birthday-0903}\label{thm:birthday-0903}
+    Show that the birthday paradox occurs: with $\bigO{\sqrt{n}}$ people,
+    $\prob{X \geq 1} \geq \bigTh{1}$. Precisely, if $m \geq 2\sqrt{n} + 1$, then
+    \[\prob{X \geq 1} \geq \frac{1}{2}.\]
 \end{exercise}
 
-We compute $\variance{X}$ and use Chebyshev's inequality (\cref{thm:chebyshev}).
-
 \begin{lemma}[Variance of the Number of Collisions]\label{lem:pairwise-0903}
-    For any two different pairs $\set{i,j} \neq \set{k,l}$,
-    \[\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}} = \frac{1}{n^2},\]
-    i.e., $X_{ij}$ and $X_{kl}$ are independent. Consequently
+    The $X_{ij}$ are \emph{pairwise independent}: for any two different pairs
+    $\set{i,j} \neq \set{k,l}$,
+    \[\expectation{X_{ij} X_{kl}} = \expectation{X_{ij}} \expectation{X_{kl}} = \frac{1}{n^2}.\]
+    So
     \[\variance{X} = \sum_{i \neq j} \variance{X_{ij}}
         = \binom{m}{2} \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \expectation{X}.\]
 \end{lemma}
 
 \begin{proof}
     We have $\expectation{X_{ij} X_{kl}} = \prob{f(i) = f(j) \text{ and } f(k) = f(l)}$. If the
-    pairs are disjoint, the two events depend on the birthdays of four different people, which are
-    independent, so the probability is $\prob{f(i) = f(j)} \cdot \prob{f(k) = f(l)} = \sfrac{1}{n^2}$.
+    pairs are disjoint, the two events depend on the independent birthdays of four different
+    people, so the probability is $\prob{f(i) = f(j)} \cdot \prob{f(k) = f(l)} = \sfrac{1}{n^2}$.
     Otherwise the pairs share one person, say $\set{i,j}$ and $\set{i,k}$ with $j \neq k$. Then
     $f(j)$ and $f(k)$ are independent of $f(i)$ and of each other, and each equals a given day $b$
     with probability $\sfrac{1}{n}$, so
     \[\prob{f(j) = f(i) \text{ and } f(k) = f(i)}
         = \sum_{b=1}^{n} \prob{f(i) = b} \cdot \frac{1}{n} \cdot \frac{1}{n}
         = \frac{1}{n^2}.\]
-    In both cases $\expectation{X_{ij} X_{kl}} = \sfrac{1}{n^2} = \expectation{X_{ij}} \expectation{X_{kl}}$.
-    For two indicators this is the same as independence, since their joint distribution is
-    determined by $\prob{X_{ij} = 1}$, $\prob{X_{kl} = 1}$ and $\prob{X_{ij} = X_{kl} = 1}$.
+    In both cases
+    $\expectation{X_{ij} X_{kl}} = \sfrac{1}{n^2} = \expectation{X_{ij}} \expectation{X_{kl}}$.
+    For two indicators this is the same as independence, because their joint distribution is
+    fixed by $\prob{X_{ij} = 1}$, $\prob{X_{kl} = 1}$ and $\prob{X_{ij} = X_{kl} = 1}$.
 
-    For the variance, expand the square of
+    Expand the square of
     $X - \expectation{X} = \sum_{i \neq j} \left(X_{ij} - \expectation{X_{ij}}\right)$:
     \begin{align*}
         \variance{X}
@@ -143,20 +140,14 @@ We compute $\variance{X}$ and use Chebyshev's inequality (\cref{thm:chebyshev}).
         + \sum_{\set{i,j} \neq \set{k,l}} \left(\expectation{X_{ij} X_{kl}} - \expectation{X_{ij}} \expectation{X_{kl}}\right)
         = \sum_{i \neq j} \variance{X_{ij}},
     \end{align*}
-    since the second sum vanishes by the first part. As $X_{ij}^2 = X_{ij}$,
+    because the second sum is zero by the first part. Since $X_{ij}^2 = X_{ij}$,
     $\variance{X_{ij}} = \expectation{X_{ij}^2} - \expectation{X_{ij}}^2
-        = \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \frac{1}{n}$,
-    and summing over the $\binom{m}{2}$ pairs gives
+        = \frac{1}{n} \left(1 - \frac{1}{n}\right) \leq \frac{1}{n}$.
+    Summing over the $\binom{m}{2}$ pairs gives
     $\variance{X} \leq \binom{m}{2} \frac{1}{n} = \expectation{X}$.
 \end{proof}
 
-\begin{theorem}[The Birthday Paradox Occurs]\label{thm:birthday-0903}
-    If $m \geq 2\sqrt{n} + 1$, then
-    \[\prob{X \geq 1} \geq \frac{1}{2}.\]
-    In words: with $\bigO{\sqrt{n}}$ people there is a collision with constant probability.
-\end{theorem}
-
-\begin{proof}
+\begin{proof}[Proof of \cref{ex:birthday-0903}]
     If $X = 0$ then $\abs{X - \expectation{X}} = \expectation{X}$. So by Chebyshev's inequality
     (\cref{thm:chebyshev}) with $a = \expectation{X}$, and then \cref{lem:pairwise-0903},
     \[\prob{X = 0} \leq \prob{\abs{X - \expectation{X}} \geq \expectation{X}}
@@ -168,44 +159,39 @@ We compute $\variance{X}$ and use Chebyshev's inequality (\cref{thm:chebyshev}).
 
 \section{Quantum Birthday Paradox}
 
-The birthday paradox solves the \emph{collision problem}: given query access
-to a function $f$, find $x \neq y$ with $f(x) = f(y)$. Querying $m = \sqrt{2n} + 1$ random points finds
-a collision with probability at least $\sfrac{1}{2}$, so $\bigO{\sqrt{n}}$ queries suffice classically.
-Here we show that classically
-$\sqrt{n}$ queries are also necessary. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$,
-where the point $x_s$ may depend on the earlier answers $f(x_1), \dots, f(x_{s-1})$ and on random coins.
-
-\begin{exercise}\label{ex:collision-lb-0903}
-    Show a $\sqrt{n}$ lower bound in the classical case.
-\end{exercise}
+The \emph{collision problem} is: given query access to a function $f$, find $x \neq y$ with
+$f(x) = f(y)$. By \cref{ex:birthday-0903}, $\bigO{\sqrt{n}}$ classical queries to random points
+are enough. An algorithm makes $k$ queries $f(x_1), \dots, f(x_k)$, where the point $x_s$ may depend on
+the earlier answers $f(x_1), \dots, f(x_{s-1})$ and on random coins.
 
 As in the birthday paradox, $f \colon D \to [n]$, where $[n] = \set{1, \dots, n}$, is a
-\emph{random function}, i.e., every value $f(x)$ is uniform in $[n]$ and independent of all the
+\emph{random function}: every value $f(x)$ is uniform in $[n]$ and independent of all the
 other values. The algorithm \emph{finds a collision} if it outputs $x \neq y$ with $f(x) = f(y)$.
-We may assume that it queries the two points that it outputs (at most $2$ extra queries, which
-does not affect the bound $\bigOm{\sqrt{n}}$) and that the queried points are different, since
-repeating a query gives no new information.
+We may assume that it queries the two points that it outputs. This costs at most $2$ extra queries,
+which does not affect the bound $\bigOm{\sqrt{n}}$. We may also assume that the queried points are
+different, because repeating a query gives no new information.
 
-\begin{theorem}[Classical Lower Bound for Collision Finding]\label{thm:collision-lb-0903}
-    Let $f \colon D \to [n]$ be a random function. Every classical algorithm (deterministic or
-    randomized, adaptive) that makes $k$ queries to different points, including the two points that
-    it outputs, finds a collision with probability at most
+\begin{exercise}\label{ex:collision-lb-0903}\label{thm:collision-lb-0903}
+    Show a $\sqrt{n}$ lower bound in the classical case: for a random function
+    $f \colon D \to [n]$, every classical algorithm (deterministic or randomized, adaptive) that
+    makes $k$ queries to different points, including the two points that it outputs, finds a
+    collision with probability at most
     \[\frac{\binom{k}{2}}{n} = \frac{k(k-1)}{2n}.\]
-    In particular, to find a collision with probability at least $\sfrac{1}{2}$ it needs
-    $k > \sqrt{n}$ queries, so the classical query complexity of the collision problem is $\bigOm{\sqrt{n}}$.
-\end{theorem}
+    So to find a collision with probability at least $\sfrac{1}{2}$ it needs $k > \sqrt{n}$
+    queries, and the classical query complexity of the collision problem is $\bigOm{\sqrt{n}}$.
+\end{exercise}
 
 \begin{proof}
-    Since the algorithm queries the points that it outputs, it can only find a collision if two of
-    its queried values agree, i.e., if for some $s$ the event $E_s$ that
-    $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$ occurs. Condition on the first $s-1$ answers and on
-    the random coins of the algorithm. Then $x_s$ is a fixed point that has not been queried before,
-    so $f(x_s)$ is still uniform in $[n]$ and independent of the $s-1$ values
-    $f(x_1), \dots, f(x_{s-1})$, which are now fixed. Hence it equals one of them with probability
-    at most $\frac{s-1}{n}$, no matter how the algorithm chose $x_s$. As this holds for every
-    outcome of the first $s-1$ steps, $\prob{E_s} \leq \frac{s-1}{n}$ without conditioning, and by
-    the union bound
+    The algorithm queries the points that it outputs, so it can only find a collision if two of
+    its queried values agree. Let $E_s$ be the event that
+    $f(x_s) \in \set{f(x_1), \dots, f(x_{s-1})}$. A collision needs $E_s$ to occur for some $s$.
+    Condition on the first $s-1$ answers and on the random coins of the algorithm. Then $x_s$ is a
+    fixed point that has not been queried before. So $f(x_s)$ is still uniform in $[n]$ and
+    independent of the $s-1$ values $f(x_1), \dots, f(x_{s-1})$, which are now fixed. It equals one
+    of them with probability at most $\frac{s-1}{n}$, no matter how the algorithm chose $x_s$. This
+    holds for every outcome of the first $s-1$ steps and of the coins, so
+    $\prob{E_s} \leq \frac{s-1}{n}$ without conditioning. By the union bound,
     \[\prob{\text{collision}} \leq \sum_{s=1}^{k} \prob{E_s} \leq \sum_{s=1}^{k} \frac{s-1}{n} = \frac{k(k-1)}{2n}.\]
-    If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then $\frac{k(k-1)}{2n} \geq \frac{1}{2}$,
-    i.e., $k^2 > k(k-1) \geq n$, so $k > \sqrt{n}$.
+    If the algorithm succeeds with probability at least $\sfrac{1}{2}$, then
+    $\frac{k(k-1)}{2n} \geq \frac{1}{2}$, so $k^2 > k(k-1) \geq n$ and $k > \sqrt{n}$.
 \end{proof}
