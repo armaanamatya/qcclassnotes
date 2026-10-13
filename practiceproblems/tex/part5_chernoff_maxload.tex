@@ -1,0 +1,118 @@
+\section{The Chernoff Bound: Proof}\label{sec:chernoff}
+
+The scribe states the Chernoff bounds (Sep 1) without proof. The proof is three ideas:
+exponentiate, apply Markov, and use independence to turn the expectation of a product into a
+product of expectations. This is the standard proof; compare with slides 3--7 of the Chernoff deck.
+
+\begin{theorem}[Chernoff Bounds]\label{thm:chernoff-pp}
+    Let $X = X_1 + \dots + X_n$ with the $X_i$ independent, $X_i = 1$ with probability $p_i$ and $0$
+    otherwise, and let $\mu = \expectation{X} = p_1 + \dots + p_n > 0$. Then
+    \begin{enumerate}
+        \item $\prob{X \geq (1+\delta)\mu} \leq e^{-\mu\delta^2/3}$ for $0 < \delta < 1$,
+        \item $\prob{X < (1-\delta)\mu} \leq e^{-\mu\delta^2/2}$ for $0 < \delta < 1$,
+        \item $\prob{X \geq R} \leq 2^{-R}$ for $R \geq 6\mu$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    \emph{Step 1: Markov on $e^{tX}$.} For $t > 0$ the function $e^{tx}$ is increasing, so
+    $X \geq a$ is the same event as $e^{tX} \geq e^{ta}$. Since $e^{tX} > 0$, Markov's inequality
+    gives
+    \[\prob{X \geq a} = \prob{e^{tX} \geq e^{ta}} \leq \frac{\expectation{e^{tX}}}{e^{ta}}.\]
+
+    \emph{Step 2: independence.} $e^{tX}$ is the product of the $e^{tX_i}$, and these are
+    independent, so the expectation factors. Each factor is
+    $\expectation{e^{tX_i}} = p_i e^t + (1 - p_i) = 1 + p_i(e^t - 1)$. Using $1 + x \leq e^x$,
+    \[\expectation{e^{tX}} = \prod_{i=1}^{n} \left(1 + p_i(e^t - 1)\right)
+        \leq \prod_{i=1}^{n} e^{p_i(e^t - 1)} = e^{\mu(e^t - 1)}.\]
+    This holds for every real $t$, positive or negative.
+
+    \emph{Step 3: choose $t$.} Put $a = (1+\delta)\mu$ and $t = \ln(1+\delta)$, which is positive
+    for $\delta > 0$. Then $e^t - 1 = \delta$ and $e^{ta} = (1+\delta)^{(1+\delta)\mu}$, so for every
+    $\delta > 0$
+    \begin{equation}\label{eq:chernoff-general}
+        \prob{X \geq (1+\delta)\mu} \leq \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^{\mu}.
+    \end{equation}
+    This is the general form. The three forms of the theorem are simplifications of it.
+
+    \emph{Step 4: the upper tail for $0 < \delta < 1$.} We need
+    $\delta - (1+\delta)\ln(1+\delta) \leq -\sfrac{\delta^2}{3}$. Let
+    \[g(\delta) = \delta - (1+\delta)\ln(1+\delta) + \frac{\delta^2}{3},
+        \qquad
+        g'(\delta) = -\ln(1+\delta) + \frac{2\delta}{3},
+        \qquad
+        g''(\delta) = -\frac{1}{1+\delta} + \frac{2}{3}.\]
+    We have $g(0) = 0$ and $g'(0) = 0$. Also $g''$ is negative for $\delta < \frac{1}{2}$ and
+    positive for $\delta > \frac{1}{2}$, so $g'$ first decreases and then increases. Since
+    $g'(1) = \frac{2}{3} - \ln 2 \approx -0.026 < 0$, the function $g'$ starts at $0$, goes down, and
+    has not come back up to $0$ by $\delta = 1$: $g' \leq 0$ on $[0, 1]$. Hence $g$ is decreasing
+    on $[0, 1]$ and $g(\delta) \leq g(0) = 0$. Therefore
+    $\prob{X \geq (1+\delta)\mu} \leq e^{-\mu\delta^2/3}$.
+
+    \emph{Step 5: the form for $R \geq 6\mu$.} Write $R = (1+\delta)\mu$, so $1 + \delta \geq 6$.
+    In \cref{eq:chernoff-general}, bound $e^{\delta}$ by $e^{1+\delta}$:
+    \[\prob{X \geq R} \leq \left(\frac{e}{1+\delta}\right)^{(1+\delta)\mu}
+        = \left(\frac{e}{1+\delta}\right)^{R} \leq \left(\frac{e}{6}\right)^{R} \leq 2^{-R},\]
+    because $\sfrac{e}{6} \approx 0.453 < \frac{1}{2}$.
+
+    \emph{Step 6: the lower tail for $0 < \delta < 1$.} Now take $t < 0$. Then $e^{tx}$ is
+    decreasing, so $X \leq a$ is the same event as $e^{tX} \geq e^{ta}$, and Steps 1 and 2 give
+    $\prob{X \leq a} \leq e^{\mu(e^t - 1) - ta}$. Put $a = (1-\delta)\mu$ and
+    $t = \ln(1-\delta) < 0$:
+    \[\prob{X \leq (1-\delta)\mu} \leq \left(\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right)^{\mu}.\]
+    We need $-\delta - (1-\delta)\ln(1-\delta) \leq -\sfrac{\delta^2}{2}$. Let
+    $h(\delta) = -\delta - (1-\delta)\ln(1-\delta) + \sfrac{\delta^2}{2}$. Then $h(0) = 0$ and
+    \[h'(\delta) = -1 + \ln(1-\delta) + 1 + \delta = \ln(1-\delta) + \delta \leq 0,\]
+    since $\ln(1-\delta) \leq -\delta$. So $h \leq 0$ on $[0, 1)$, and
+    $\prob{X < (1-\delta)\mu} \leq \prob{X \leq (1-\delta)\mu} \leq e^{-\mu\delta^2/2}$.
+\end{proof}
+
+\paragraph{What to remember.}
+\begin{itemize}
+    \item Independence is used exactly once, in Step 2. Without it the proof fails, and only Markov
+          or Chebyshev are available.
+    \item For $\delta \geq 1$ use the general form \cref{eq:chernoff-general} or the $2^{-R}$ form.
+          The $e^{-\mu\delta^2/3}$ form is only proved for $\delta < 1$.
+\end{itemize}
+
+\section{Max Load, Upper Tail: $3n \ln n$ Queries, at Most $9 \ln n$ per Slot}\label{sec:maxload}
+
+The Sep 1 scribe proves the lower tail (no slot is accessed too rarely, with $24 n \ln n$ queries).
+The version in the professor's own notes is the upper tail with $3n \ln n$ queries, the same number
+that makes every slot accessed at least once.
+
+\begin{claim}[Max Load, Upper Tail]\label{clm:maxload-pp}
+    Random sampling makes $3n \ln n$ queries into an array with $n \geq 2$ slots. Then with
+    probability at least $1 - \sfrac{1}{n^2}$ no slot is accessed $9 \ln n$ times or more.
+\end{claim}
+
+\begin{proof}
+    Fix a slot $i$ and let $Y$ be the number of queries that access it. $Y$ is a sum of $3n \ln n$
+    independent indicators, each $1$ with probability $\sfrac{1}{n}$, so
+    $\mu = \expectation{Y} = 3 \ln n$. The threshold is $9 \ln n = 3\mu = (1+\delta)\mu$ with
+    $\delta = 2$. Since $\delta = 2$ is not below $1$, we use the general form
+    \cref{eq:chernoff-general}:
+    \[\prob{Y \geq 9 \ln n} \leq \left(\frac{e^{2}}{3^{3}}\right)^{3 \ln n}
+        = n^{3(2 - \ln 27)} = n^{-3.88\ldots} \leq \frac{1}{n^{3}}.\]
+    Here $\ln 27 \approx 3.296$, so the exponent is $3 \cdot (2 - 3.296) \approx -3.89$. By the
+    union bound over the $n$ slots,
+    \[\prob{\text{some slot is accessed at least } 9 \ln n \text{ times}} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}. \qedhere\]
+\end{proof}
+
+This is stronger than the $1 - \sfrac{1}{n}$ in the professor's notes.
+
+\paragraph{With only the three forms in the scribe.}
+If only the stated forms may be used, take $R = 6\mu = 18 \ln n$ in the third one:
+$\prob{Y \geq 18 \ln n} \leq 2^{-18 \ln n} = n^{-18 \ln 2} \approx n^{-12.5}$. The union bound gives
+a failure probability of at most $n^{-11}$. The constant is $18$ instead of $9$, but no new formula
+is needed.
+
+\paragraph{Putting both tails together.}
+By the Sep 1 theorem, $3n \ln n$ queries access every slot at least once with probability at least
+$1 - \sfrac{1}{n^2}$. With \cref{clm:maxload-pp} and a union bound, with probability at least
+$1 - \sfrac{2}{n^2}$ every slot is accessed at least once and fewer than $9 \ln n$ times.
+
+\paragraph{Numbers for $n = 1000$.}
+$\ln n \approx 6.91$, so the algorithm makes $3n \ln n \approx 20{,}700$ queries. Each slot is
+accessed about $20.7$ times on average. The cap $9 \ln n$ is about $62$. The probability that some
+slot reaches the cap is at most $1000^{-2.89} \approx 2 \times 10^{-9}$.

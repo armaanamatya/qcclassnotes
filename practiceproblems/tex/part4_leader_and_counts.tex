@@ -1,0 +1,201 @@
+\section{Leader Election with a Changed Parameter}\label{sec:leader}
+
+The algorithm (Sep 8) has two parameters: each node becomes a candidate with probability $p$, and
+each candidate contacts $k$ random referees. In class $p = \sfrac{2 \ln n}{n}$ and
+$k = \ceil{\sqrt{n \ln n}}$. The whole analysis is four estimates, and a changed parameter just
+changes the numbers in them. Here $R_u$ is the referee set of node $u$.
+\begin{gather*}
+    \prob{\text{no candidate}} = (1-p)^n \leq e^{-pn},
+    \qquad
+    \prob{R_u \cap R_v = \emptyset} \leq \left(1 - \frac{k}{n}\right)^{k} \leq e^{-k^2/n}, \\
+    \prob{\text{more than one leader}} \leq \binom{n}{2}\, p^2\, e^{-k^2/n},
+    \qquad
+    \expectation{\text{messages}} \leq 2k \cdot np.
+\end{gather*}
+\begin{center}
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{llll}
+        \toprule
+        Parameters                                                      & No leader                 & More than one leader                         & Expected messages                         \\ \midrule
+        $p = \sfrac{2 \ln n}{n}$, $k = \ceil{\sqrt{n \ln n}}$ (class)   & $\leq \sfrac{1}{n^2}$     & $\leq \sfrac{2 \ln^2 n}{n}$                  & $\leq 4k \ln n$                           \\
+        $p = \sfrac{3 \ln n}{n}$, same $k$                              & $\leq \sfrac{1}{n^3}$     & $\leq \sfrac{9 \ln^2 n}{(2n)}$               & $\leq 6k \ln n$                           \\
+        same $p$, $k = \ceil{2\sqrt{n \ln n}}$                          & $\leq \sfrac{1}{n^2}$     & $\leq \sfrac{2 \ln^2 n}{n^4}$                & $\leq 4k \ln n$, with $k$ twice as large  \\
+        same $p$, $k = \ceil{\sqrt{n}}$                                 & $\leq \sfrac{1}{n^2}$     & bound is $\sfrac{2 \ln^2 n}{e}$, useless     & $\leq 4k \ln n$                           \\
+        $p = \sfrac{1}{n}$, same $k$                                    & about $\sfrac{1}{e}$      & $\leq \sfrac{1}{(2n)}$                       & $\leq 2k$                                 \\ \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{center}
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 3 \ln n / n$]\label{pp:leader3}
+    Redo the analysis with candidate probability $p = \sfrac{3 \ln n}{n}$ and the same $k$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item At least one leader: the candidate with the smallest id always wins at all its
+              referees, so there is no leader only if there is no candidate.
+              $\prob{\text{no candidate}} = (1-p)^n \leq e^{-pn} = e^{-3 \ln n} = \sfrac{1}{n^3}$.
+        \item Two candidates with a common referee cannot both be leaders. Two referee sets are
+              disjoint with probability at most $e^{-k^2/n} \leq e^{-\ln n} = \sfrac{1}{n}$, as
+              before.
+        \item A fixed pair is bad (both are candidates, with no common referee) with probability at
+              most $\sfrac{p^2}{n}$. The expected number of bad pairs is at most
+              \[\binom{n}{2} \frac{p^2}{n} \leq \frac{n^2}{2} \cdot \frac{9 \ln^2 n}{n^2} \cdot \frac{1}{n} = \frac{9 \ln^2 n}{2n}.\]
+        \item By Markov,
+              $\prob{\text{more than one leader}} \leq \prob{\text{at least one bad pair}} \leq \frac{9 \ln^2 n}{2n}$.
+        \item Messages: at most $2k$ per candidate and $3 \ln n$ candidates in expectation, so at
+              most $6k \ln n = \bigO{\sqrt{n} \log^{3/2} n}$.
+    \end{enumerate}
+    More candidates make ``no leader'' less likely, and ``two leaders'' and the message count
+    slightly larger. The asymptotics do not change.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Only $\sqrt{n}$ referees]\label{pp:leader-sqrt}
+    What breaks if $k = \ceil{\sqrt{n}}$, without the logarithm?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Now $\sfrac{k^2}{n} \approx 1$, so two referee sets are disjoint with probability about
+              $e^{-1} \approx 0.37$ instead of $\sfrac{1}{n}$.
+        \item The bound on the expected number of bad pairs becomes
+              $\frac{n^2}{2} \cdot \frac{4 \ln^2 n}{n^2} \cdot e^{-1} = \frac{2 \ln^2 n}{e}$, which is
+              larger than $1$. Markov says nothing.
+        \item The algorithm itself fails, not only the proof. Take the two candidates with the
+              smallest ids. With probability about $0.37$ they share no referee. Then, unless the
+              second one happened to pick the first as a referee, none of its referees hears a
+              smaller id, and both declare themselves leader.
+    \end{enumerate}
+    This is the birthday paradox: two random sets of size $k$ out of $n$ meet reliably only when
+    $k^2$ is larger than $n$ by a log factor.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Too few candidates]\label{pp:leader-few}
+    What happens with $p = \sfrac{1}{n}$?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    The expected number of candidates is $1$, and
+    $\prob{\text{no candidate}} = \left(1 - \frac{1}{n}\right)^n$, which tends to
+    $\sfrac{1}{e} \approx 0.37$. So with constant probability nobody is elected. The factor $\ln n$
+    in $p$ is what pushes this probability down to $\sfrac{1}{n^2}$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Numbers for $n = 1{,}000{,}000$]\label{pp:leader-num}
+    Evaluate the class algorithm for $n = 10^6$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    $\ln n \approx 13.82$.
+    \begin{enumerate}
+        \item Expected candidates: $np = 2 \ln n \approx 27.6$.
+        \item Referees per candidate: $k = \ceil{\sqrt{10^6 \cdot 13.82}} = 3717$.
+        \item Expected messages: at most $4k \ln n \approx 205{,}000$. The trivial algorithm, where
+              everyone sends its id to everyone, uses about $n^2 = 10^{12}$.
+        \item Failure probability: at most
+              $\frac{1}{n^2} + \frac{2 \ln^2 n}{n} \approx 10^{-12} + 3.8 \times 10^{-4}$.
+        \item Rounds: $3$. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\section{Deterministic, Randomized and Quantum Query Counts}\label{sec:counts}
+
+All entries are from the scribes. $N = 2^n$ is the number of inputs.
+\begin{center}
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{lllll}
+        \toprule
+        Problem                               & Deterministic         & Randomized                       & Quantum             & Lecture              \\ \midrule
+        Search, one solution among $N$        & $N - 1$               & $\bigOm{N}$                      & $\bigO{\sqrt{N}}$   & Aug 25, Sep 1, Oct 6 \\
+        Deutsch                               & $2$                   & $2$                              & $1$                 & Sep 24               \\
+        Deutsch--Jozsa                        & $\sfrac{N}{2} + 1$    & $\bigO{1}$ for constant error    & $1$, no error       & Sep 24               \\
+        Bernstein--Vazirani                   & $n$                   & $n$                              & $1$                 & Sep 29               \\
+        Simon                                 & $\bigTh{\sqrt{N}}$    & $\bigTh{\sqrt{N}}$               & $\bigO{n}$          & Sep 29, Oct 1        \\
+        Collision, random function into $[n]$ & ---                   & $\bigTh{\sqrt{n}}$               & later in the course & Sep 3                \\ \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{center}
+
+\begin{exercisebox}
+\begin{pproblem}[Is Deutsch--Jozsa an exponential speedup?]\label{pp:dj-speedup}
+    The quantum algorithm uses $1$ query and a deterministic one needs $\sfrac{N}{2} + 1$. Is this
+    an exponential quantum advantage?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    Only against deterministic (or zero-error) algorithms. A randomized algorithm queries $\alpha$
+    random inputs and answers ``balanced'' if two answers differ. It is always right on a constant
+    $f$. On a balanced $f$ all $\alpha$ answers agree with probability
+    $2 \cdot \left(\frac{1}{2}\right)^{\alpha} = \left(\frac{1}{2}\right)^{\alpha - 1}$. With
+    $\alpha = 11$ queries the error is below $\sfrac{1}{1000}$, for every $n$. So against
+    bounded-error randomized algorithms the gap is $1$ query against a constant.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Why Simon is different]\label{pp:simon-sep}
+    Explain why Simon's problem gives a real exponential separation.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    The Oct 1 lower bound is for randomized algorithms with bounded error: success probability
+    $\sfrac{2}{3}$ needs more than $\sfrac{\sqrt{N}}{2}$ queries. The quantum algorithm needs
+    $\bigO{n}$ queries. So the gap is $\sqrt{2^n}$ against $n$ even when the classical algorithm may
+    use randomness and may err. A quantum advantage has to be shown against randomized algorithms,
+    because they are the strongest classical model (Aug 25).
+\end{wsolution}
+\end{exercisebox}
+
+\needspace{7cm}
+\begin{exercisebox}
+\begin{pproblem}[The numbers for $n = 20$]\label{pp:n20}
+    Fill in the query counts for $n = 20$, $N = 1{,}048{,}576$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    The classical count for Simon lies between the lower bound of Oct 1 and the deterministic
+    algorithm of Sep 29.
+    \begin{center}
+        \begin{tabular}{lp{4.4cm}p{4.4cm}}
+            \toprule
+            Problem                   & Classical                                                                         & Quantum                                                         \\ \midrule
+            Deutsch--Jozsa, no error  & $524{,}289$                                                                       & $1$                                                             \\
+            Bernstein--Vazirani       & $20$                                                                              & $1$                                                             \\
+            Simon                     & more than $512$ ($\sfrac{\sqrt{N}}{2}$); about $1024$ suffice up to a constant    & $21$ per attempt: $19$ quantum and $2$ classical                \\
+            Search, one solution      & $1{,}048{,}575$ deterministic                                                     & $804$ Grover iterations: $\floor{\frac{\pi}{4} \cdot 1024}$     \\ \bottomrule
+        \end{tabular}
+    \end{center}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[One-line reasons]\label{pp:reasons}
+    Give a one-line reason for each statement.
+    \begin{enumerate}[label=(\alph*)]
+        \item Search is only a quadratic speedup.
+        \item Bernstein--Vazirani is $n$ against $1$.
+        \item Simon and collisions have the same square root.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) Grover uses $\bigO{\sqrt{N}}$ queries and the scribe notes that $\bigOm{\sqrt{N}}$ quantum
+    queries are necessary, so there is no exponential gain for unstructured search.
+
+    (b) Each classical answer is one bit and $s$ has $n$ bits. One quantum query returns all $n$
+    bits because the Hadamard transform turns the sign pattern $(-1)^{s \cdot x}$ into $\ket{s}$.
+
+    (c) Classically $s$ is found only by a collision, and $k$ queries make about $\sfrac{k^2}{2}$
+    pairs, so $k$ must reach about $\sqrt{N}$. This is the birthday paradox of Sep 3.
+\end{wsolution}
+\end{exercisebox}

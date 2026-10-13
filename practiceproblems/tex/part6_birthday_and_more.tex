@@ -1,0 +1,314 @@
+\section{Birthday Paradox and Collisions}\label{sec:birthday}
+
+Everything here is from Sep 3. There are $m$ people (queries) and $n$ days (values), and $X$ is the
+number of colliding pairs.
+\begin{gather*}
+    \expectation{X} = \binom{m}{2} \frac{1}{n} = \frac{m(m-1)}{2n},
+    \qquad
+    \prob{\text{no collision}} = \prod_{i=0}^{m-1} \left(1 - \frac{i}{n}\right) \leq e^{-m(m-1)/(2n)}, \\
+    \prob{X = 0} \leq \frac{\variance{X}}{\expectation{X}^2} \leq \frac{1}{\expectation{X}}.
+\end{gather*}
+The first is linearity of expectation, the second is the chain rule with $1 - x \leq e^{-x}$, and
+the third is Chebyshev with $\variance{X} \leq \expectation{X}$.
+
+\begin{exercisebox}
+\begin{pproblem}[The numbers for $n = 365$]\label{pp:bday365}
+    \leavevmode
+    \begin{enumerate}[label=(\alph*)]
+        \item How many people make the expected number of collisions at least $1$?
+        \item How many make the probability of a collision at least $\frac{1}{2}$, by the chain-rule
+              bound?
+        \item How many does the Chebyshev proof need to guarantee probability $\frac{1}{2}$?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) We need $m(m-1) \geq 2n = 730$. Since $27 \cdot 26 = 702$ and $28 \cdot 27 = 756$, the
+    answer is $m = 28$, with $\expectation{X} = \sfrac{756}{730} \approx 1.04$.
+
+    (b) We need $e^{-m(m-1)/730} \leq \frac{1}{2}$, that is $m(m-1) \geq 730 \ln 2 \approx 505.997$.
+    Since $22 \cdot 21 = 462$ and $23 \cdot 22 = 506$, the answer is $m = 23$. The exact product for
+    $m = 23$ is $0.4927$, so a collision has probability $0.507$.
+
+    (c) Chebyshev gives $\prob{X = 0} \leq \sfrac{1}{\expectation{X}}$, so we need
+    $\expectation{X} \geq 2$, that is $m(m-1) \geq 1460$. Since $38 \cdot 37 = 1406$ and
+    $39 \cdot 38 = 1482$, the answer is $m = 39$. The condition $m \geq 2\sqrt{n} + 1 \approx 39.2$
+    of the exercise gives $m = 40$.
+
+    The three answers differ ($28$, $23$, $39$) but all are about $\sqrt{n}$. Part (a) alone proves
+    nothing about the probability: $\expectation{X} \geq 1$ does not imply that
+    $\prob{X \geq 1}$ is large. That step needs more than the expectation: either the direct
+    product of part (b), or the variance, which is what the exercise uses with Chebyshev.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Why Chebyshev and not Chernoff?]\label{pp:why-cheb}
+    $X$ is a sum of indicators $X_{ij}$. Why does the birthday proof not use the Chernoff bound?
+    Why is Markov not enough?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Chernoff needs mutually independent indicators. The $X_{ij}$ are not: if persons $1$
+              and $2$ share a birthday and persons $2$ and $3$ share a birthday, then persons $1$
+              and $3$ do too. So $\prob{X_{12} = X_{23} = X_{13} = 1} = \sfrac{1}{n^2}$, not
+              $\sfrac{1}{n^3}$.
+        \item They are pairwise independent: for two different pairs,
+              $\prob{X_{ij} = X_{kl} = 1} = \sfrac{1}{n^2} = \prob{X_{ij} = 1} \cdot \prob{X_{kl} = 1}$,
+              whether the pairs share a person or not.
+        \item Pairwise independence is exactly what the variance needs. The cross terms
+              $\expectation{X_{ij} X_{kl}} - \expectation{X_{ij}}\expectation{X_{kl}}$ are all zero,
+              so $\variance{X}$ is the sum of the $\variance{X_{ij}}$, which is at most
+              $\expectation{X}$. Chebyshev then applies.
+        \item Markov gives $\prob{X \geq 1} \leq \expectation{X}$. That is an upper bound on the
+              probability of a collision, and we want a lower bound.
+    \end{enumerate}
+    The rule: Markov needs only $X \geq 0$, Chebyshev needs the variance (pairwise independence is
+    enough), and Chernoff needs mutual independence.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[The collision lower bound with numbers]\label{pp:collision-num}
+    Let $f$ be a random function into $n = 1{,}000{,}000$ values.
+    \begin{enumerate}[label=(\alph*)]
+        \item Bound the probability that $500$ queries find a collision.
+        \item In general, bound it for $k = \sfrac{\sqrt{n}}{2}$ queries.
+        \item How many queries are needed for probability $\frac{1}{2}$, and how many are enough?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    By the Sep 3 exercise, $k$ queries find a collision with probability at most
+    $\sfrac{k(k-1)}{(2n)}$. The reason is that query number $s$ hits one of the $s - 1$ earlier
+    answers with probability at most $\sfrac{(s-1)}{n}$, and the union bound adds these up.
+
+    (a) $\frac{500 \cdot 499}{2{,}000{,}000} \approx 0.125$.
+
+    (b) $\frac{k(k-1)}{2n} < \frac{k^2}{2n} = \frac{n/4}{2n} = \frac{1}{8}$, for every $n$.
+
+    (c) Needed: $\frac{k(k-1)}{2n} \geq \frac{1}{2}$ means $k(k-1) \geq 1{,}000{,}000$. Since
+    $1000 \cdot 999 = 999{,}000$ is too small, $k \geq 1001$. Enough: by the birthday exercise,
+    $m \geq 2\sqrt{n} + 1 = 2001$ random queries collide with probability at least $\frac{1}{2}$.
+
+    So the answer lies between $1001$ and $2001$ queries: $\bigTh{\sqrt{n}}$. These are two
+    separate proofs. The upper bound analyses one algorithm (random queries, Chebyshev). The lower
+    bound holds for every algorithm, adaptive or randomized (union bound).
+\end{wsolution}
+\end{exercisebox}
+
+\section{Expectation, Markov and the Weak Law}\label{sec:expect}
+
+Three short problems that each use one tool: linearity of expectation (Aug 27), the weak law from
+Chebyshev (Sep 8), and Markov (Sep 3).
+
+\begin{exercisebox}
+\begin{pproblem}[Empty bins]\label{pp:empty}
+    Throw $m$ balls independently and uniformly into $n$ bins.
+    \begin{enumerate}[label=(\alph*)]
+        \item Find the expected number of empty bins.
+        \item Evaluate it for $m = n$, $m = n \ln n$ and $m = 2n \ln n$.
+        \item For $m = 2n \ln n$, bound the probability that some bin is empty.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    Let $Y_i = 1$ if bin $i$ is empty and $0$ otherwise, and let $Y = Y_1 + \dots + Y_n$ be the
+    number of empty bins. One ball misses bin $i$ with probability $1 - \sfrac{1}{n}$, and the balls
+    are independent, so
+    $\expectation{Y_i} = \prob{Y_i = 1} = \left(1 - \frac{1}{n}\right)^m$.
+
+    (a) By linearity of expectation,
+    $\expectation{Y} = n\left(1 - \frac{1}{n}\right)^m \leq n e^{-m/n}$, using $1 - x \leq e^{-x}$.
+
+    (b) For $m = n$: about $\sfrac{n}{e}$, so $37\%$ of the bins are empty (for $n = 100$ the exact
+    value is $36.6$). For $m = n \ln n$: at most $n e^{-\ln n} = 1$. For $m = 2n \ln n$: at most
+    $n \cdot n^{-2} = \sfrac{1}{n}$.
+
+    (c) $Y \geq 0$, so Markov gives $\prob{Y \geq 1} \leq \expectation{Y} \leq \sfrac{1}{n}$.
+
+    The $Y_i$ are not independent (if every other bin is empty, bin $i$ is not), and linearity does
+    not need them to be. Part (c) is the coupon collector bound again: Markov on the number of empty
+    bins gives the same number as the union bound over the bins.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Estimating the bias of a coin]\label{pp:coin}
+    A coin shows heads with unknown probability $p$. We toss it $n$ times and estimate $p$ by the
+    fraction of heads. How large must $n$ be so that the estimate is within $\eps$ of $p$ with
+    probability at least $1 - \delta$? Evaluate for $\eps = \delta = 0.05$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    Let $X_i = 1$ if toss $i$ is heads. Then $\expectation{X_i} = p$ and
+    $\variance{X_i} = p(1-p) \leq \frac{1}{4}$, because $p(1-p)$ is largest at $p = \frac{1}{2}$. The
+    estimate is the average $\overline{X}_n$ of $X_1, \dots, X_n$. By the weak law (the Sep 8
+    exercise, which is Chebyshev applied to the average),
+    \[\prob{\abs{\overline{X}_n - p} \geq \eps} \leq \frac{\sigma^2}{n\eps^2}
+        = \frac{p(1-p)}{n\eps^2} \leq \frac{1}{4n\eps^2}.\]
+    This is at most $\delta$ when $n \geq \frac{1}{4\eps^2\delta}$. For $\eps = \delta = 0.05$:
+    $n \geq \frac{1}{4 \cdot 0.0025 \cdot 0.05} = 2000$ tosses.
+
+    The bound does not need $p$, which is the point: $p$ is what we are trying to learn. The weak
+    law only needs pairwise independent tosses. The cost of using Chebyshev is the factor
+    $\sfrac{1}{\delta}$: for $\delta = 10^{-6}$ it asks for $10^8$ tosses. Independent tosses allow
+    Chernoff, where $\delta$ enters only as $\ln(\sfrac{1}{\delta})$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Las Vegas to Monte Carlo]\label{pp:lv-mc}
+    A Las Vegas algorithm $\mathcal{A}$ is always correct and makes $T$ queries in expectation on
+    every input.
+    \begin{enumerate}[label=(\alph*)]
+        \item Build an algorithm that never makes more than $2T$ queries and fails with probability
+              at most $\frac{1}{2}$.
+        \item Get the failure probability down to $\sfrac{1}{n}$.
+        \item Check (a) on random sampling for search.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) Run $\mathcal{A}$ and stop it after $2T$ queries. If it has finished, output its answer,
+    which is correct. If not, output ``fail''. Let $X$ be the number of queries that $\mathcal{A}$
+    would make. $X \geq 0$ and $\expectation{X} \leq T$, so by Markov
+    $\prob{X \geq 2T} \leq \frac{\expectation{X}}{2T} \leq \frac{1}{2}$. The new algorithm fails only
+    in that case. Stopping after $cT$ queries gives failure at most $\sfrac{1}{c}$ in the same way.
+
+    (b) Markov alone would need $c = n$, that is $nT$ queries. Instead repeat the $2T$-query version
+    $\ceil{\log_2 n}$ times with fresh randomness and stop at the first run that finishes. All runs
+    fail with probability at most $\left(\frac{1}{2}\right)^{\log_2 n} = \frac{1}{n}$. The total is
+    at most $2T \ceil{\log_2 n}$ queries.
+
+    (c) Random sampling with replacement finds $x$ with probability $\sfrac{1}{n}$ per query, so the
+    number of queries is geometric with mean $T = n$. Markov says that $2n$ queries fail with
+    probability at most $\frac{1}{2}$. The exact value is
+    $\left(1 - \frac{1}{n}\right)^{2n} \leq e^{-2} \approx 0.135$.
+
+    Markov is weak here, but it used nothing about $\mathcal{A}$ except its expected cost. Part (b)
+    works because a Las Vegas run tells us whether it finished, so failures are detected and never
+    output as answers.
+\end{wsolution}
+\end{exercisebox}
+
+\section{Three More Quantum Questions}\label{sec:more}
+
+\begin{exercisebox}
+\begin{pproblem}[Why do we need $U_f$?]\label{pp:uf}
+    Let $f \colon \set{0,1}^n \to \set{0,1}$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Why can no quantum circuit map $\ket{x}$ to $\ket{f(x)}$?
+        \item Show that $U_f \ket{x}\ket{y} = \ket{x}\ket{y \oplus f(x)}$ is unitary.
+        \item How do we read $f(x)$ from it, and where does the sign $(-1)^{f(x)}$ come from?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) Every quantum gate is unitary, so it preserves norms and can be undone (Sep 15). The map
+    $x \mapsto f(x)$ is not one-to-one as soon as two inputs have the same value, and with more than
+    two inputs that always happens. In vectors: if $f(x) = f(x')$ with $x \neq x'$, a linear map $T$
+    with $T\ket{x} = \ket{f(x)}$ sends $\ket{x} - \ket{x'}$ to $0$. That vector has norm $\sqrt{2}$,
+    so $T$ does not preserve norms. This is the Sep 15 argument for XOR, where $00$ and $11$ both
+    give $0$.
+
+    (b) $U_f$ sends the basis state $\ket{x}\ket{y}$ to the basis state
+    $\ket{x}\ket{y \oplus f(x)}$. Applying it twice gives $y \oplus f(x) \oplus f(x) = y$, so
+    $U_f^2 = I$. So $U_f$ permutes the $2^{n+1}$ basis states, its matrix is a permutation matrix,
+    and a permutation matrix is unitary (the Sep 15 argument for CNOT). The trick is that $x$ is
+    kept: from $(x, y \oplus f(x))$ we can recover $y$, so nothing is lost.
+
+    (c) With $y = 0$: $U_f \ket{x}\ket{0} = \ket{x}\ket{f(x)}$, so measuring the last qubit gives
+    $f(x)$. With the last qubit in $\ket{-} = \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$:
+    \[U_f \ket{x}\ket{-} = \ket{x} \cdot \frac{1}{\sqrt{2}}\left(\ket{f(x)} - \ket{1 \oplus f(x)}\right).\]
+    If $f(x) = 0$ this is $\ket{x}\ket{-}$, and if $f(x) = 1$ it is $-\ket{x}\ket{-}$. So
+    $U_f \ket{x}\ket{-} = (-1)^{f(x)} \ket{x}\ket{-}$, the first fact of \cref{sec:run}.
+
+    CNOT is the smallest example: it is $U_f$ for the one-bit function $f(x) = x$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Deterministic Simon for $n = 4$]\label{pp:det-simon}
+    Run the deterministic algorithm of the Sep 29 exercise for $n = 4$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Which inputs does it query, and how many?
+        \item Which two queries collide if $s = 0110$? If $s = 1100$?
+        \item How many queries for $n = 20$, against the obvious deterministic algorithm and the
+              quantum one?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    The algorithm splits $x$ into its first $m = \ceil{\sfrac{n}{2}}$ bits $u$ and its last $n - m$
+    bits $v$, and queries every string of the form $(u, 0 \dots 0)$ and every string of the form
+    $(0 \dots 0, v)$.
+
+    (a) Here $m = 2$. The strings $u00$ are $0000, 0100, 1000, 1100$. The strings $00v$ are
+    $0000, 0001, 0010, 0011$. The string $0000$ is in both, so there are $4 + 4 - 1 = 7$ queries.
+
+    (b) $s = 0110$ has $u = 01$ and $v = 10$. The queries $0100$ and $0010$ have XOR $0110 = s$, so
+    $f(0100) = f(0010)$. $s = 1100$ has $u = 11$ and $v = 00$. The queries $1100$ and $0000$ have
+    XOR $1100 = s$, so $f(1100) = f(0000)$.
+
+    In general every $s = (u, v) \neq 0000$ is the XOR of the two queried strings $(u, 00)$ and
+    $(00, v)$, and these are different because $s \neq 0000$. So a collision always appears, and by
+    the promise any collision $x, x'$ has $x \oplus x' = s$. If no two answers agree, $f$ is
+    one-to-one and $s = 0000$.
+
+    (c) The count is $2^m + 2^{n-m} - 1$. For $n = 20$ that is $1024 + 1024 - 1 = 2047$. Querying
+    inputs until two answers agree needs $2^{19} + 1 = 524{,}289$ queries in the worst case. Simon's
+    algorithm makes $n + 1 = 21$.
+
+    So the deterministic count is about $2\sqrt{N}$, the same order as the randomized lower bound of
+    \cref{sec:lower}, and the quantum count is about $\log N$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Grover when $a$ is unknown]\label{pp:unknown-a}
+    Let $N = 64$, and let the number of solutions $a$ be unknown, with $1 \leq a \leq 32$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Why not just run $6$ iterations?
+        \item State the algorithm of the Oct 8 exercise and its guarantee.
+        \item Compute its success probability for $a = 1$ and for $a = 4$.
+        \item How do we make the failure probability small?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) Six iterations is right for $a = 1$ (success $0.997$), but for $a = 4$ it rotates past the
+    target and succeeds with probability $0.02$ (\cref{pp:wrong-a}). The right $k$ depends on $a$.
+
+    (b) Let $K = \floor{2\sqrt{N}} = 16$. Choose $k$ uniformly from $\set{1, \dots, 16}$, make $k$
+    Grover iterations on the uniform state and measure. The exercise proves
+    \[\prob{\text{success}}
+        = \frac{1}{K} \sum_{k=1}^{K} \sin^2\left((2k+1)\theta\right)
+        = \frac{1}{2} - \frac{\sin\left(4(K+1)\theta\right) - \sin 4\theta}{4K \sin 2\theta}
+        \geq \frac{1}{2} - \frac{1}{4K \sin 2\theta}
+        \geq \frac{3}{8}.\]
+
+    (c) For $a = 1$: $\sin\theta = \sfrac{1}{8}$ and $\theta \approx 0.1253$. Then
+    $\sin 2\theta \approx 0.2480$, $\sin 4\theta \approx 0.4806$ and
+    $\sin(68\theta) = \sin(8.522) \approx 0.7849$. The probability is
+    \[\frac{1}{2} - \frac{0.7849 - 0.4806}{64 \cdot 0.2480} \approx \frac{1}{2} - 0.019 = 0.481.\]
+    For $a = 4$: $\sin\theta = \frac{1}{4}$ and $\theta \approx 0.2527$. Then
+    $\sin 2\theta \approx 0.4841$, $\sin 4\theta \approx 0.8472$ and
+    $\sin(68\theta) = \sin(17.182) \approx -0.9953$. The probability is
+    \[\frac{1}{2} - \frac{-0.9953 - 0.8472}{64 \cdot 0.4841} \approx \frac{1}{2} + 0.059 = 0.559.\]
+    Both are above $\sfrac{3}{8} = 0.375$. The reason it works: averaged over many values of $k$,
+    $\sin^2$ of the angle is about $\frac{1}{2}$, whatever $\theta$ is. The last inequality of (b)
+    holds because
+    $K \sin 2\theta \geq \sqrt{2N} \cdot \sqrt{\sfrac{2a}{N}} = 2\sqrt{a} \geq 2$, so the subtracted
+    term is at most $\sfrac{1}{8}$. It uses $a \leq \sfrac{N}{2}$.
+
+    (d) Check the measured $x$ with one query to $f$. If it is not a solution, repeat with a new
+    random $k$. After $r$ rounds the failure probability is at most
+    $\left(\frac{5}{8}\right)^r$, which is below $1\%$ for $r = 10$.
+
+    Each round costs at most $16 = 2\sqrt{N}$ queries, so the algorithm is still
+    $\bigO{\sqrt{N}}$ without knowing $a$.
+\end{wsolution}
+\end{exercisebox}

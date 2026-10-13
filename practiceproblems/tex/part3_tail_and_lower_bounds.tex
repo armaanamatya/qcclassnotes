@@ -1,0 +1,238 @@
+\section{Tail Bounds in a New Setting}\label{sec:tail}
+
+Pick the inequality by what is known about $X$ (Sep 1, Sep 3).
+\begin{center}
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{lll}
+        \toprule
+        Inequality & What it needs                                                      & Bound                                                           \\ \midrule
+        Markov     & $X \geq 0$ and $\expectation{X}$                                   & $\prob{X \geq b} \leq \sfrac{\expectation{X}}{b}$               \\
+        Chebyshev  & $\expectation{X}$ and $\variance{X}$                               & $\prob{\abs{X - \expectation{X}} \geq b} \leq \sfrac{\variance{X}}{b^2}$ \\
+        Chernoff   & $X$ is a sum of independent $0/1$ variables, $\mu = \expectation{X}$ & exponentially small in $\mu$ (three forms below)                \\ \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{center}
+\begin{gather*}
+    \prob{X \geq (1+\delta)\mu} \leq e^{-\mu\delta^2/3},
+    \qquad
+    \prob{X < (1-\delta)\mu} \leq e^{-\mu\delta^2/2}
+    \quad (0 < \delta < 1), \\
+    \prob{X \geq R} \leq 2^{-R} \quad (R \geq 6\mu).
+\end{gather*}
+For a statement about all $n$ bins, slots or coupons, bound one of them and multiply by $n$ (union
+bound).
+
+\begin{exercisebox}
+\begin{pproblem}[The same event, three bounds]\label{pp:three}
+    A fair coin is tossed $n$ times and $X$ is the number of heads. Bound
+    $\prob{X \geq \sfrac{3n}{4}}$ with each inequality. Evaluate for $n = 100$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    $\expectation{X} = \sfrac{n}{2}$ and $\variance{X} = n \cdot \frac{1}{2} \cdot \frac{1}{2} = \sfrac{n}{4}$.
+    \begin{enumerate}
+        \item Markov: $\prob{X \geq \sfrac{3n}{4}} \leq \frac{n/2}{3n/4} = \frac{2}{3}$.
+        \item Chebyshev: $X \geq \sfrac{3n}{4}$ implies $\abs{X - \sfrac{n}{2}} \geq \sfrac{n}{4}$, so
+              the probability is at most $\frac{n/4}{(n/4)^2} = \frac{4}{n}$.
+        \item Chernoff: $\sfrac{3n}{4} = \left(1 + \frac{1}{2}\right)\mu$ with $\mu = \sfrac{n}{2}$ and
+              $\delta = \frac{1}{2}$, so the probability is at most
+              $e^{-(n/2)(1/4)/3} = e^{-n/24}$.
+    \end{enumerate}
+    For $n = 100$: $0.667$, $0.04$ and $e^{-4.17} \approx 0.016$. Markov does not improve with $n$,
+    Chebyshev improves like $\sfrac{1}{n}$, and Chernoff improves exponentially.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$n$ balls into $n$ bins]\label{pp:balls}
+    Throw $n$ balls independently and uniformly into $n$ bins, $n \geq 4$. Show that with probability
+    at least $1 - \sfrac{1}{n^2}$ no bin receives $3 \log_2 n$ balls or more.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Fix a bin and let $X$ be its number of balls. $X$ is a sum of $n$ independent
+              indicators, each $1$ with probability $\sfrac{1}{n}$, so $\mu = 1$.
+        \item Take $R = 3 \log_2 n$. For $n \geq 4$ we have $R \geq 6 = 6\mu$, so the third Chernoff
+              form applies.
+        \item $\prob{X \geq 3 \log_2 n} \leq 2^{-3 \log_2 n} = \sfrac{1}{n^3}$.
+        \item Union bound over the $n$ bins:
+              $\prob{\text{some bin has at least } 3 \log_2 n \text{ balls}} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}$. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Coupon collector with a different number of trials]\label{pp:coupon}
+    There are $n$ coupons and each trial gives a uniformly random one. Bound the probability that
+    some coupon is missing after
+    \begin{enumerate}[label=(\alph*)]
+        \item $2n \ln n$ trials,
+        \item $n \ln n + cn$ trials.
+        \item What happens after only $n$ trials?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    A fixed coupon is missed by one trial with probability $1 - \sfrac{1}{n}$, so it is missing
+    after $m$ trials with probability $\left(1 - \frac{1}{n}\right)^m \leq e^{-m/n}$.
+
+    (a) $e^{-2 \ln n} = \sfrac{1}{n^2}$ per coupon, so at most $n \cdot \frac{1}{n^2} = \frac{1}{n}$
+    by the union bound.
+
+    (b) $e^{-\ln n - c} = \sfrac{e^{-c}}{n}$ per coupon, so at most $e^{-c}$ in total. For $c = 3$
+    this is about $0.05$.
+
+    (c) The expected number of missing coupons is
+    $n\left(1 - \frac{1}{n}\right)^n \approx \sfrac{n}{e}$, by linearity of expectation. About
+    $37\%$ of the coupons are still missing.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Boosting a Monte Carlo algorithm by majority vote]\label{pp:majority}
+    An algorithm gives the correct yes/no answer with probability $\sfrac{2}{3}$. Run it $t$ times
+    independently ($t$ odd) and output the majority answer. How large must $t$ be for an error of at
+    most $\sfrac{1}{n}$?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Let $X$ be the number of correct runs: a sum of $t$ independent indicators with
+              $\mu = \sfrac{2t}{3}$.
+        \item The majority is wrong only if $X < \sfrac{t}{2}$.
+        \item Write $\sfrac{t}{2} = (1 - \delta)\mu$: $(1 - \delta) \cdot \frac{2t}{3} = \frac{t}{2}$
+              gives $\delta = \frac{1}{4}$.
+        \item Lower tail:
+              $\prob{X < \sfrac{t}{2}} \leq e^{-\mu\delta^2/2} = e^{-(2t/3)(1/16)/2} = e^{-t/48}$.
+        \item $e^{-t/48} \leq \sfrac{1}{n}$ when $t \geq 48 \ln n$.
+    \end{enumerate}
+    So $\bigO{\log n}$ repetitions bring the error from $\sfrac{1}{3}$ down to $\sfrac{1}{n}$.
+\end{wsolution}
+\end{exercisebox}
+
+\section{Lower Bounds by Adversary Argument and by Yao's Principle}\label{sec:lower}
+
+There are two templates. \textbf{Adversary} (Aug 25), for deterministic algorithms: answer the
+queries so that two different inputs stay consistent, and the algorithm must be wrong on one.
+\textbf{Yao} (Sep 1, Oct 1), for randomized algorithms: choose a distribution on inputs and show
+that every deterministic algorithm does badly on average; then every randomized algorithm does
+badly on some input.
+
+\begin{exercisebox}
+\begin{pproblem}[Membership needs $n$ queries]\label{pp:membership}
+    The scribe shows that finding $x$ needs $n - 1$ queries when $x$ is promised to be in the array.
+    Show that deciding whether $x$ is in the array at all needs $n$ queries.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Fix a deterministic algorithm. The adversary answers every query with ``not $x$''.
+        \item Suppose the algorithm stops after at most $n - 1$ queries. Then some slot $j$ was never
+              queried.
+        \item Two arrays agree with all the answers: one has $x$ in slot $j$, the other has no $x$
+              anywhere.
+        \item The algorithm saw the same answers on both, so it gives the same output on both. It is
+              wrong on one.
+        \item So a correct algorithm makes $n$ queries.
+    \end{enumerate}
+    The promise is what saved one query on Aug 25: with a promise, $n - 1$ answers of ``no'' leave
+    only one possible slot.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch--Jozsa needs $N/2 + 1$ deterministic queries]\label{pp:dj-lb}
+    Prove that a deterministic classical algorithm for the Deutsch--Jozsa problem needs
+    $2^{n-1} + 1$ queries.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Let $N = 2^n$. The adversary answers $0$ to every query.
+        \item Suppose the algorithm stops after at most $\sfrac{N}{2}$ queries. At least
+              $\sfrac{N}{2}$ inputs are unqueried.
+        \item Completion 1: $f = 0$ everywhere, which is constant.
+        \item Completion 2: $f = 1$ on exactly $\sfrac{N}{2}$ of the unqueried inputs and $0$
+              elsewhere, which is balanced.
+        \item Both satisfy the promise and agree with every answer, so the algorithm is wrong on one. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Randomized search needs about $n/2$ expected queries]\label{pp:yao-lv}
+    Use Yao's principle to show that a Las Vegas algorithm for search makes at least
+    $\sfrac{(n-1)}{2}$ expected queries on some input.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Input distribution $\mu$: $x$ is in a uniformly random slot, each with probability
+              $\sfrac{1}{n}$.
+        \item Take a deterministic algorithm that is always correct. As long as every answer is
+              ``no'', its queries follow one fixed order $q_1, q_2, \dots$
+        \item It cannot stop while two or more slots are unqueried and $x$ has not been seen (the
+              adversary argument). So if $x$ is in slot $q_i$ with $i \leq n - 1$, it makes at least
+              $i$ queries, and if $x$ is in the last slot it makes $n - 1$.
+        \item The expected number of queries under $\mu$ is at least
+              \[\frac{1}{n} \left(\sum_{i=1}^{n-1} i + (n-1)\right) = \frac{(n-1)(n+2)}{2n} \geq \frac{n-1}{2}.\]
+        \item By Yao's principle the expected cost of a randomized algorithm on its worst input is
+              at least the expected cost of the best deterministic algorithm under $\mu$. So it is
+              at least $\sfrac{(n-1)}{2} = \bigOm{n}$. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[The same for Monte Carlo algorithms]\label{pp:yao-mc}
+    Show that a randomized search algorithm with success probability at least $\sfrac{2}{3}$ on
+    every input needs at least $\sfrac{2n}{3} - 1$ queries.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Use the same distribution $\mu$. Take a deterministic algorithm with $T$ queries, in
+              the fixed order $q_1, \dots, q_T$ while the answers are ``no''.
+        \item It finds $x$ if $x$ is in one of these $T$ slots: probability $\sfrac{T}{n}$.
+        \item Otherwise it has seen $T$ answers of ``no'' and outputs one fixed slot. That slot is
+              the right one with probability at most $\sfrac{1}{n}$ overall.
+        \item So it succeeds with probability at most $\sfrac{(T+1)}{n}$ under $\mu$.
+        \item If $T + 1 < \sfrac{2n}{3}$, every deterministic algorithm with $T$ queries errs with
+              probability more than $\sfrac{1}{3}$ under $\mu$. By Yao's principle (the form proved
+              on Oct 1) every randomized algorithm with $T$ queries errs with probability more than
+              $\sfrac{1}{3}$ on some input. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Simon's problem, in outline]\label{pp:simon-lb}
+    State the hard distribution for Simon's problem and the key estimate. Evaluate it for $n = 10$
+    and $16$ queries.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Distribution: $s$ is uniform among the $N - 1$ nonzero strings, and $f$ is a uniformly
+              random $2$-to-$1$ function with period $s$.
+        \item An algorithm learns $s$ only from a collision, two queries $x$ and $x \oplus s$.
+        \item With $k$ distinct queries the probability of a collision is at most
+              $\sfrac{k(k-1)}{N}$, since there are $\sfrac{k(k-1)}{2}$ pairs and each pair rules in
+              one value of $s$ out of at least $\sfrac{N}{2}$.
+        \item Without a collision, $s$ is still uniform over at least $\sfrac{N}{2}$ strings, so a
+              guess is right with probability at most $\sfrac{2}{N}$.
+        \item The success probability is at most $\sfrac{(k(k-1) + 2)}{N}$.
+    \end{enumerate}
+    For $n = 10$, $N = 1024$ and $k = 16 = \sfrac{\sqrt{N}}{2}$: at most
+    $\sfrac{(240 + 2)}{1024} \approx 0.24$. So $\sfrac{\sqrt{N}}{2}$ queries are not enough for
+    success probability $\sfrac{2}{3}$, and the classical complexity is $\bigOm{\sqrt{2^n}}$.
+\end{wsolution}
+\end{exercisebox}

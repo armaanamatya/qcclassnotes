@@ -1,0 +1,77 @@
+% Worked practice problems for midterm 1, set in the style of my lecture scribes.
+% The style files are the ones in ../scribes (scribe.sty is the unmodified course file).
+% This document is not part of the scribes. Build from this folder with
+%   pdflatex -interaction=nonstopmode practiceproblems.tex   (three passes)
+
+\documentclass[a4paper,11pt,final]{article}
+\makeatletter
+\def\input@path{{../scribes/}}
+\makeatother
+\usepackage{scribecompat} % must come before scribe
+\usepackage{scribe}
+\usepackage{scribeextras} % dashed exercise boxes, Dirac notation, inline TikZ
+
+\theoremstyle{plain}
+\newtheorem{claim}[theorem]{Claim}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+
+% Practice problems are numbered inside their section: Problem 1.1, 1.2, ...
+\theoremstyle{definition}
+\newtheorem{pproblem}{Problem}[section]
+\crefname{pproblem}{Problem}{Problems}
+\Crefname{pproblem}{Problem}{Problems}
+
+% The table of contents lists the sections with their numbers and page numbers
+% (scribeextras.sty hides both for the scribes, where the lecture days carry them).
+\makeatletter
+\renewcommand{\cftsecpresnum}{}
+\renewcommand{\cftsecaftersnum}{}
+\setlength{\cftsecnumwidth}{2.3em}
+\setlength{\cftsecindent}{0em}
+\renewcommand{\cftsecfillnum}[1]{{\cftsecleader}\nobreak
+    \makebox[\@pnumwidth][\cftpnumalign]{\cftsecpagefont #1}\cftsecafterpnum\par}
+\makeatother
+
+% A little space between the parts (a), (b), ... of a solution.
+\AtBeginEnvironment{wsolution}{\setlength{\parskip}{0.35em}}
+
+\begin{document}
+
+\begin{center}
+\textbf{\large Quantum Computing} \\
+
+Professor Gopal Pandurangan\\
+\vspace{0.1in}
+\end{center}
+
+\hrule
+
+\vspace{0.1in}
+
+\textbf{Practice Problems for Midterm 1} (lectures of August 25 -- October 8, 2026)
+
+\vspace{0.1in}
+
+\hrule
+
+\vspace{0.1in}
+
+These are practice problems in the style of the likely question types, each with a full solution.
+They are a guess at the exam, not questions from the professor. Every method used is from the
+scribes; the lecture date is given to find the matching page.
+\Cref{sec:chernoff,sec:maxload} fill two gaps in the scribes: the proof of the Chernoff bound, and
+the upper-tail version of the max-load exercise.
+
+\tableofcontents
+
+\clearpage
+
+\input{tex/part1_query_algorithms}
+\input{tex/part2_states_and_walks}
+\input{tex/part3_tail_and_lower_bounds}
+\input{tex/part4_leader_and_counts}
+\input{tex/part5_chernoff_maxload}
+\input{tex/part6_birthday_and_more}
+
+\end{document}
