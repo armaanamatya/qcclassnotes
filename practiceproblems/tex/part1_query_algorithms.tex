@@ -1,0 +1,298 @@
+\section{Run Deutsch--Jozsa, Bernstein--Vazirani or Simon on a Concrete $f$}\label{sec:run}
+
+The method is always the same: write the state after every gate. Two facts from the scribes
+(Sep 24, Sep 29) do all the work:
+\[U_f \ket{x}\ket{-} = (-1)^{f(x)} \ket{x}\ket{-},
+    \qquad
+    H^{\otimes n}\ket{x} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}.\]
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch--Jozsa with $n = 2$]\label{pp:dj}
+    Let $f(x_1 x_2) = x_1 \oplus x_2$. Run the Deutsch--Jozsa algorithm on $f$. What is measured,
+    and what does the algorithm conclude?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Start in $\ket{00}\ket{1}$. Hadamards on all three qubits give
+              $\frac{1}{2}\left(\ket{00} + \ket{01} + \ket{10} + \ket{11}\right)\ket{-}$.
+        \item The query multiplies each $\ket{x}$ by $(-1)^{f(x)}$. Here $f(00) = 0$, $f(01) = 1$,
+              $f(10) = 1$, $f(11) = 0$, so the state is
+              $\frac{1}{2}\left(\ket{00} - \ket{01} - \ket{10} + \ket{11}\right)\ket{-}$.
+        \item Hadamards on the first two qubits. The amplitude of $\ket{y}$ is
+              $\frac{1}{4} \sum_{x} (-1)^{f(x) + x \cdot y}$.
+        \item For $y = 00$ this is $\frac{1}{4}(1 - 1 - 1 + 1) = 0$. For $y = 11$ we have
+              $x \cdot y = x_1 \oplus x_2 = f(x)$, so every term is $+1$ and the amplitude is $1$.
+        \item The measurement gives $11$ with probability $1$. The outcome is not $00$, so $f$ is
+              balanced.
+    \end{enumerate}
+    One quantum query was used. A deterministic classical algorithm needs $2^{n-1} + 1 = 3$ queries.
+
+    \emph{Check with a constant function.} For $f \equiv 1$ the state after the query is
+    $-\frac{1}{2} \sum_{x} \ket{x} = -\ket{+}\ket{+}$, and the Hadamards turn it into $-\ket{00}$.
+    The measurement gives $00$, so $f$ is constant. The global sign $-1$ does not affect the
+    measurement.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Bernstein--Vazirani with $n = 3$]\label{pp:bv}
+    Let $f(x) = s \cdot x \bmod 2$ with the hidden string $s = 101$, so $f(x) = x_1 \oplus x_3$.
+    \begin{enumerate}[label=(\alph*)]
+        \item How does a classical algorithm find $s$?
+        \item Run the quantum algorithm.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) Query the unit vectors: $f(100) = 1$, $f(010) = 0$, $f(001) = 1$. The answers are the bits
+    of $s$, so $n = 3$ queries. Fewer cannot work, since each answer is one bit and $s$ has $n$ bits.
+
+    (b) After the first Hadamards and the query, the first register is
+    \[\frac{1}{\sqrt{8}} \sum_{x} (-1)^{s \cdot x} \ket{x}
+        = \frac{1}{\sqrt{8}} \left(\ket{000} - \ket{001} + \ket{010} - \ket{011} - \ket{100} + \ket{101} - \ket{110} + \ket{111}\right).\]
+    After the second Hadamards the amplitude of $\ket{y}$ is
+    \[\frac{1}{8} \sum_{x} (-1)^{s \cdot x + y \cdot x} = \frac{1}{8} \sum_{x} (-1)^{(s \oplus y) \cdot x}
+        = \begin{cases} 1 & \text{if } y = s, \\ 0 & \text{if } y \neq s, \end{cases}\]
+    by the sum-of-signs claim (Sep 29): the sum is $2^n$ if $s \oplus y = 000$ and $0$ otherwise.
+    So the measurement gives $y = 101 = s$ with probability $1$, after one query.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Simon with $n = 3$]\label{pp:simon}
+    The function $f \colon \set{0,1}^3 \to \set{0,1}^3$ is given by the table below. Run Simon's
+    algorithm and find $s$.
+    \begin{center}
+        \begin{tabular}{c|cccccccc}
+            $x$    & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\ \hline
+            $f(x)$ & 101 & 010 & 000 & 110 & 000 & 110 & 101 & 010
+        \end{tabular}
+    \end{center}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item After the Hadamards and the query, the state is
+              $\frac{1}{\sqrt{8}} \sum_{x} \ket{x}\ket{f(x)}$.
+        \item Measure the second register. Suppose the outcome is $010$. The inputs with
+              $f(x) = 010$ are $001$ and $111$, so the first register is
+              $\frac{1}{\sqrt{2}}\left(\ket{001} + \ket{111}\right)$.
+        \item Apply $H^{\otimes 3}$. The amplitude of $\ket{y}$ is
+              \[\frac{1}{\sqrt{2}} \cdot \frac{1}{\sqrt{8}} \left((-1)^{001 \cdot y} + (-1)^{111 \cdot y}\right)
+                  = \frac{1}{4} (-1)^{001 \cdot y} \left(1 + (-1)^{110 \cdot y}\right).\]
+        \item This is $\pm\frac{1}{2}$ if $110 \cdot y = 0$ and $0$ if $110 \cdot y = 1$. So $y$ is
+              one of $000, 001, 110, 111$, each with probability $\sfrac{1}{4}$. The state is
+              $\frac{1}{2}\left(\ket{000} - \ket{001} + \ket{110} - \ket{111}\right)$.
+        \item Every outcome satisfies $y_1 \oplus y_2 = 0$. The same holds for any other outcome in
+              step 2, because every pair $\set{x, x \oplus s}$ has the same difference.
+        \item Run the circuit $n - 1 = 2$ times. Suppose the outcomes are $y = 111$ and $y = 001$.
+              They give the equations $s_1 \oplus s_2 \oplus s_3 = 0$ and $s_3 = 0$.
+        \item Solve: $s_3 = 0$ and $s_1 = s_2$. The solutions are $000$ and $110$, so the nonzero
+              candidate is $s' = 110$.
+        \item Check with two classical queries: $f(000) = 101 = f(110)$. So $f$ is $2$-to-$1$ and
+              $s = 110$.
+    \end{enumerate}
+
+    \emph{What can go wrong.} If the two outcomes are dependent (for example $000$ and $111$, or
+    $001$ twice), the system has more than two solutions and we run again. Two outcomes are
+    independent with probability $\frac{3}{4} \cdot \frac{1}{2} = \frac{3}{8}$: the first must be
+    nonzero ($3$ of $4$), and the second must be outside $\set{000, y_1}$ ($2$ of $4$). This matches
+    the bound of at least $\sfrac{1}{4}$ from Oct 1.
+
+    \emph{If $f$ were $1$-to-$1$.} Step 2 would leave a single $\ket{x}$, every $y$ would have
+    probability $\sfrac{1}{8}$, and the check in step 8 would fail, so the algorithm would answer
+    $s = 000$.
+\end{wsolution}
+\end{exercisebox}
+
+\section{Grover with Given $N$ and $a$}\label{sec:grover}
+
+Everything follows from three formulas (Oct 6, Oct 8). $N$ is the number of inputs, $a$ the number
+of solutions, and $k$ the number of iterations:
+\[\sin\theta = \sqrt{\frac{a}{N}},
+    \qquad
+    \prob{\text{success after } k \text{ iterations}} = \sin^2\left((2k+1)\theta\right),
+    \qquad
+    k = \floor{\frac{\pi}{4\theta}}.\]
+The recipe: compute $\theta$, compute $k$, plug in. Each iteration adds $2\theta$ to the angle, and
+we want the angle $(2k+1)\theta$ as close to $90^\circ$ as possible.
+
+\begin{exercisebox}
+\begin{pproblem}[$N = 4$, $a = 1$]\label{pp:grover4}
+    Find $\theta$, the best $k$ and the success probability. Then verify by tracking the four
+    amplitudes.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item $\sin\theta = \sqrt{\sfrac{1}{4}} = \frac{1}{2}$, so $\theta = 30^\circ = \sfrac{\pi}{6}$.
+        \item $k = \floor{\sfrac{\pi}{(4\theta)}} = \floor{1.5} = 1$.
+        \item The success probability is $\sin^2(3 \cdot 30^\circ) = \sin^2 90^\circ = 1$. One query
+              finds the solution with certainty; classically $3$ queries are needed in the worst
+              case.
+    \end{enumerate}
+
+    \emph{Amplitude check.} Start with $\left(\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2}\right)$.
+    The phase flip $Z_f$ negates the solution:
+    $\left(\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, -\frac{1}{2}\right)$, with the solution last. The
+    mean is $\frac{1}{4}\left(\frac{1}{2} + \frac{1}{2} + \frac{1}{2} - \frac{1}{2}\right) = \frac{1}{4}$.
+    Inversion about the mean sends each amplitude $\alpha$ to $2 \cdot \frac{1}{4} - \alpha$, which
+    gives $(0, 0, 0, 1)$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$N = 8$, $a = 1$, and overshooting]\label{pp:grover8}
+    Find the best $k$, and the success probability for $k = 1, 2, 3$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item $\sin\theta = \sfrac{1}{\sqrt{8}} \approx 0.3536$, so
+              $\theta \approx 0.3614$ rad $\approx 20.7^\circ$.
+        \item $k = \floor{\sfrac{\pi}{(4 \cdot 0.3614)}} = \floor{2.17} = 2$.
+        \item Plug in:
+    \end{enumerate}
+    \begin{center}
+        \begin{tabular}{ccc}
+            \toprule
+            $k$ & Angle $(2k+1)\theta$ & Success probability                \\ \midrule
+            $0$ & $20.7^\circ$         & $\sfrac{1}{8} = 0.125$             \\
+            $1$ & $62.1^\circ$         & $\sfrac{25}{32} \approx 0.781$     \\
+            $2$ & $103.5^\circ$        & $\sfrac{121}{128} \approx 0.945$   \\
+            $3$ & $144.9^\circ$        & $\sfrac{169}{512} \approx 0.330$   \\ \bottomrule
+        \end{tabular}
+    \end{center}
+    The best is $k = 2$ with probability about $0.945$. A third iteration rotates past $90^\circ$
+    and the probability drops to $0.33$: more iterations are not better.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$N = 8$, $a = 2$]\label{pp:grover82}
+    Same $N$, two solutions: find $\theta$, $k$ and the success probability.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    $\sin\theta = \sqrt{\sfrac{2}{8}} = \frac{1}{2}$, so $\theta = 30^\circ$, $k = 1$ and the
+    success probability is $\sin^2 90^\circ = 1$. Only $\sfrac{a}{N}$ matters, so this is the same as
+    $N = 4$, $a = 1$. Whenever $a = \sfrac{N}{4}$, one iteration succeeds with certainty.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Using the wrong $a$]\label{pp:wrong-a}
+    Let $N = 64$. We run the number of iterations that is right for $a = 1$, but in fact $a = 4$.
+    What is the success probability? What should $k$ have been?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item For $a = 1$: $\sin\theta = \sfrac{1}{8}$, $\theta \approx 0.1253$ and
+              $k = \floor{6.27} = 6$. With $a = 1$ this would succeed with probability
+              $\sin^2(13 \cdot 0.1253) \approx 0.997$.
+        \item With $a = 4$: $\sin\theta = \sqrt{\sfrac{4}{64}} = \frac{1}{4}$ and
+              $\theta \approx 0.2527$. After $6$ iterations the angle is
+              $13 \cdot 0.2527 \approx 3.285$ rad $\approx 188^\circ$, and $\sin^2 \approx 0.02$.
+        \item The right choice is $k = \floor{\sfrac{\pi}{(4 \cdot 0.2527)}} = \floor{3.11} = 3$, with
+              success probability $\sin^2(7 \cdot 0.2527) \approx 0.961$.
+    \end{enumerate}
+    So with the wrong $a$ the algorithm fails $98\%$ of the time. This is why an unknown $a$ needs a
+    random $k$ (Oct 8): choose $k$ uniformly from $\set{1, \dots, \floor{2\sqrt{N}}}$ and the success
+    probability is at least $\sfrac{3}{8}$ for every $a$ with $1 \leq a \leq \sfrac{N}{2}$
+    (\cref{pp:unknown-a}).
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$a = N/2$ and $a > N/2$]\label{pp:half}
+    What does Grover's algorithm do when half or more of the inputs are solutions?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    For $a = \sfrac{N}{2}$: $\theta = 45^\circ$, and the angles $45^\circ, 135^\circ, 225^\circ, \dots$
+    all have $\sin^2 = \frac{1}{2}$. Iterating never helps. For $a > \sfrac{N}{2}$:
+    $\theta > 45^\circ$, so $k = \floor{\sfrac{\pi}{(4\theta)}} = 0$, and measuring the uniform state
+    directly succeeds with probability $\sfrac{a}{N} > \frac{1}{2}$. In both cases just sample a
+    random $x$ and check it with one query.
+\end{wsolution}
+\end{exercisebox}
+
+\section{Amplitude Amplification for a Procedure with Success Probability $p$}\label{sec:ampamp}
+
+Amplitude amplification is Grover with the Hadamards replaced by any measurement-free algorithm
+$\mathcal{A}$ (Oct 8). If $\mathcal{A}$ succeeds with probability $p$, then
+\begin{gather*}
+    \sin\theta = \sqrt{p},
+    \qquad
+    Q = -\mathcal{A}\, Z_0\, \mathcal{A}^{-1} Z_f, \\
+    \prob{\text{success after } k \text{ rounds}} = \sin^2\left((2k+1)\theta\right),
+    \qquad
+    k = \floor{\frac{\pi}{4\theta}}.
+\end{gather*}
+The cost is $2k + 1$ applications of $\mathcal{A}$ or its inverse: one to prepare the state and two
+per round.
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 1/100$]\label{pp:amp100}
+    A quantum algorithm $\mathcal{A}$ outputs a good answer with probability $\sfrac{1}{100}$, and we
+    can check an answer with $f$. How many runs of $\mathcal{A}$ are needed classically, and how
+    many with amplitude amplification?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \leavevmode
+    \begin{enumerate}
+        \item Classically: run, check, repeat. The number of runs is geometric with mean
+              $\sfrac{1}{p} = 100$.
+        \item $\sin\theta = \sqrt{\sfrac{1}{100}} = 0.1$, so $\theta \approx 0.1002$.
+        \item $k = \floor{\sfrac{\pi}{(4 \cdot 0.1002)}} = \floor{7.84} = 7$.
+        \item The success probability is $\sin^2(15 \cdot 0.1002) = \sin^2(1.503) \approx 0.995$.
+        \item Cost: $2 \cdot 7 + 1 = 15$ applications of $\mathcal{A}$ or its inverse, and $7$
+              queries to $f$.
+    \end{enumerate}
+    So $15$ applications instead of $100$. In general the cost is at most
+    $\frac{\pi}{2\sqrt{p}} + 1 = \bigO{\sfrac{1}{\sqrt{p}}}$ against $\sfrac{1}{p}$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 1/4$]\label{pp:amp4}
+    Answer the same question for $p = \sfrac{1}{4}$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    $\sin\theta = \frac{1}{2}$, $\theta = 30^\circ$, $k = 1$, and the success probability is
+    $\sin^2 90^\circ = 1$. Three applications of $\mathcal{A}$ or its inverse give a good answer
+    with certainty. Classically the expected number of runs is $4$, and no fixed number of runs
+    gives certainty.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Short questions]\label{pp:ampshort}
+    \leavevmode
+    \begin{enumerate}[label=(\alph*)]
+        \item Why must $\mathcal{A}$ contain no measurement?
+        \item How is Grover's algorithm a special case?
+        \item What if $p$ is unknown?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    (a) The operator $Q$ uses the inverse of $\mathcal{A}$. A unitary circuit is inverted by running
+    it backwards with each gate inverted. A measurement is not unitary and cannot be undone.
+
+    (b) Take $\mathcal{A} = H^{\otimes n}$. Then $\mathcal{A}\ket{0^n}$ is the uniform state,
+    $p = \sfrac{a}{N}$, and $Q = -H^{\otimes n} Z_0 H^{\otimes n} Z_f$ is the Grover iteration.
+
+    (c) The formula for $k$ needs $p$. The theorem in the scribe assumes that $p$ is known; the
+    unknown case was not covered.
+\end{wsolution}
+\end{exercisebox}
