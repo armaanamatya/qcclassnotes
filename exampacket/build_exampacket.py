@@ -1,86 +1,62 @@
-# Builds exampacket/exampacket.tex from scribes/main.tex and the weekly packets.
-# Run from the repo root: python exampacket/build_exampacket.py .  then pdflatex in exampacket/ (three passes).
-import re, pathlib, sys
+# Builds exampacket/exampacket.tex: the scribes exactly as submitted (from
+# submission/Amatya_Scribes1.zip, so every number and page matches the PDF allowed in the exam),
+# followed by two mock exams with solutions (tex/mockexams.tex).
+# This is a study copy. Only the submitted scribes may be brought to the exam.
+# Run from the repo root: python exampacket/build_exampacket.py .
+# then build in exampacket/ with pdflatex (three passes).
+import pathlib, sys, zipfile
 
 repo = pathlib.Path(sys.argv[1])
 out = repo / 'exampacket'
-(out / 'tex').mkdir(parents=True, exist_ok=True)
 BS = chr(92)
 
-# The questions most likely on the exam, 2--3 per week.
-PICK = {
-    1: ['pp:membership', 'wp:kcopies'],
-    2: ['pp:balls', 'pp:coupon', 'pp:bday365'],
-    3: ['pp:leader3', 'pp:triangle'],
-    4: ['pp:five', 'pp:unitary'],
-    5: ['pp:dj', 'wp:deutsch'],
-    6: ['pp:bv', 'pp:simon', 'wp:indep4'],
-    7: ['pp:grover8', 'wp:mean8', 'pp:amp100'],
-}
-
-blocks = {}
-for f in sorted((repo / 'weeklypackets/tex').glob('week*.tex')):
-    s = f.read_text(encoding='utf8')
-    for m in re.finditer(r'\\begin\{exercisebox\}.*?\\end\{exercisebox\}', s, re.S):
-        lab = re.search(r'\\label\{((?:pp|wp):[^}]+)\}', m.group(0))
-        if lab:
-            blocks[lab.group(1)] = m.group(0)
-
-for w, labs in PICK.items():
-    body = [BS + 'practiceweek{' + str(w) + '}', '']
-    for lab in labs:
-        body += [blocks[lab], '']
-    (out / f'tex/practice_week{w}.tex').write_text('\n'.join(body), encoding='utf8')
-
-main = (repo / 'scribes/main.tex').read_text(encoding='utf8')
+# The submitted sources go to exampacket/_submitted/scribes/ (ignored by git).
+with zipfile.ZipFile(repo / 'submission/Amatya_Scribes1.zip') as z:
+    z.extractall(out / '_submitted')
+main = (out / '_submitted/scribes/main.tex').read_text(encoding='utf8')
 
 preamble = r'''
-% Practice questions after each week (not part of the submitted scribes).
-\theoremstyle{definition}
-\newcounter{practiceweek}
-\newtheorem{pproblem}{Practice Problem}
-\renewcommand{\thepproblem}{\arabic{practiceweek}.\arabic{pproblem}}
-\crefname{pproblem}{Practice Problem}{Practice Problems}
-\Crefname{pproblem}{Practice Problem}{Practice Problems}
+% Mock exams after the scribes (not part of the submitted scribes).
 \newcommand{\scr}[1]{\cref{#1}, p.~\pageref{#1}}
 \newcommand{\uses}[1]{\noindent\textit{Scribes:} #1.\par}
-\AtBeginEnvironment{wsolution}{\setlength{\parskip}{0.35em}}
-\makeatletter
-\newcommand{\practiceweek}[1]{%
-    \par\FloatBarrier
-    \vspace{0.4in}%
-    \needspace{2.5in}%
-    \setcounter{practiceweek}{#1}%
-    \setcounter{pproblem}{0}%
-    \phantomsection
-    \addcontentsline{toc}{lecture}{Practice questions, week #1}%
+% \qslot{n}{topic} starts question n; each question environment after it is one version.
+\newcounter{mockslot}
+\newcounter{mockversion}
+\newcommand{\qslot}[2]{%
+    \par\bigskip
+    \setcounter{mockslot}{#1}%
+    \setcounter{mockversion}{0}%
     \hrule
     \vspace{0.1in}
-    \noindent\textbf{Practice questions for week #1} (likely exam questions, with solutions)\par
+    \noindent\textbf{\large Question #1: #2} (25 points; two versions)\par
     \vspace{0.1in}
     \hrule
     \vspace{0.1in}
 }
-\makeatother
+\newenvironment{question}[1][]{%
+    \stepcounter{mockversion}\begin{exercisebox}\noindent
+    \textbf{Question \arabic{mockslot}, Version \arabic{mockversion}} (#1).\ }{%
+    \end{exercisebox}}
+\newenvironment{msolution}{%
+    \par\medskip\noindent
+    \textbf{Solution to Question \arabic{mockslot}, Version \arabic{mockversion}.}\par
+    \setlength{\parskip}{0.35em}}{%
+    \par\medskip}
 '''
 
-# Load the scribe style files from ../scribes, and add the practice definitions.
-main = main.replace(BS + 'documentclass[a4paper,11pt,final]{article}',
-                    BS + 'documentclass[a4paper,11pt,final]{article}\n' + BS + 'makeatletter\n'
-                    + BS + 'def' + BS + 'input@path{{../scribes/}}\n' + BS + 'makeatother', 1)
-main = main.replace(BS + 'begin{document}', preamble + '\n' + BS + 'begin{document}', 1)
-main = main.replace('% My scribes for all the lectures, in one document.',
-                    '% Exam copy: my scribes (../scribes/tex) with practice questions after each week.\n'
-                    '% Generated from scribes/main.tex; build from this folder, three passes.', 1)
+# Nothing is added before the end of the scribes (not even table of contents entries), so the
+# scribe pages stay identical to the submitted PDF.
+def replace_once(s, old, new):
+    assert s.count(old) == 1, old
+    return s.replace(old, new)
 
-# Insert each week's practice questions before the next \newweek, and week 7 after the last lecture.
-weeks = [m.start() for m in re.finditer(r'^\\newweek\{', main, re.M)]
-assert len(weeks) == 7, len(weeks)
-last = main.index(BS + 'input{tex/lecture_2026-10-08}')
-last = main.index('\n', last) + 1
-inserts = [(weeks[i], i) for i in range(1, 7)] + [(last, 7)]
-for pos, w in sorted(inserts, reverse=True):
-    main = main[:pos] + BS + 'input{tex/practice_week' + str(w) + '}\n\n' + main[pos:]
+main = replace_once(main, BS + 'documentclass[a4paper,11pt,final]{article}',
+                    BS + 'documentclass[a4paper,11pt,final]{article}\n' + BS + 'makeatletter\n'
+                    + BS + 'def' + BS + 'input@path{{_submitted/scribes/}}\n' + BS + 'makeatother')
+main = replace_once(main, BS + 'begin{document}', preamble + '\n' + BS + 'begin{document}')
+main = replace_once(main, BS + 'end{document}', BS + 'input{tex/mockexams}\n\n' + BS + 'end{document}')
+main = ('% Study copy: generated by build_exampacket.py from the submitted scribes; do not edit.\n'
+        + main)
 
 (out / 'exampacket.tex').write_text(main, encoding='utf8')
-print('problems', sum(len(v) for v in PICK.values()))
+print('wrote', out / 'exampacket.tex')

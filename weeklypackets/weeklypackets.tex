@@ -1,7 +1,8 @@
 % Weekly exam packets for midterm 1: one section per week, read after that week's review session.
 % Each week lists the scribe results to have open, then likely questions with full solutions.
-% Scribe numbers and pages are read from ../scribes/main.aux (xr-hyper), so they always match the
-% current scribes/main.pdf. Build the scribes first, then from this folder:
+% Scribe numbers and pages are read from ../exampacket/exampacket.aux (xr-hyper), whose first 53
+% pages are the scribes exactly as submitted (submission/Amatya_Scribes1.pdf), the copy allowed in
+% the exam. Build exampacket/ first, then from this folder:
 %   pdflatex -interaction=nonstopmode weeklypackets.tex   (three passes)
 
 \documentclass[a4paper,11pt,final]{article}
@@ -12,7 +13,7 @@
 \usepackage{scribecompat} % must come before scribe
 \usepackage{scribe}
 \usepackage{scribeextras} % dashed exercise boxes, Dirac notation, inline TikZ
-\externaldocument[S-]{../scribes/main}
+\externaldocument[S-]{../exampacket/exampacket}
 
 \theoremstyle{plain}
 \newtheorem{claim}[theorem]{Claim}
@@ -78,8 +79,8 @@ One section per week. Read it after that week's review session. Each section sta
 results to have open in the scribes, then gives likely questions with full solutions. The
 questions are a guess at the exam, not questions from the professor: they take the exercises
 assigned in class and change the function, the numbers or one step. Every solution says which
-scribe results it uses. Numbers such as ``Theorem 6, p.~8'' refer to \texttt{scribes/main.pdf}
-(the reviewed submission copy has the same numbering). A week only uses material up to that
+scribe results it uses. Numbers such as ``Theorem 6, p.~8'' refer to the scribes as submitted
+(\texttt{submission/Amatya\_Scribes1.pdf}), the only copy allowed in the exam. A week only uses material up to that
 week. The few places that go beyond the scribes are marked.
 
 \tableofcontents
