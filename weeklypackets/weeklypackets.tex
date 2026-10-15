@@ -1,0 +1,104 @@
+% Weekly exam packets for midterm 1: one section per week, read after that week's review session.
+% Each week lists the scribe results to have open, then likely questions with full solutions.
+% Scribe numbers and pages are read from ../exampacket/exampacket.aux (xr-hyper), whose first 53
+% pages are the scribes exactly as submitted (submission/Amatya_Scribes1.pdf), the copy allowed in
+% the exam. Build exampacket/ first, then from this folder:
+%   pdflatex -interaction=nonstopmode weeklypackets.tex   (three passes)
+
+\documentclass[a4paper,11pt,final]{article}
+\makeatletter
+\def\input@path{{../scribes/}}
+\makeatother
+\usepackage{xr-hyper}     % must come before hyperref, which scribe.sty loads
+\usepackage{scribecompat} % must come before scribe
+\usepackage{scribe}
+\usepackage{scribeextras} % dashed exercise boxes, Dirac notation, inline TikZ
+\externaldocument[S-]{../exampacket/exampacket}
+
+\theoremstyle{plain}
+\newtheorem{claim}[theorem]{Claim}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+
+% Problems are numbered inside their week: Problem 1.1, 1.2, ...
+\theoremstyle{definition}
+\newtheorem{pproblem}{Problem}[section]
+\crefname{pproblem}{Problem}{Problems}
+\Crefname{pproblem}{Problem}{Problems}
+
+% \scr{label}: the scribe result with that label, as "Theorem 6, p. 8" (no link: it is another PDF).
+\newcommand{\scr}[1]{\cref*{S-#1}, p.~\pageref*{S-#1}}
+% One row of a week's "open these" table.
+\newcommand{\openrow}[2]{#2 & \cref*{S-#1} & \pageref*{S-#1} \\}
+\newenvironment{opentable}{%
+    \begin{center}\small
+    \begin{tabular}{p{9.6cm}ll}
+        \toprule
+        In the scribes & Result & Page \\ \midrule}{%
+        \bottomrule
+    \end{tabular}
+    \end{center}}
+% The line at the top of a solution that says which scribe results it uses.
+\newcommand{\uses}[1]{\noindent\textit{Scribes:} #1.\par}
+
+% The table of contents lists the sections with their numbers and page numbers
+% (scribeextras.sty hides both for the scribes, where the lecture days carry them).
+\makeatletter
+\renewcommand{\cftsecpresnum}{}
+\renewcommand{\cftsecaftersnum}{}
+\setlength{\cftsecnumwidth}{2.3em}
+\setlength{\cftsecindent}{0em}
+\renewcommand{\cftsecfillnum}[1]{{\cftsecleader}\nobreak
+    \makebox[\@pnumwidth][\cftpnumalign]{\cftsecpagefont #1}\cftsecafterpnum\par}
+\makeatother
+
+\AtBeginEnvironment{wsolution}{\setlength{\parskip}{0.35em}}
+
+\begin{document}
+
+\begin{center}
+\textbf{\large Quantum Computing} \\
+
+Professor Gopal Pandurangan\\
+\vspace{0.1in}
+\end{center}
+
+\hrule
+
+\vspace{0.1in}
+
+\textbf{Weekly Exam Packets for Midterm 1} (lectures of August 25 -- October 8, 2026)
+
+\vspace{0.1in}
+
+\hrule
+
+\vspace{0.1in}
+
+One section per week. Read it after that week's review session. Each section starts with the
+results to have open in the scribes, then gives likely questions with full solutions. The
+questions are a guess at the exam, not questions from the professor: they take the exercises
+assigned in class and change the function, the numbers or one step. Every solution says which
+scribe results it uses. Numbers such as ``Theorem 6, p.~8'' refer to the scribes as submitted
+(\texttt{submission/Amatya\_Scribes1.pdf}), the only copy allowed in the exam. A week only uses material up to that
+week. The few places that go beyond the scribes are marked.
+
+\tableofcontents
+
+\clearpage
+
+\input{tex/week1}
+\clearpage
+\input{tex/week2}
+\clearpage
+\input{tex/week3}
+\clearpage
+\input{tex/week4}
+\clearpage
+\input{tex/week5}
+\clearpage
+\input{tex/week6}
+\clearpage
+\input{tex/week7}
+
+\end{document}

@@ -1,0 +1,160 @@
+\section{Week 5: $U_f$, Phase Kickback, Deutsch and Deutsch--Jozsa}\label{sec:week5}
+
+Lecture of September 24. There is no scribe for September 22.
+
+\begin{opentable}
+    \openrow{fig:uf-0924}{The oracle $U_f \ket{x}\ket{y} = \ket{x}\ket{y \oplus f(x)}$}
+    \openrow{ex:hback-0924}{Exercise: $H \frac{1}{\sqrt{2}}(\ket{0} + (-1)^a\ket{1})$}
+    \openrow{thm:deutsch-0924}{Exercise: Deutsch's algorithm gives $f(0) \oplus f(1)$}
+    \openrow{lem:wh-0924}{Walsh--Hadamard transform}
+    \openrow{thm:dj-0924}{Exercise: Deutsch--Jozsa outcome $0^n$ iff constant}
+\end{opentable}
+
+Two facts do all the work:
+\[U_f \ket{x}\ket{-} = (-1)^{f(x)} \ket{x}\ket{-},
+    \qquad
+    H^{\otimes n}\ket{x} = \frac{1}{\sqrt{2^n}} \sum_{y \in \set{0,1}^n} (-1)^{x \cdot y} \ket{y}.\]
+To run an algorithm on a given $f$, write the state after every gate.
+
+\begin{exercisebox}
+\begin{pproblem}[Why do we need $U_f$?]\label{pp:uf}
+    Let $f \colon \set{0,1}^n \to \set{0,1}$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Why can no quantum circuit map $\ket{x}$ to $\ket{f(x)}$?
+        \item Show that $U_f \ket{x}\ket{y} = \ket{x}\ket{y \oplus f(x)}$ is unitary.
+        \item How do we read $f(x)$ from it, and where does the sign $(-1)^{f(x)}$ come from?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:xor-0915}; \scr{fig:uf-0924}}
+    (a) Every quantum gate is unitary, so it preserves norms and can be undone (Sep 15). The map
+    $x \mapsto f(x)$ is not one-to-one as soon as two inputs have the same value, and with more than
+    two inputs that always happens. In vectors: if $f(x) = f(x')$ with $x \neq x'$, a linear map $T$
+    with $T\ket{x} = \ket{f(x)}$ sends $\ket{x} - \ket{x'}$ to $0$. That vector has norm $\sqrt{2}$,
+    so $T$ does not preserve norms. This is the Sep 15 argument for XOR, where $00$ and $11$ both
+    give $0$.
+
+    (b) $U_f$ sends the basis state $\ket{x}\ket{y}$ to the basis state
+    $\ket{x}\ket{y \oplus f(x)}$. Applying it twice gives $y \oplus f(x) \oplus f(x) = y$, so
+    $U_f^2 = I$. So $U_f$ permutes the $2^{n+1}$ basis states, its matrix is a permutation matrix,
+    and a permutation matrix is unitary (the Sep 15 argument for CNOT). The trick is that $x$ is
+    kept: from $(x, y \oplus f(x))$ we can recover $y$, so nothing is lost.
+
+    (c) With $y = 0$: $U_f \ket{x}\ket{0} = \ket{x}\ket{f(x)}$, so measuring the last qubit gives
+    $f(x)$. With the last qubit in $\ket{-} = \frac{1}{\sqrt{2}}\left(\ket{0} - \ket{1}\right)$:
+    \[U_f \ket{x}\ket{-} = \ket{x} \cdot \frac{1}{\sqrt{2}}\left(\ket{f(x)} - \ket{1 \oplus f(x)}\right).\]
+    If $f(x) = 0$ this is $\ket{x}\ket{-}$, and if $f(x) = 1$ it is $-\ket{x}\ket{-}$. So
+    $U_f \ket{x}\ket{-} = (-1)^{f(x)} \ket{x}\ket{-}$, the phase kickback used in \cref{pp:dj}.
+
+    CNOT is the smallest example: it is $U_f$ for the one-bit function $f(x) = x$.
+\end{wsolution}
+\end{exercisebox}
+
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch on $f(x) = 1 - x$]\label{wp:deutsch}
+    Run Deutsch's algorithm on $f(0) = 1$, $f(1) = 0$, writing the state after every gate.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{ex:hback-0924}; \scr{thm:deutsch-0924}}
+    \leavevmode
+    \begin{enumerate}
+        \item Start in $\ket{0}\ket{1}$. After $H \otimes H$:
+              $\ket{+}\ket{-} = \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right)\ket{-}$.
+        \item The query multiplies $\ket{x}$ by $(-1)^{f(x)}$:
+              $\frac{1}{\sqrt{2}}\left(-\ket{0} + \ket{1}\right)\ket{-} = -\ket{-}\ket{-}$.
+        \item $H$ on the first qubit: $H\ket{-} = \ket{1}$, so the state is $-\ket{1}\ket{-}$.
+        \item The first qubit is measured as $1$ with probability $1$. Indeed
+              $f(0) \oplus f(1) = 1$: $f$ is balanced.
+    \end{enumerate}
+    The sign $-1$ is global and does not change the measurement.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$H^{\otimes 2}$ on a basis state]\label{wp:h2}
+    Compute $H^{\otimes 2}\ket{10}$ with the Walsh--Hadamard formula, and check it as a product.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:wh-0924}}
+    With $x = 10$, $x \cdot y = y_1$, so
+    \[H^{\otimes 2}\ket{10} = \frac{1}{2} \sum_{y} (-1)^{y_1} \ket{y}
+        = \frac{1}{2}\left(\ket{00} + \ket{01} - \ket{10} - \ket{11}\right).\]
+    As a product: $H\ket{1} \otimes H\ket{0} = \ket{-}\ket{+}
+        = \frac{1}{2}\left(\ket{0} - \ket{1}\right)\left(\ket{0} + \ket{1}\right)$, which multiplies
+    out to the same four terms.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch--Jozsa with $n = 2$]\label{pp:dj}
+    Let $f(x_1 x_2) = x_1 \oplus x_2$. Run the Deutsch--Jozsa algorithm on $f$. What is measured,
+    and what does the algorithm conclude?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:dj-0924}; \scr{lem:wh-0924}}
+    \leavevmode
+    \begin{enumerate}
+        \item Start in $\ket{00}\ket{1}$. Hadamards on all three qubits give
+              $\frac{1}{2}\left(\ket{00} + \ket{01} + \ket{10} + \ket{11}\right)\ket{-}$.
+        \item The query multiplies each $\ket{x}$ by $(-1)^{f(x)}$. Here $f(00) = 0$, $f(01) = 1$,
+              $f(10) = 1$, $f(11) = 0$, so the state is
+              $\frac{1}{2}\left(\ket{00} - \ket{01} - \ket{10} + \ket{11}\right)\ket{-}$.
+        \item Hadamards on the first two qubits. The amplitude of $\ket{y}$ is
+              $\frac{1}{4} \sum_{x} (-1)^{f(x) + x \cdot y}$.
+        \item For $y = 00$ this is $\frac{1}{4}(1 - 1 - 1 + 1) = 0$. For $y = 11$ we have
+              $x \cdot y = x_1 \oplus x_2 = f(x)$, so every term is $+1$ and the amplitude is $1$.
+        \item The measurement gives $11$ with probability $1$. The outcome is not $00$, so $f$ is
+              balanced.
+    \end{enumerate}
+    One quantum query was used. A deterministic classical algorithm needs $2^{n-1} + 1 = 3$ queries.
+
+    \emph{Check with a constant function.} For $f \equiv 1$ the state after the query is
+    $-\frac{1}{2} \sum_{x} \ket{x} = -\ket{+}\ket{+}$, and the Hadamards turn it into $-\ket{00}$.
+    The measurement gives $00$, so $f$ is constant. The global sign $-1$ does not affect the
+    measurement.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch--Jozsa needs $N/2 + 1$ deterministic queries]\label{pp:dj-lb}
+    Prove that a deterministic classical algorithm for the Deutsch--Jozsa problem needs
+    $2^{n-1} + 1$ queries.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:dj-0924}}
+    \leavevmode
+    \begin{enumerate}
+        \item Let $N = 2^n$. The adversary answers $0$ to every query.
+        \item Suppose the algorithm stops after at most $\sfrac{N}{2}$ queries. At least
+              $\sfrac{N}{2}$ inputs are unqueried.
+        \item Completion 1: $f = 0$ everywhere, which is constant.
+        \item Completion 2: $f = 1$ on exactly $\sfrac{N}{2}$ of the unqueried inputs and $0$
+              elsewhere, which is balanced.
+        \item Both satisfy the promise and agree with every answer, so the algorithm is wrong on one. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Is Deutsch--Jozsa an exponential speedup?]\label{pp:dj-speedup}
+    The quantum algorithm uses $1$ query and a deterministic one needs $\sfrac{N}{2} + 1$. Is this
+    an exponential quantum advantage?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:dj-0924}}
+    Only against deterministic (or zero-error) algorithms. A randomized algorithm queries $\alpha$
+    random inputs and answers ``balanced'' if two answers differ. It is always right on a constant
+    $f$. On a balanced $f$ all $\alpha$ answers agree with probability
+    $2 \cdot \left(\frac{1}{2}\right)^{\alpha} = \left(\frac{1}{2}\right)^{\alpha - 1}$. With
+    $\alpha = 11$ queries the error is below $\sfrac{1}{1000}$, for every $n$. So against
+    bounded-error randomized algorithms the gap is $1$ query against a constant.
+\end{wsolution}
+\end{exercisebox}
+

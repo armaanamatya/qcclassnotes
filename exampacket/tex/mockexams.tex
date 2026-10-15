@@ -1,0 +1,313 @@
+% One mock midterm in the announced format (75 minutes, short answers and problems that mix
+% topics up to and including Grover's algorithm). Each of the four questions comes in two
+% versions; solutions follow each version.
+
+\clearpage
+\noindent\textbf{Study copy.} Pages 1--53 above are the scribes exactly as submitted; the mock
+exam below is not part of them. Do not bring this copy to the exam: only the submitted scribes are
+allowed. The page numbers in the solutions are pages of the submitted scribes.
+\vspace{0.2in}
+
+\noindent\textbf{\large Mock Midterm}
+
+\vspace{0.1in}
+
+\noindent 75 minutes, 4 questions, 25 points each. Open scribes only. Each question has two
+versions. For one practice exam, pick one version of each question (for example all Version 1,
+then all Version 2, or mix them: $2^4 = 16$ different exams). Cover the solution, which follows
+each version, until you have written your answer.
+\vspace{0.1in}
+
+\qslot{1}{Short answers}
+
+\begin{question}[Short answers]
+    Answer each part in two or three lines.
+    \begin{enumerate}[label=(\alph*)]
+        \item $X \geq 0$ and $\expectation{X} = 5$. Bound $\prob{X \geq 20}$. If also
+              $\variance{X} = 4$, give a better bound.
+        \item The birthday-paradox proof bounds $\prob{X = 0}$ with Chebyshev's inequality. Why not
+              with the Chernoff bound?
+        \item Is $\frac{1}{2}\left(\ket{00} + \ket{01} + \ket{10} - \ket{11}\right)$ entangled?
+              Prove your answer.
+        \item Why can no quantum circuit map $\ket{x_1 x_2}$ to $\ket{x_1 \oplus x_2}$? How does the
+              oracle $U_f$ get around this?
+        \item Deutsch--Jozsa uses $1$ query, and a deterministic algorithm needs $2^{n-1} + 1$. Is
+              this an exponential separation from randomized algorithms? Is Simon's?
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{thm:markov}; \scr{thm:chebyshev}; \scr{lem:pairwise-0903}; \scr{thm:bell-0915};
+          \scr{lem:xor-0915}; \scr{thm:dj-0924}; \scr{thm:simon-det-lb-1001}}
+    (a) Markov: $\prob{X \geq 20} \leq \sfrac{5}{20} = \sfrac{1}{4}$. Chebyshev: $X \geq 20$
+    implies $\abs{X - 5} \geq 15$, so $\prob{X \geq 20} \leq \sfrac{4}{15^2} = \sfrac{4}{225}
+    \approx 0.018$.
+
+    (b) Chernoff needs mutually independent indicators. The pair indicators $X_{ij}$ are only
+    pairwise independent: if persons $1, 2$ and persons $2, 3$ share a birthday, so do $1, 3$.
+    Pairwise independence is exactly what the variance needs, so Chebyshev applies.
+
+    (c) Write the state as $a\ket{00} + b\ket{01} + c\ket{10} + d\ket{11}$. A product state has
+    $ad = \alpha_0\alpha_1\beta_0\beta_1 = bc$. Here $ad = -\sfrac{1}{4}$ and $bc = \sfrac{1}{4}$,
+    so the state is entangled.
+
+    (d) Gates are unitary, so they are invertible and preserve norms. The map is not one-to-one:
+    $\ket{00}$ and $\ket{11}$ would both go to $\ket{0}$, so $\ket{00} - \ket{11}$, of norm
+    $\sqrt{2}$, would go to $0$. The oracle keeps the input:
+    $U_f\ket{x}\ket{y} = \ket{x}\ket{y \oplus f(x)}$ permutes the basis states and is its own
+    inverse, so it is unitary.
+
+    (e) No. A randomized algorithm queries $11$ random inputs and answers ``balanced'' if two
+    answers differ; it errs with probability at most $2^{-10}$, for every $n$. So the gap is
+    $1$ against a constant. Simon's is exponential: every randomized algorithm with success
+    probability $\sfrac{2}{3}$ needs more than $\sfrac{\sqrt{2^n}}{2}$ queries, against $\bigO{n}$
+    quantum queries.
+\end{msolution}
+
+\begin{question}[Short answers]
+    Answer each part in two or three lines.
+    \begin{enumerate}[label=(\alph*)]
+        \item A random walk on the path $1 - 2 - 3$ starts at vertex $1$. What is the stationary
+              distribution? Does $p_t$ converge to it? Why?
+        \item In the leader election algorithm, what goes wrong if each candidate contacts only
+              $\ceil{\sqrt{n}}$ referees instead of $\ceil{\sqrt{n \ln n}}$?
+        \item Which of $U = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i \\ i & 1 \end{pmatrix}$ and
+              $V = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ is unitary?
+        \item A measurement-free quantum algorithm $\mathcal{A}$ succeeds with probability
+              $\sfrac{1}{100}$. How many applications of $\mathcal{A}$ or $\mathcal{A}^{-1}$ does
+              amplitude amplification need, against the expected number of classical repetitions?
+              Why must $\mathcal{A}$ contain no measurement?
+        \item In $\set{0,1}^n$ with $x \cdot y = \sum_i x_i y_i \bmod 2$, can a nonzero vector be
+              orthogonal to itself? What does this mean for the measured $y$'s in Simon's
+              algorithm?
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{thm:stationary-0910}; \scr{thm:convergence-0910}; \scr{lem:disjoint-0908};
+          \scr{thm:leader-atmost-0908}; \scr{thm:unitary-0915}; \scr{thm:ampamp-1008};
+          \scr{thm:orth-ind-0917}; \scr{thm:indep-1001}}
+    (a) Degrees $1, 2, 1$ and $m = 2$, so $\pi = \left(\frac{1}{4}, \frac{1}{2}, \frac{1}{4}\right)$.
+    The path is bipartite ($\set{1,3}$ and $\set{2}$), so it does not converge: $p_t$ alternates
+    between $(0, 1, 0)$ and $\left(\frac{1}{2}, 0, \frac{1}{2}\right)$.
+
+    (b) Two referee sets are disjoint with probability about $e^{-k^2/n} = e^{-1} \approx 0.37$
+    instead of $\sfrac{1}{n}$, so two candidates often share no referee and both become leaders.
+    The bound on $\prob{\text{more than one leader}}$ becomes $\sfrac{2\ln^2 n}{e} > 1$: useless.
+
+    (c) $U^\dagger U = \frac{1}{2}\begin{pmatrix} 1 & -i \\ -i & 1 \end{pmatrix}\begin{pmatrix} 1 & i \\ i & 1 \end{pmatrix} = I$,
+    so $U$ is unitary (remember to conjugate). $V$ is not: $V\ket{1} = \ket{0} + \ket{1}$ has norm
+    $\sqrt{2}$.
+
+    (d) $\sin\theta = \sqrt{\sfrac{1}{100}} = 0.1$, $\theta \approx 0.1002$,
+    $k = \floor{\sfrac{\pi}{(4\theta)}} = 7$, success $\sin^2(15\theta) \approx 0.995$, cost
+    $2k + 1 = 15$ applications, against $100$ expected classical repetitions. The operator
+    $Q = -\mathcal{A}Z_0\mathcal{A}^{-1}Z_f$ needs $\mathcal{A}^{-1}$, and a measurement cannot be
+    undone.
+
+    (e) Yes: $11 \cdot 11 = 1 + 1 = 0$. So ``orthogonal implies independent'' (proved over
+    $\mathbb{R}$ and $\mathbb{C}$ using $\norm{v}^2 > 0$) fails over $\set{0,1}$. In Simon's
+    algorithm all $y$'s satisfy $s \cdot y = 0$, and $s$ itself may be among them; their
+    independence comes from the probability bound of the Oct 1 exercise, not from orthogonality.
+\end{msolution}
+
+\qslot{2}{Quantum query algorithms}
+
+\begin{question}[One circuit, two problems]
+    Let $f \colon \set{0,1}^3 \to \set{0,1}$, $f(x) = x_1 \oplus x_3$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Run the circuit $H^{\otimes 3}$, $U_f$, $H^{\otimes 3}$ on $\ket{000}\ket{-}$: write
+              the state after the query and after the last Hadamards. What is measured?
+        \item What does the Deutsch--Jozsa algorithm conclude about $f$? What does the
+              Bernstein--Vazirani algorithm conclude? Are both conclusions correct?
+        \item Prove that every deterministic classical algorithm that finds $s$ from queries to
+              $f(x) = s \cdot x$ needs $n$ queries.
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{thm:dj-0924}; \scr{thm:bv-0929}; \scr{lem:signsum-0929}}
+    (a) After the first Hadamards and the query (phase kickback), the first register is
+    \[\frac{1}{\sqrt{8}} \sum_{x} (-1)^{x_1 \oplus x_3} \ket{x}
+        = \frac{1}{\sqrt{8}} \left(\ket{000} - \ket{001} + \ket{010} - \ket{011} - \ket{100} + \ket{101} - \ket{110} + \ket{111}\right).\]
+    With $s = 101$, $f(x) = s \cdot x$. After the last Hadamards the amplitude of $\ket{y}$ is
+    $\frac{1}{8} \sum_x (-1)^{(s \oplus y) \cdot x}$, which is $1$ for $y = s$ and $0$ otherwise
+    (sum of signs). So $101$ is measured with probability $1$.
+
+    (b) The outcome is not $000$, so Deutsch--Jozsa says ``balanced''. Bernstein--Vazirani says
+    $s = 101$. Both are correct: $f$ is $1$ on exactly the $4$ inputs with $x_1 \neq x_3$.
+
+    (c) Fix a deterministic algorithm. Each query $x$ returns one bit $s \cdot x$, a linear
+    equation in the unknown $s$. The adversary answers $0$ to every query. After $q < n$ queries,
+    the strings $s$ with $s \cdot x = 0$ for every queried $x$ form a subspace of $\set{0,1}^n$
+    of dimension at least $n - q \geq 1$, so it contains $0^n$ and some $s \neq 0^n$. Both agree
+    with every answer, and the algorithm gives the same output on both, so it is wrong on one.
+    Querying $10\dots0, \dots, 0\dots01$ shows that $n$ queries suffice.
+\end{msolution}
+
+\begin{question}[Simon's algorithm]
+    The function $f \colon \set{0,1}^3 \to \set{0,1}^3$ is $2$-to-$1$ with an unknown period $s$:
+    \begin{center}
+        \begin{tabular}{c|cccccccc}
+            $x$    & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\ \hline
+            $f(x)$ & 101 & 010 & 000 & 110 & 000 & 110 & 101 & 010
+        \end{tabular}
+    \end{center}
+    \begin{enumerate}[label=(\alph*)]
+        \item In one run of Simon's circuit the second register is measured as $010$. Give the state
+              of the first register, then after $H^{\otimes 3}$. Which $y$ can be measured, and with
+              what probability?
+        \item Two runs give $y = 111$ and $y = 001$. Find $s$, and say how to check it.
+        \item With what probability are the $y$'s of two runs linearly independent? Compare with
+              the scribe's bound.
+        \item Why does every classical algorithm need $\bigOm{\sqrt{2^n}}$ queries? Two or three
+              sentences.
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{thm:simon-run-0929}; \scr{thm:simon-0929}; \scr{thm:indep-1001};
+          \scr{lem:collision-1001}; \scr{thm:simon-rand-lb-1001}}
+    (a) The inputs with $f(x) = 010$ are $001$ and $111$, so the first register is
+    $\frac{1}{\sqrt{2}}\left(\ket{001} + \ket{111}\right)$. After $H^{\otimes 3}$ the amplitude of
+    $\ket{y}$ is $\frac{1}{4}(-1)^{001 \cdot y}\left(1 + (-1)^{110 \cdot y}\right)$: it is
+    $\pm\frac{1}{2}$ when $110 \cdot y = 0$ and $0$ otherwise. So $y \in \set{000, 001, 110, 111}$,
+    each with probability $\sfrac{1}{4}$.
+
+    (b) $s \cdot 111 = 0$ and $s \cdot 001 = 0$ give $s_3 = 0$ and $s_1 = s_2$, so $s \in \set{000,
+    110}$. Check with two classical queries: $f(000) = 101 = f(110)$, so $s = 110$.
+
+    (c) The $y$'s are uniform in $V = \set{y \suchthat s \cdot y = 0}$, which has $4$ elements. The
+    first must be nonzero ($\sfrac{3}{4}$) and the second outside $\set{000, y_1}$ ($\sfrac{2}{4}$):
+    probability $\sfrac{3}{8}$. The exercise gives $\left(1 - \frac{1}{2}\right)\left(1 - \frac{1}{4}\right)
+    = \sfrac{3}{8} \geq \sfrac{1}{4}$, the same.
+
+    (d) A classical algorithm learns about $s$ only from a collision, two queries $x$ and
+    $x \oplus s$. With $k$ queries there are $\binom{k}{2}$ pairs, each a collision with
+    probability about $\sfrac{2}{2^n}$ for a random $s$, so the collision probability is at most
+    $\sfrac{k(k-1)}{2^n}$: small unless $k = \bigOm{\sqrt{2^n}}$ (birthday paradox). By Yao's
+    principle this holds for randomized algorithms too.
+\end{msolution}
+
+\qslot{3}{Probability and randomized algorithms}
+
+\begin{question}[Random sampling]
+    Random sampling makes $m$ independent uniformly random queries into an array of $n$ slots.
+    \begin{enumerate}[label=(\alph*)]
+        \item Find the expected number of slots that are never accessed.
+        \item Let $m = 2n \ln n$. Show that some slot is never accessed with probability at most
+              $\sfrac{1}{n}$.
+        \item Let $m = 3n \ln n$. Show that with probability at least $1 - n^{-11}$ no slot is
+              accessed $18 \ln n$ times or more.
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{thm:linearity-0827}; \scr{thm:markov}; \scr{thm:whp}; \scr{thm:chernoff-0901}}
+    (a) Let $Y_i = 1$ if slot $i$ is never accessed. A query misses slot $i$ with probability
+    $1 - \sfrac{1}{n}$, so $\expectation{Y_i} = \left(1 - \sfrac{1}{n}\right)^m$, and by linearity
+    the expected number of empty slots is
+    $n\left(1 - \sfrac{1}{n}\right)^m \leq n e^{-m/n}$, using $1 - x \leq e^{-x}$.
+
+    (b) For $m = 2n \ln n$ this is at most $n e^{-2 \ln n} = \sfrac{1}{n}$. The number $Y$ of empty
+    slots is $\geq 0$, so by Markov $\prob{Y \geq 1} \leq \expectation{Y} \leq \sfrac{1}{n}$.
+    (Equivalently: union bound over the $n$ slots.)
+
+    (c) Fix a slot; the number of accesses $Z$ is a sum of $3n \ln n$ independent indicators with
+    probability $\sfrac{1}{n}$, so $\mu = 3 \ln n$. Since $18 \ln n = 6\mu$, the third Chernoff form
+    gives $\prob{Z \geq 18 \ln n} \leq 2^{-18 \ln n} = n^{-18 \ln 2} \leq n^{-12}$. Union bound
+    over $n$ slots: at most $n^{-11}$.
+\end{msolution}
+
+\begin{question}[A random walk]
+    Vertices $1, 2, 3$ form a triangle and vertex $4$ is joined to vertex $3$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Write the transition matrix $P$.
+        \item Find the stationary distribution $\pi$ and verify $\pi P = \pi$.
+        \item Does the walk converge to $\pi$ from every start? Why?
+        \item Starting at vertex $4$, compute $p_1$ and $p_2$.
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{lem:evolution-0910}; \scr{thm:stationary-0910}; \scr{thm:convergence-0910}}
+    (a) Degrees $2, 2, 3, 1$:
+    \[P = \begin{pmatrix}
+            0            & \tfrac{1}{2} & \tfrac{1}{2} & 0            \\
+            \tfrac{1}{2} & 0            & \tfrac{1}{2} & 0            \\
+            \tfrac{1}{3} & \tfrac{1}{3} & 0            & \tfrac{1}{3} \\
+            0            & 0            & 1            & 0
+        \end{pmatrix}.\]
+
+    (b) $m = 4$, so $\pi = \left(\frac{2}{8}, \frac{2}{8}, \frac{3}{8}, \frac{1}{8}\right)$. Check,
+    vertex by vertex: $\frac{1}{8} + \frac{1}{8} = \frac{1}{4}$;
+    $\frac{1}{8} + \frac{1}{8} = \frac{1}{4}$; $\frac{1}{8} + \frac{1}{8} + \frac{1}{8} = \frac{3}{8}$;
+    $\frac{3}{8} \cdot \frac{1}{3} = \frac{1}{8}$.
+
+    (c) Yes: the graph is connected, and the triangle is an odd cycle, so it is not bipartite.
+
+    (d) $p_0 = (0,0,0,1)$, $p_1 = (0, 0, 1, 0)$, $p_2 = \left(\frac{1}{3}, \frac{1}{3}, 0, \frac{1}{3}\right)$.
+\end{msolution}
+
+\qslot{4}{Grover and lower bounds}
+
+\begin{question}[Grover with numbers]
+    Let $N = 8$ with exactly one solution.
+    \begin{enumerate}[label=(\alph*)]
+        \item Track the eight amplitudes through one Grover iteration ($Z_f$, then inversion about
+              the mean). What is the success probability after one iteration?
+        \item Find $\theta$, the number of iterations $k$ of the scribe's exercise, and the success
+              probability for $k = 2$ and $k = 3$. Explain why $k = 3$ is worse.
+        \item Now the number of solutions $a$ is unknown, $1 \leq a \leq 4$. Give an algorithm with
+              $\bigO{\sqrt{N}}$ queries that succeeds with probability at least $\sfrac{3}{8}$,
+              and make the success probability at least $0.99$.
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{lem:diffusion-1006}; \scr{cor:hk-1008}; \scr{thm:iterations-1008}; \scr{thm:randomk-1008}}
+    (a) Start with all amplitudes $\sfrac{1}{\sqrt{8}}$. $Z_f$ makes the solution's amplitude
+    $-\sfrac{1}{\sqrt{8}}$. The mean is $\frac{1}{8} \cdot \frac{7 - 1}{\sqrt{8}} = \frac{3}{4\sqrt{8}}$.
+    Inversion about the mean sends $\alpha$ to $2 \cdot \text{mean} - \alpha$: the non-solutions
+    become $\frac{1}{2\sqrt{8}}$ and the solution $\frac{5}{2\sqrt{8}}$. Success probability
+    $\frac{25}{32} \approx 0.78$. Check: $7 \cdot \frac{1}{32} + \frac{25}{32} = 1$.
+
+    (b) $\sin\theta = \sfrac{1}{\sqrt{8}}$, $\theta \approx 0.3614$ rad $\approx 20.7^\circ$.
+    $\frac{\pi}{4\theta} - \frac{1}{2} \approx 1.67$, so $k = 2$. After $k$ iterations the success
+    probability is $\sin^2\left((2k+1)\theta\right)$: for $k = 2$ the angle is $103.5^\circ$ and
+    the probability is $\approx 0.945$ (at least $1 - \sfrac{1}{8}$, as the exercise
+    guarantees); for $k = 3$ the angle is $144.9^\circ$ and the probability drops to
+    $\approx 0.33$. Each iteration rotates by $2\theta$, and the third one rotates past
+    $90^\circ$, away from the solution.
+
+    (c) Choose $k$ uniformly from $\set{1, \dots, \floor{2\sqrt{8}}} = \set{1, \dots, 5}$, make
+    $k$ iterations and measure. Since $a \leq \sfrac{N}{2}$, this succeeds with probability at
+    least $\sfrac{3}{8}$, using at most $5 = \bigO{\sqrt{N}}$ queries. Check the result with one
+    query; if it is not a solution, repeat with a new random $k$. After $r$ rounds the failure
+    probability is at most $\left(\sfrac{5}{8}\right)^r \leq 0.01$ for $r = 10$.
+\end{msolution}
+
+\begin{question}[Search lower bounds]
+    An array of $n$ slots is searched for $x$ by queries ``is $A[i] = x$?''.
+    \begin{enumerate}[label=(\alph*)]
+        \item Without a promise that $x$ is present, show that a deterministic algorithm that
+              decides whether $x$ is present needs $n$ queries.
+        \item With the promise, show that a randomized algorithm that finds $x$ with probability
+              at least $\sfrac{2}{3}$ on every input needs at least $\sfrac{2n}{3} - 1$ queries.
+        \item How many queries does Grover's algorithm make for $n = 2^{20}$, and why does (b) not
+              contradict this?
+    \end{enumerate}
+\end{question}
+\begin{msolution}
+    \uses{\scr{thm:detsearch-0825}; \scr{lem:yao-1001}}
+    (a) The adversary answers ``no'' to every query. If the algorithm stops after at most $n - 1$
+    queries, some slot $j$ is unqueried. The array with $x$ in slot $j$ and the array with no $x$
+    agree with all answers, and the algorithm gives the same output on both: wrong on one.
+
+    (b) Let $\mu$ put $x$ in a uniformly random slot. A deterministic algorithm with $T$ queries
+    queries a fixed sequence $q_1, \dots, q_T$ while the answers are ``no''. It finds $x$ with
+    probability $\sfrac{T}{n}$; otherwise it outputs one fixed slot, right with probability at
+    most $\sfrac{1}{n}$. So it succeeds with probability at most $\sfrac{(T+1)}{n}$ under $\mu$.
+    If $T < \sfrac{2n}{3} - 1$, every such algorithm errs with probability more than $\sfrac{1}{3}$
+    under $\mu$, and by Yao's principle every randomized algorithm with $T$ queries errs with
+    probability more than $\sfrac{1}{3}$ on some input.
+
+    (c) $\theta \approx \sfrac{1}{1024}$, $k = \floor{\sfrac{\pi}{(4\theta)}} \approx
+    \floor{\frac{\pi}{4} \cdot 1024} = 804$ iterations, one query each. (b) is a bound for
+    classical algorithms; quantum queries can be made in superposition, which is what Grover
+    exploits. The quadratic speedup is the best possible: quantum search needs
+    $\bigOm{\sqrt{N}}$ queries.
+\end{msolution}

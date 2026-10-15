@@ -15,3 +15,6 @@
 _minted*/
 tikzimages/
 build.log
+
+# Submitted scribe sources, extracted by exampacket/build_exampacket.py
+exampacket/_submitted/

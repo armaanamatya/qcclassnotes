@@ -1,0 +1,312 @@
+\section{Week 3: Leader Election, Law of Large Numbers, Random Walks}\label{sec:week3}
+
+Lectures of September 8 and 10.
+
+\begin{opentable}
+    \openrow{thm:anonymous-0908}{Exercise: no deterministic leader election (symmetry)}
+    \openrow{thm:leader-atleast-0908}{Exercise: at least one leader, $\geq 1 - \sfrac{1}{n^2}$}
+    \openrow{lem:badpair-0908}{Two leaders form a bad pair}
+    \openrow{lem:disjoint-0908}{Two referee sets rarely miss each other}
+    \openrow{thm:leader-atmost-0908}{Exercise: more than one leader, $\leq \sfrac{2\log^2 n}{n}$}
+    \openrow{thm:complexity-0908}{Messages and rounds}
+    \openrow{thm:wlln-0908}{Exercise: weak law from Chebyshev}
+    \openrow{lem:evolution-0910}{$p_{t+1} = p_t P$}
+    \openrow{thm:probvec-0910}{Exercise: $pP$ is a probability vector}
+    \openrow{thm:stationary-0910}{$\pi_v = \sfrac{d(v)}{2m}$}
+    \openrow{thm:convergence-0910}{Convergence iff connected and not bipartite}
+\end{opentable}
+
+\subsection{No Deterministic Leader Election}
+
+\begin{exercisebox}
+\begin{pproblem}[The symmetry argument for $n = 3$]\label{wp:anon3}
+    Three anonymous nodes form a complete network, and all start in the same state.
+    \begin{enumerate}[label=(\alph*)]
+        \item Write down the port numbering of the scribe's proof for $n = 3$, and say on which port
+              a message sent on port $1$ arrives.
+        \item Run the deterministic algorithm ``in round $1$, send \texttt{hi} on port $1$; a node
+              that receives \texttt{hi} on port $2$ becomes leader'' on it.
+        \item Which assumptions of the proof does the randomized algorithm of Sep 8 not satisfy?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:anonymous-0908}}
+    (a) Port $j$ of node $i$ leads to node $i + j \bmod 3$:
+    \begin{center}
+        \begin{tabular}{ccc}
+            \toprule
+            Node & Port $1$ leads to & Port $2$ leads to \\ \midrule
+            $0$  & $1$               & $2$               \\
+            $1$  & $2$               & $0$               \\
+            $2$  & $0$               & $1$               \\ \bottomrule
+        \end{tabular}
+    \end{center}
+    The edge between $i$ and $i + 1$ is port $1$ at $i$ and port $2$ at $i + 1$, so a message sent
+    on port $1$ arrives on port $3 - 1 = 2$.
+
+    (b) Every node sends \texttt{hi} on port $1$, and by (a) every node receives exactly one
+    \texttt{hi}, on port $2$. So all $3$ nodes become leaders. In general the proof shows that all
+    nodes are always in the same state, so the number of leaders is $0$ or $n$.
+
+    (c) The proof needs two things: all nodes start in the same state, and the algorithm is
+    deterministic. The Sep 8 algorithm assumes unique ids, so the nodes do not start in the same
+    state. It is also randomized: each node flips its own coins (whether to be a candidate, which
+    referees to contact), so the induction step ``the algorithm is deterministic, so they move to
+    the same state'' fails.
+\end{wsolution}
+\end{exercisebox}
+
+\subsection{Leader Election with a Changed Parameter}
+
+Each node becomes a candidate with probability $p$, and each candidate contacts $k$ random
+referees; in class $p = \sfrac{2 \ln n}{n}$ and $k = \ceil{\sqrt{n \ln n}}$. A changed parameter
+only changes the numbers in four estimates ($R_u$ is the referee set of $u$):
+\begin{gather*}
+    \prob{\text{no candidate}} = (1-p)^n \leq e^{-pn},
+    \qquad
+    \prob{R_u \cap R_v = \emptyset} \leq \left(1 - \frac{k}{n}\right)^{k} \leq e^{-k^2/n}, \\
+    \prob{\text{more than one leader}} \leq \binom{n}{2}\, p^2\, e^{-k^2/n},
+    \qquad
+    \expectation{\text{messages}} \leq 2k \cdot np.
+\end{gather*}
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 3 \ln n / n$]\label{pp:leader3}
+    Redo the analysis with candidate probability $p = \sfrac{3 \ln n}{n}$ and the same $k$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:leader-atleast-0908}; \scr{lem:disjoint-0908}; \scr{thm:leader-atmost-0908}; \scr{thm:complexity-0908}}
+    \leavevmode
+    \begin{enumerate}
+        \item At least one leader: the candidate with the smallest id always wins at all its
+              referees, so there is no leader only if there is no candidate.
+              $\prob{\text{no candidate}} = (1-p)^n \leq e^{-pn} = e^{-3 \ln n} = \sfrac{1}{n^3}$.
+        \item Two candidates with a common referee cannot both be leaders. Two referee sets are
+              disjoint with probability at most $e^{-k^2/n} \leq e^{-\ln n} = \sfrac{1}{n}$, as
+              before.
+        \item A fixed pair is bad (both are candidates, with no common referee) with probability at
+              most $\sfrac{p^2}{n}$. The expected number of bad pairs is at most
+              \[\binom{n}{2} \frac{p^2}{n} \leq \frac{n^2}{2} \cdot \frac{9 \ln^2 n}{n^2} \cdot \frac{1}{n} = \frac{9 \ln^2 n}{2n}.\]
+        \item By Markov,
+              $\prob{\text{more than one leader}} \leq \prob{\text{at least one bad pair}} \leq \frac{9 \ln^2 n}{2n}$.
+        \item Messages: at most $2k$ per candidate and $3 \ln n$ candidates in expectation, so at
+              most $6k \ln n = \bigO{\sqrt{n} \log^{3/2} n}$.
+    \end{enumerate}
+    More candidates make ``no leader'' less likely, and ``two leaders'' and the message count
+    slightly larger. The asymptotics do not change.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Only $\sqrt{n}$ referees]\label{pp:leader-sqrt}
+    What breaks if $k = \ceil{\sqrt{n}}$, without the logarithm?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:disjoint-0908}; \scr{thm:leader-atmost-0908}}
+    \leavevmode
+    \begin{enumerate}
+        \item Now $\sfrac{k^2}{n} \approx 1$, so two referee sets are disjoint with probability about
+              $e^{-1} \approx 0.37$ instead of $\sfrac{1}{n}$.
+        \item The bound on the expected number of bad pairs becomes
+              $\frac{n^2}{2} \cdot \frac{4 \ln^2 n}{n^2} \cdot e^{-1} = \frac{2 \ln^2 n}{e}$, which is
+              larger than $1$. Markov says nothing.
+        \item The algorithm itself fails, not only the proof. Take the two candidates with the
+              smallest ids. With probability about $0.37$ they share no referee. Then, unless the
+              second one happened to pick the first as a referee, none of its referees hears a
+              smaller id, and both declare themselves leader.
+    \end{enumerate}
+    This is the birthday paradox: two random sets of size $k$ out of $n$ meet reliably only when
+    $k^2$ is larger than $n$ by a log factor.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Too few candidates]\label{pp:leader-few}
+    What happens with $p = \sfrac{1}{n}$?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:leader-atleast-0908}}
+    The expected number of candidates is $1$, and
+    $\prob{\text{no candidate}} = \left(1 - \frac{1}{n}\right)^n$, which tends to
+    $\sfrac{1}{e} \approx 0.37$. So with constant probability nobody is elected. The factor $\ln n$
+    in $p$ is what pushes this probability down to $\sfrac{1}{n^2}$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Numbers for $n = 1{,}000{,}000$]\label{pp:leader-num}
+    Evaluate the class algorithm for $n = 10^6$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:leader-atmost-0908}; \scr{thm:complexity-0908}}
+    $\ln n \approx 13.82$.
+    \begin{enumerate}
+        \item Expected candidates: $np = 2 \ln n \approx 27.6$.
+        \item Referees per candidate: $k = \ceil{\sqrt{10^6 \cdot 13.82}} = 3717$.
+        \item Expected messages: at most $4k \ln n \approx 205{,}000$. The trivial algorithm, where
+              everyone sends its id to everyone, uses about $n^2 = 10^{12}$.
+        \item Failure probability: at most
+              $\frac{1}{n^2} + \frac{2 \ln^2 n}{n} \approx 10^{-12} + 3.8 \times 10^{-4}$.
+        \item Rounds: $3$. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+
+\subsection{Law of Large Numbers}
+
+\begin{exercisebox}
+\begin{pproblem}[Estimating the bias of a coin]\label{pp:coin}
+    A coin shows heads with unknown probability $p$. We toss it $n$ times and estimate $p$ by the
+    fraction of heads. How large must $n$ be so that the estimate is within $\eps$ of $p$ with
+    probability at least $1 - \delta$? Evaluate for $\eps = \delta = 0.05$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:wlln-0908}}
+    Let $X_i = 1$ if toss $i$ is heads. Then $\expectation{X_i} = p$ and
+    $\variance{X_i} = p(1-p) \leq \frac{1}{4}$, because $p(1-p)$ is largest at $p = \frac{1}{2}$. The
+    estimate is the average $\overline{X}_n$ of $X_1, \dots, X_n$. By the weak law (the Sep 8
+    exercise, which is Chebyshev applied to the average),
+    \[\prob{\abs{\overline{X}_n - p} \geq \eps} \leq \frac{\sigma^2}{n\eps^2}
+        = \frac{p(1-p)}{n\eps^2} \leq \frac{1}{4n\eps^2}.\]
+    This is at most $\delta$ when $n \geq \frac{1}{4\eps^2\delta}$. For $\eps = \delta = 0.05$:
+    $n \geq \frac{1}{4 \cdot 0.0025 \cdot 0.05} = 2000$ tosses.
+
+    The bound does not need $p$, which is the point: $p$ is what we are trying to learn. The weak
+    law only needs pairwise independent tosses. The cost of using Chebyshev is the factor
+    $\sfrac{1}{\delta}$: for $\delta = 10^{-6}$ it asks for $10^8$ tosses. Independent tosses allow
+    Chernoff, where $\delta$ enters only as $\ln(\sfrac{1}{\delta})$.
+\end{wsolution}
+\end{exercisebox}
+
+
+\subsection{Random Walk on a Small Graph}
+
+For a graph with $m$ edges, $P_{uv} = \sfrac{1}{\deg(u)}$ if $u \sim v$ and $0$ otherwise,
+$p_{t+1} = p_t P$ and $\pi_v = \sfrac{\deg(v)}{2m}$. The walk converges to $\pi$ from every start
+exactly when the graph is connected and not bipartite; a graph is bipartite exactly when it has no
+odd cycle.
+
+\begin{exercisebox}
+\begin{pproblem}[A triangle with a tail]\label{pp:triangle}
+    Vertices $1, 2, 3$ form a triangle and vertex $4$ is joined to vertex $3$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Write $P$.
+        \item Find $\pi$ and verify it.
+        \item Does the walk converge?
+        \item Starting at vertex $4$, compute $p_1, p_2, p_3$.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:evolution-0910}; \scr{thm:stationary-0910}; \scr{thm:convergence-0910}}
+    (a) The degrees are $2, 2, 3, 1$, so
+    \[P = \begin{pmatrix}
+            0            & \tfrac{1}{2} & \tfrac{1}{2} & 0            \\
+            \tfrac{1}{2} & 0            & \tfrac{1}{2} & 0            \\
+            \tfrac{1}{3} & \tfrac{1}{3} & 0            & \tfrac{1}{3} \\
+            0            & 0            & 1            & 0
+        \end{pmatrix}.\]
+    Every row sums to $1$.
+
+    (b) There are $m = 4$ edges, so
+    $\pi = \left(\frac{2}{8}, \frac{2}{8}, \frac{3}{8}, \frac{1}{8}\right)
+        = \left(\frac{1}{4}, \frac{1}{4}, \frac{3}{8}, \frac{1}{8}\right)$.
+    Verify $\pi P = \pi$ entry by entry:
+    \begin{itemize}
+        \item Vertex $1$: $\pi_2 \cdot \frac{1}{2} + \pi_3 \cdot \frac{1}{3} = \frac{1}{8} + \frac{1}{8} = \frac{1}{4}$.
+        \item Vertex $2$: $\pi_1 \cdot \frac{1}{2} + \pi_3 \cdot \frac{1}{3} = \frac{1}{8} + \frac{1}{8} = \frac{1}{4}$.
+        \item Vertex $3$: $\pi_1 \cdot \frac{1}{2} + \pi_2 \cdot \frac{1}{2} + \pi_4 \cdot 1
+                  = \frac{1}{8} + \frac{1}{8} + \frac{1}{8} = \frac{3}{8}$.
+        \item Vertex $4$: $\pi_3 \cdot \frac{1}{3} = \frac{1}{8}$.
+    \end{itemize}
+
+    (c) Yes. The graph is connected, and it contains a triangle (an odd cycle), so it is not
+    bipartite.
+
+    (d) $p_0 = (0, 0, 0, 1)$.
+    \begin{itemize}
+        \item $p_1 = (0, 0, 1, 0)$: from $4$ the walk must go to $3$.
+        \item $p_2 = \left(\frac{1}{3}, \frac{1}{3}, 0, \frac{1}{3}\right)$: from $3$ each
+              neighbour has probability $\frac{1}{3}$.
+        \item $p_3 = \left(\frac{1}{3} \cdot \frac{1}{2},\ \frac{1}{3} \cdot \frac{1}{2},\
+                  \frac{1}{3} \cdot \frac{1}{2} + \frac{1}{3} \cdot \frac{1}{2} + \frac{1}{3} \cdot 1,\ 0\right)
+                  = \left(\frac{1}{6}, \frac{1}{6}, \frac{2}{3}, 0\right)$.
+    \end{itemize}
+    Each $p_t$ sums to $1$, as it must (a row stochastic matrix preserves probability vectors).
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[A path on three vertices]\label{pp:path}
+    Consider the path $1 - 2 - 3$. Find $\pi$. Does the walk from vertex $1$ converge?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:stationary-0910}; \scr{thm:convergence-0910}}
+    \leavevmode
+    \begin{enumerate}
+        \item The degrees are $1, 2, 1$ and $m = 2$, so
+              $\pi = \left(\frac{1}{4}, \frac{1}{2}, \frac{1}{4}\right)$. Check:
+              $\pi P = \left(\frac{1}{2} \cdot \frac{1}{2},\ \frac{1}{4} + \frac{1}{4},\ \frac{1}{2} \cdot \frac{1}{2}\right) = \pi$.
+        \item The graph is bipartite, with sides $\set{1, 3}$ and $\set{2}$.
+        \item From $p_0 = (1, 0, 0)$: $p_1 = (0, 1, 0)$,
+              $p_2 = \left(\frac{1}{2}, 0, \frac{1}{2}\right)$, $p_3 = (0, 1, 0)$, and so on.
+        \item The distribution alternates forever between $(0, 1, 0)$ and
+              $\left(\frac{1}{2}, 0, \frac{1}{2}\right)$. It does not converge, although $\pi$
+              exists and satisfies $\pi P = \pi$.
+    \end{enumerate}
+    \emph{Beyond the scribes} (the eigenvalue proof is not in them): $P$ has the eigenvalues $1$,
+    $0$ and $-1$. The eigenvalue $-1$ is what a
+    bipartite graph produces, and its contribution $(-1)^t$ never dies out.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Short questions]\label{pp:walkshort}
+    Find the stationary distribution and say whether the walk converges for
+    \begin{enumerate}[label=(\alph*)]
+        \item a $4$-cycle and a $5$-cycle,
+        \item any $d$-regular graph on $n$ vertices,
+        \item a disconnected graph.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:stationary-0910}; \scr{thm:convergence-0910}}
+    (a) In a $4$-cycle every degree is $2$, so $\pi$ is uniform,
+    $\left(\frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4}\right)$. An even cycle is bipartite, so
+    the walk from a single vertex does not converge. A $5$-cycle is an odd cycle, so the walk does
+    converge, to the uniform distribution.
+
+    (b) $2m = nd$, so $\pi_v = \sfrac{d}{(nd)} = \sfrac{1}{n}$: the stationary distribution is
+    uniform.
+
+    (c) Each component has its own stationary distribution, so $\pi$ is not unique and the limit
+    depends on the start.
+\end{wsolution}
+\end{exercisebox}
+
+
+\begin{exercisebox}
+\begin{pproblem}[Rows, not columns]\label{wp:columns}
+    The Sep 10 exercise uses that every row of $P$ sums to $1$. Show by an example that columns
+    summing to $1$ is not enough: find a matrix $Q$ with nonnegative entries whose columns sum to
+    $1$, and a probability vector $p$, such that $pQ$ is not a probability vector.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:probvec-0910}}
+    Take
+    \[Q = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix}, \qquad p = (1, 0).\]
+    Both columns sum to $1$, but $pQ = (1, 1)$, whose entries sum to $2$. In general the entries of
+    $pQ$ sum to $\sum_j \sum_i p_i Q_{ij} = \sum_i p_i \left(\sum_j Q_{ij}\right)$: this is $1$ for
+    every probability vector $p$ exactly when every row sum $\sum_j Q_{ij}$ is $1$.
+\end{wsolution}
+\end{exercisebox}
