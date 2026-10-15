@@ -1,0 +1,82 @@
+\practiceweek{2}
+
+\begin{exercisebox}
+\begin{pproblem}[$n$ balls into $n$ bins]\label{pp:balls}
+    Throw $n$ balls independently and uniformly into $n$ bins, $n \geq 4$. Show that with probability
+    at least $1 - \sfrac{1}{n^2}$ no bin receives $3 \log_2 n$ balls or more.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:chernoff-0901}}
+    \leavevmode
+    \begin{enumerate}
+        \item Fix a bin and let $X$ be its number of balls. $X$ is a sum of $n$ independent
+              indicators, each $1$ with probability $\sfrac{1}{n}$, so $\mu = 1$.
+        \item Take $R = 3 \log_2 n$. For $n \geq 4$ we have $R \geq 6 = 6\mu$, so the third Chernoff
+              form applies.
+        \item $\prob{X \geq 3 \log_2 n} \leq 2^{-3 \log_2 n} = \sfrac{1}{n^3}$.
+        \item Union bound over the $n$ bins:
+              $\prob{\text{some bin has at least } 3 \log_2 n \text{ balls}} \leq n \cdot \frac{1}{n^3} = \frac{1}{n^2}$. \qedhere
+    \end{enumerate}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Coupon collector with a different number of trials]\label{pp:coupon}
+    There are $n$ coupons and each trial gives a uniformly random one. Bound the probability that
+    some coupon is missing after
+    \begin{enumerate}[label=(\alph*)]
+        \item $2n \ln n$ trials,
+        \item $n \ln n + cn$ trials.
+        \item What happens after only $n$ trials?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:whp}; \scr{thm:linearity-0827}}
+    A fixed coupon is missed by one trial with probability $1 - \sfrac{1}{n}$, so it is missing
+    after $m$ trials with probability $\left(1 - \frac{1}{n}\right)^m \leq e^{-m/n}$.
+
+    (a) $e^{-2 \ln n} = \sfrac{1}{n^2}$ per coupon, so at most $n \cdot \frac{1}{n^2} = \frac{1}{n}$
+    by the union bound.
+
+    (b) $e^{-\ln n - c} = \sfrac{e^{-c}}{n}$ per coupon, so at most $e^{-c}$ in total. For $c = 3$
+    this is about $0.05$.
+
+    (c) The expected number of missing coupons is
+    $n\left(1 - \frac{1}{n}\right)^n \approx \sfrac{n}{e}$, by linearity of expectation. About
+    $37\%$ of the coupons are still missing.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[The numbers for $n = 365$]\label{pp:bday365}
+    \leavevmode
+    \begin{enumerate}[label=(\alph*)]
+        \item How many people make the expected number of collisions at least $1$?
+        \item How many make the probability of a collision at least $\frac{1}{2}$, by the chain-rule
+              bound?
+        \item How many does the Chebyshev proof need to guarantee probability $\frac{1}{2}$?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:birthday-0903}}
+    (a) We need $m(m-1) \geq 2n = 730$. Since $27 \cdot 26 = 702$ and $28 \cdot 27 = 756$, the
+    answer is $m = 28$, with $\expectation{X} = \sfrac{756}{730} \approx 1.04$.
+
+    (b) We need $e^{-m(m-1)/730} \leq \frac{1}{2}$, that is $m(m-1) \geq 730 \ln 2 \approx 505.997$.
+    Since $22 \cdot 21 = 462$ and $23 \cdot 22 = 506$, the answer is $m = 23$. The exact product for
+    $m = 23$ is $0.4927$, so a collision has probability $0.507$.
+
+    (c) Chebyshev gives $\prob{X = 0} \leq \sfrac{1}{\expectation{X}}$, so we need
+    $\expectation{X} \geq 2$, that is $m(m-1) \geq 1460$. Since $38 \cdot 37 = 1406$ and
+    $39 \cdot 38 = 1482$, the answer is $m = 39$. The condition $m \geq 2\sqrt{n} + 1 \approx 39.2$
+    of the exercise gives $m = 40$.
+
+    The three answers differ ($28$, $23$, $39$) but all are about $\sqrt{n}$. Part (a) alone proves
+    nothing about the probability: $\expectation{X} \geq 1$ does not imply that
+    $\prob{X \geq 1}$ is large. That step needs more than the expectation: either the direct
+    product of part (b), or the variance, which is what the exercise uses with Chebyshev.
+\end{wsolution}
+\end{exercisebox}

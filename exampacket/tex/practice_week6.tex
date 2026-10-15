@@ -1,0 +1,100 @@
+\practiceweek{6}
+
+\begin{exercisebox}
+\begin{pproblem}[Bernstein--Vazirani with $n = 3$]\label{pp:bv}
+    Let $f(x) = s \cdot x \bmod 2$ with the hidden string $s = 101$, so $f(x) = x_1 \oplus x_3$.
+    \begin{enumerate}[label=(\alph*)]
+        \item How does a classical algorithm find $s$?
+        \item Run the quantum algorithm.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:bv-0929}; \scr{lem:signsum-0929}}
+    (a) Query the unit vectors: $f(100) = 1$, $f(010) = 0$, $f(001) = 1$. The answers are the bits
+    of $s$, so $n = 3$ queries. Fewer cannot work, since each answer is one bit and $s$ has $n$ bits.
+
+    (b) After the first Hadamards and the query, the first register is
+    \[\frac{1}{\sqrt{8}} \sum_{x} (-1)^{s \cdot x} \ket{x}
+        = \frac{1}{\sqrt{8}} \left(\ket{000} - \ket{001} + \ket{010} - \ket{011} - \ket{100} + \ket{101} - \ket{110} + \ket{111}\right).\]
+    After the second Hadamards the amplitude of $\ket{y}$ is
+    \[\frac{1}{8} \sum_{x} (-1)^{s \cdot x + y \cdot x} = \frac{1}{8} \sum_{x} (-1)^{(s \oplus y) \cdot x}
+        = \begin{cases} 1 & \text{if } y = s, \\ 0 & \text{if } y \neq s, \end{cases}\]
+    by the sum-of-signs claim (Sep 29): the sum is $2^n$ if $s \oplus y = 000$ and $0$ otherwise.
+    So the measurement gives $y = 101 = s$ with probability $1$, after one query.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Simon with $n = 3$]\label{pp:simon}
+    The function $f \colon \set{0,1}^3 \to \set{0,1}^3$ is given by the table below. Run Simon's
+    algorithm and find $s$.
+    \begin{center}
+        \begin{tabular}{c|cccccccc}
+            $x$    & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\ \hline
+            $f(x)$ & 101 & 010 & 000 & 110 & 000 & 110 & 101 & 010
+        \end{tabular}
+    \end{center}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:simon-run-0929}; \scr{thm:simon-0929}; \scr{thm:indep-1001}}
+    \leavevmode
+    \begin{enumerate}
+        \item After the Hadamards and the query, the state is
+              $\frac{1}{\sqrt{8}} \sum_{x} \ket{x}\ket{f(x)}$.
+        \item Measure the second register. Suppose the outcome is $010$. The inputs with
+              $f(x) = 010$ are $001$ and $111$, so the first register is
+              $\frac{1}{\sqrt{2}}\left(\ket{001} + \ket{111}\right)$.
+        \item Apply $H^{\otimes 3}$. The amplitude of $\ket{y}$ is
+              \[\frac{1}{\sqrt{2}} \cdot \frac{1}{\sqrt{8}} \left((-1)^{001 \cdot y} + (-1)^{111 \cdot y}\right)
+                  = \frac{1}{4} (-1)^{001 \cdot y} \left(1 + (-1)^{110 \cdot y}\right).\]
+        \item This is $\pm\frac{1}{2}$ if $110 \cdot y = 0$ and $0$ if $110 \cdot y = 1$. So $y$ is
+              one of $000, 001, 110, 111$, each with probability $\sfrac{1}{4}$. The state is
+              $\frac{1}{2}\left(\ket{000} - \ket{001} + \ket{110} - \ket{111}\right)$.
+        \item Every outcome satisfies $y_1 \oplus y_2 = 0$. The same holds for any other outcome in
+              step 2, because every pair $\set{x, x \oplus s}$ has the same difference.
+        \item Run the circuit $n - 1 = 2$ times. Suppose the outcomes are $y = 111$ and $y = 001$.
+              They give the equations $s_1 \oplus s_2 \oplus s_3 = 0$ and $s_3 = 0$.
+        \item Solve: $s_3 = 0$ and $s_1 = s_2$. The solutions are $000$ and $110$, so the nonzero
+              candidate is $s' = 110$.
+        \item Check with two classical queries: $f(000) = 101 = f(110)$. So $f$ is $2$-to-$1$ and
+              $s = 110$.
+    \end{enumerate}
+
+    \emph{What can go wrong.} If the two outcomes are dependent (for example $000$ and $111$, or
+    $001$ twice), the system has more than two solutions and we run again. Two outcomes are
+    independent with probability $\frac{3}{4} \cdot \frac{1}{2} = \frac{3}{8}$: the first must be
+    nonzero ($3$ of $4$), and the second must be outside $\set{000, y_1}$ ($2$ of $4$). This matches
+    the bound of at least $\sfrac{1}{4}$ from Oct 1.
+
+    \emph{If $f$ were $1$-to-$1$.} Step 2 would leave a single $\ket{x}$, every $y$ would have
+    probability $\sfrac{1}{8}$, and the check in step 8 would fail, so the algorithm would answer
+    $s = 000$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Independence for $n = 4$]\label{wp:indep4}
+    Simon's algorithm with $n = 4$ collects $y_1, y_2, y_3$. Find the probability that they are
+    linearly independent if $f$ is $2$-to-$1$, and if $f$ is $1$-to-$1$. How many attempts are
+    expected in the $2$-to-$1$ case?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:indep-1001}}
+    \emph{$2$-to-$1$.} The $y$'s are uniform in $V = \set{y \suchthat s \cdot y = 0}$, of dimension
+    $d = 3$. Part 1 of the exercise gives
+    \[\left(1 - \frac{1}{2}\right)\left(1 - \frac{1}{4}\right)\left(1 - \frac{1}{8}\right)
+        = \frac{1}{2} \cdot \frac{3}{4} \cdot \frac{7}{8} = \frac{21}{64} \approx 0.33 \geq \frac{1}{4}.\]
+    Each factor is the probability that the next vector is outside the span of the earlier ones:
+    the span of $i - 1$ independent vectors has $2^{i-1}$ of the $2^3$ elements of $V$.
+
+    \emph{$1$-to-$1$.} Now $V = \set{0,1}^4$, $d = 4$, and we need $d - 1 = 3$ independent
+    vectors. Part 2 gives
+    $\frac{3}{4} \cdot \frac{7}{8} \cdot \frac{15}{16} = \frac{315}{512} \approx 0.62 \geq \frac{1}{2}$.
+
+    \emph{Attempts.} Each attempt succeeds with probability $\sfrac{21}{64}$, independently, so the
+    number of attempts is geometric with mean $\sfrac{64}{21} \approx 3.05$ (\scr{thm:geometric-0827}).
+\end{wsolution}
+\end{exercisebox}

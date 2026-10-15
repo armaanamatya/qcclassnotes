@@ -1,0 +1,53 @@
+\practiceweek{5}
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch--Jozsa with $n = 2$]\label{pp:dj}
+    Let $f(x_1 x_2) = x_1 \oplus x_2$. Run the Deutsch--Jozsa algorithm on $f$. What is measured,
+    and what does the algorithm conclude?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:dj-0924}; \scr{lem:wh-0924}}
+    \leavevmode
+    \begin{enumerate}
+        \item Start in $\ket{00}\ket{1}$. Hadamards on all three qubits give
+              $\frac{1}{2}\left(\ket{00} + \ket{01} + \ket{10} + \ket{11}\right)\ket{-}$.
+        \item The query multiplies each $\ket{x}$ by $(-1)^{f(x)}$. Here $f(00) = 0$, $f(01) = 1$,
+              $f(10) = 1$, $f(11) = 0$, so the state is
+              $\frac{1}{2}\left(\ket{00} - \ket{01} - \ket{10} + \ket{11}\right)\ket{-}$.
+        \item Hadamards on the first two qubits. The amplitude of $\ket{y}$ is
+              $\frac{1}{4} \sum_{x} (-1)^{f(x) + x \cdot y}$.
+        \item For $y = 00$ this is $\frac{1}{4}(1 - 1 - 1 + 1) = 0$. For $y = 11$ we have
+              $x \cdot y = x_1 \oplus x_2 = f(x)$, so every term is $+1$ and the amplitude is $1$.
+        \item The measurement gives $11$ with probability $1$. The outcome is not $00$, so $f$ is
+              balanced.
+    \end{enumerate}
+    One quantum query was used. A deterministic classical algorithm needs $2^{n-1} + 1 = 3$ queries.
+
+    \emph{Check with a constant function.} For $f \equiv 1$ the state after the query is
+    $-\frac{1}{2} \sum_{x} \ket{x} = -\ket{+}\ket{+}$, and the Hadamards turn it into $-\ket{00}$.
+    The measurement gives $00$, so $f$ is constant. The global sign $-1$ does not affect the
+    measurement.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Deutsch on $f(x) = 1 - x$]\label{wp:deutsch}
+    Run Deutsch's algorithm on $f(0) = 1$, $f(1) = 0$, writing the state after every gate.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{ex:hback-0924}; \scr{thm:deutsch-0924}}
+    \leavevmode
+    \begin{enumerate}
+        \item Start in $\ket{0}\ket{1}$. After $H \otimes H$:
+              $\ket{+}\ket{-} = \frac{1}{\sqrt{2}}\left(\ket{0} + \ket{1}\right)\ket{-}$.
+        \item The query multiplies $\ket{x}$ by $(-1)^{f(x)}$:
+              $\frac{1}{\sqrt{2}}\left(-\ket{0} + \ket{1}\right)\ket{-} = -\ket{-}\ket{-}$.
+        \item $H$ on the first qubit: $H\ket{-} = \ket{1}$, so the state is $-\ket{1}\ket{-}$.
+        \item The first qubit is measured as $1$ with probability $1$. Indeed
+              $f(0) \oplus f(1) = 1$: $f$ is balanced.
+    \end{enumerate}
+    The sign $-1$ is global and does not change the measurement.
+\end{wsolution}
+\end{exercisebox}

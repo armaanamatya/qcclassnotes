@@ -7,6 +7,22 @@ Not known from anything in this repo: the midterm date, its exact scope, and its
 syllabus only says "Midterm exam 1: 25%". The likely-question list in section 3 is inference from
 what was assigned in class, not information from the professor.
 
+Week-by-week recap with figures, timed blocks and self-checks:
+<https://claude.ai/artifact/2ogYiEzX2Ln3MxYxbD5gBi> (private; open it while signed in). One week per
+sitting. After each sitting, do that week's section of `weeklypackets/weeklypackets.pdf`: the
+scribe results to have open (number and page in `scribes/main.pdf`), then likely questions with
+full solutions.
+
+| Week | Lectures | Topic | Time |
+|---|---|---|---|
+| 1 | Aug 25, 27 | Expectation, geometric variable, deterministic search lower bound | 60 min |
+| 2 | Sep 1, 3 | Coupon collector, Yao, Markov / Chebyshev / Chernoff, birthday, collision bound | 90 min |
+| 3 | Sep 8, 10 | Leader election, weak law, random walks and stationary distribution | 90 min |
+| 4 | Sep 15, 17 | Qubits, unitaries, H and CNOT, entanglement (`ad = bc`), rank | 60 min |
+| 5 | Sep 24 | `U_f`, phase kickback, Deutsch, Hadamard transform, Deutsch–Jozsa | 75 min |
+| 6 | Sep 29, Oct 1 | Bernstein–Vazirani, Simon (quantum and classical bounds) | 120 min |
+| 7 | Oct 6, 8 | Grover, number of iterations, random `k`, amplitude amplification | 120 min |
+
 ## 1. What the seven weeks cover
 
 Syllabus topics 1–3 and 5–8 are done. Topic 4 (superdense coding, teleportation) has no scribe.
@@ -88,7 +104,7 @@ For these the scribe is the only course source, so read them closely.
 
 With the scribes open, copying a proof earns nothing, so expect the in-class results with something
 changed: a concrete instance, a different parameter, or one step turned into a new statement.
-The 25 exercises he assigned in class are the best evidence of what he thinks you should be able
+The 26 exercises he assigned in class are the best evidence of what he thinks you should be able
 to do; the list below is those, varied.
 
 Most likely, one or two from each line:

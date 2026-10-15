@@ -1,0 +1,371 @@
+\section{Week 7: Grover's Algorithm and Amplitude Amplification}\label{sec:week7}
+
+Lectures of October 6 and 8.
+
+\begin{opentable}
+    \openrow{lem:diffusion-1006}{Inversion about the mean}
+    \openrow{lem:giter-1006}{One Grover iteration}
+    \openrow{ex:grover-rotation-1006}{Exercise: $G$ is the rotation $R_{2\theta}$}
+    \openrow{ex:diffusion-1008}{Exercise: $D = 2\ket{h}\bra{h} - I$}
+    \openrow{lem:tworef-1008}{Two reflections make a rotation}
+    \openrow{cor:hk-1008}{The state after $k$ iterations}
+    \openrow{ex:msquare-1008}{Exercise: $M^2$ is the rotation by $2\theta$}
+    \openrow{thm:iterations-1008}{Exercise: number of iterations, success $\geq 1 - \sfrac{a}{N}$}
+    \openrow{thm:randomk-1008}{Exercise: random $k$, success $\geq \sfrac{3}{8}$}
+    \openrow{thm:ampamp-1008}{Exercise: amplitude amplification}
+\end{opentable}
+
+\subsection{Grover with Given $N$ and $a$}
+
+$N$ is the number of inputs, $a$ the number of solutions and $k$ the number of iterations:
+\[\sin\theta = \sqrt{\frac{a}{N}},
+    \qquad
+    \prob{\text{success after } k \text{ iterations}} = \sin^2\left((2k+1)\theta\right).\]
+The scribe takes $k$ to be an integer closest to $\frac{\pi}{4\theta} - \frac{1}{2}$, and proves
+success probability at least $1 - \sfrac{a}{N}$. Except at a tie this is the same as
+$k = \floor{\sfrac{\pi}{(4\theta)}}$, which the solutions below use. Each iteration adds $2\theta$
+to the angle, and we want $(2k+1)\theta$ as close to $90^\circ$ as possible.
+
+\begin{exercisebox}
+\begin{pproblem}[$N = 4$, $a = 1$]\label{pp:grover4}
+    Find $\theta$, the best $k$ and the success probability. Then verify by tracking the four
+    amplitudes.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:diffusion-1006}; \scr{thm:iterations-1008}}
+    \leavevmode
+    \begin{enumerate}
+        \item $\sin\theta = \sqrt{\sfrac{1}{4}} = \frac{1}{2}$, so $\theta = 30^\circ = \sfrac{\pi}{6}$.
+        \item $k = \floor{\sfrac{\pi}{(4\theta)}} = \floor{1.5} = 1$.
+        \item The success probability is $\sin^2(3 \cdot 30^\circ) = \sin^2 90^\circ = 1$. One query
+              finds the solution with certainty; classically $3$ queries are needed in the worst
+              case.
+    \end{enumerate}
+
+    \emph{Amplitude check.} Start with $\left(\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2}\right)$.
+    The phase flip $Z_f$ negates the solution:
+    $\left(\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, -\frac{1}{2}\right)$, with the solution last. The
+    mean is $\frac{1}{4}\left(\frac{1}{2} + \frac{1}{2} + \frac{1}{2} - \frac{1}{2}\right) = \frac{1}{4}$.
+    Inversion about the mean sends each amplitude $\alpha$ to $2 \cdot \frac{1}{4} - \alpha$, which
+    gives $(0, 0, 0, 1)$.
+\end{wsolution}
+\end{exercisebox}
+
+
+\begin{exercisebox}
+\begin{pproblem}[Inversion about the mean for $N = 8$, $a = 1$]\label{wp:mean8}
+    Track the eight amplitudes through one Grover iteration and compare with
+    $\sin^2(3\theta)$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:diffusion-1006}; \scr{cor:hk-1008}}
+    \leavevmode
+    \begin{enumerate}
+        \item Start: every amplitude is $\sfrac{1}{\sqrt{8}}$.
+        \item $Z_f$ negates the solution: seven amplitudes $\sfrac{1}{\sqrt{8}}$ and one
+              $-\sfrac{1}{\sqrt{8}}$.
+        \item The mean is $\frac{1}{8} \cdot \frac{7 - 1}{\sqrt{8}} = \frac{3}{4\sqrt{8}}$.
+        \item Each amplitude $\alpha$ becomes $2 \cdot \text{mean} - \alpha$. Non-solutions:
+              $\frac{6}{4\sqrt{8}} - \frac{1}{\sqrt{8}} = \frac{1}{2\sqrt{8}}$. Solution:
+              $\frac{6}{4\sqrt{8}} + \frac{1}{\sqrt{8}} = \frac{5}{2\sqrt{8}}$.
+        \item Success probability $\frac{25}{4 \cdot 8} = \frac{25}{32} \approx 0.781$. Check of the
+              norm: $7 \cdot \frac{1}{32} + \frac{25}{32} = 1$.
+    \end{enumerate}
+    With $\sin\theta = \sfrac{1}{\sqrt{8}}$: $\sin 3\theta = 3\sin\theta - 4\sin^3\theta =
+    \frac{3}{\sqrt{8}} - \frac{4}{8\sqrt{8}} = \frac{5}{2\sqrt{8}}$, the same amplitude.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$N = 8$, $a = 1$, and overshooting]\label{pp:grover8}
+    Find the best $k$, and the success probability for $k = 1, 2, 3$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{cor:hk-1008}; \scr{thm:iterations-1008}}
+    \leavevmode
+    \begin{enumerate}
+        \item $\sin\theta = \sfrac{1}{\sqrt{8}} \approx 0.3536$, so
+              $\theta \approx 0.3614$ rad $\approx 20.7^\circ$.
+        \item $k = \floor{\sfrac{\pi}{(4 \cdot 0.3614)}} = \floor{2.17} = 2$.
+        \item Plug in:
+    \end{enumerate}
+    \begin{center}
+        \begin{tabular}{ccc}
+            \toprule
+            $k$ & Angle $(2k+1)\theta$ & Success probability                \\ \midrule
+            $0$ & $20.7^\circ$         & $\sfrac{1}{8} = 0.125$             \\
+            $1$ & $62.1^\circ$         & $\sfrac{25}{32} \approx 0.781$     \\
+            $2$ & $103.5^\circ$        & $\sfrac{121}{128} \approx 0.945$   \\
+            $3$ & $144.9^\circ$        & $\sfrac{169}{512} \approx 0.330$   \\ \bottomrule
+        \end{tabular}
+    \end{center}
+    The best is $k = 2$ with probability about $0.945$. A third iteration rotates past $90^\circ$
+    and the probability drops to $0.33$: more iterations are not better.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$N = 8$, $a = 2$]\label{pp:grover82}
+    Same $N$, two solutions: find $\theta$, $k$ and the success probability.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{cor:hk-1008}; \scr{thm:iterations-1008}}
+    $\sin\theta = \sqrt{\sfrac{2}{8}} = \frac{1}{2}$, so $\theta = 30^\circ$, $k = 1$ and the
+    success probability is $\sin^2 90^\circ = 1$. Only $\sfrac{a}{N}$ matters, so this is the same as
+    $N = 4$, $a = 1$. Whenever $a = \sfrac{N}{4}$, one iteration succeeds with certainty.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Using the wrong $a$]\label{pp:wrong-a}
+    Let $N = 64$. We run the number of iterations that is right for $a = 1$, but in fact $a = 4$.
+    What is the success probability? What should $k$ have been?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{cor:hk-1008}; \scr{thm:iterations-1008}}
+    \leavevmode
+    \begin{enumerate}
+        \item For $a = 1$: $\sin\theta = \sfrac{1}{8}$, $\theta \approx 0.1253$ and
+              $k = \floor{6.27} = 6$. With $a = 1$ this would succeed with probability
+              $\sin^2(13 \cdot 0.1253) \approx 0.997$.
+        \item With $a = 4$: $\sin\theta = \sqrt{\sfrac{4}{64}} = \frac{1}{4}$ and
+              $\theta \approx 0.2527$. After $6$ iterations the angle is
+              $13 \cdot 0.2527 \approx 3.285$ rad $\approx 188^\circ$, and $\sin^2 \approx 0.02$.
+        \item The right choice is $k = \floor{\sfrac{\pi}{(4 \cdot 0.2527)}} = \floor{3.11} = 3$, with
+              success probability $\sin^2(7 \cdot 0.2527) \approx 0.961$.
+    \end{enumerate}
+    So with the wrong $a$ the algorithm fails $98\%$ of the time. This is why an unknown $a$ needs a
+    random $k$ (Oct 8): choose $k$ uniformly from $\set{1, \dots, \floor{2\sqrt{N}}}$ and the success
+    probability is at least $\sfrac{3}{8}$ for every $a$ with $1 \leq a \leq \sfrac{N}{2}$
+    (\cref{pp:unknown-a}).
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$a = N/2$ and $a > N/2$]\label{pp:half}
+    What does Grover's algorithm do when half or more of the inputs are solutions?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{cor:hk-1008}}
+    For $a = \sfrac{N}{2}$: $\theta = 45^\circ$, and the angles $45^\circ, 135^\circ, 225^\circ, \dots$
+    all have $\sin^2 = \frac{1}{2}$. Iterating never helps. For $a > \sfrac{N}{2}$:
+    $\theta > 45^\circ$, so $k = \floor{\sfrac{\pi}{(4\theta)}} = 0$, and measuring the uniform state
+    directly succeeds with probability $\sfrac{a}{N} > \frac{1}{2}$. In both cases just sample a
+    random $x$ and check it with one query.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Grover when $a$ is unknown]\label{pp:unknown-a}
+    Let $N = 64$, and let the number of solutions $a$ be unknown, with $1 \leq a \leq 32$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Why not just run $6$ iterations?
+        \item State the algorithm of the Oct 8 exercise and its guarantee.
+        \item Compute its success probability for $a = 1$ and for $a = 4$.
+        \item How do we make the failure probability small?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:randomk-1008}}
+    (a) Six iterations is right for $a = 1$ (success $0.997$), but for $a = 4$ it rotates past the
+    target and succeeds with probability $0.02$ (\cref{pp:wrong-a}). The right $k$ depends on $a$.
+
+    (b) Let $K = \floor{2\sqrt{N}} = 16$. Choose $k$ uniformly from $\set{1, \dots, 16}$, make $k$
+    Grover iterations on the uniform state and measure. The exercise proves
+    \[\prob{\text{success}}
+        = \frac{1}{K} \sum_{k=1}^{K} \sin^2\left((2k+1)\theta\right)
+        = \frac{1}{2} - \frac{\sin\left(4(K+1)\theta\right) - \sin 4\theta}{4K \sin 2\theta}
+        \geq \frac{1}{2} - \frac{1}{4K \sin 2\theta}
+        \geq \frac{3}{8}.\]
+
+    (c) For $a = 1$: $\sin\theta = \sfrac{1}{8}$ and $\theta \approx 0.1253$. Then
+    $\sin 2\theta \approx 0.2480$, $\sin 4\theta \approx 0.4806$ and
+    $\sin(68\theta) = \sin(8.522) \approx 0.7849$. The probability is
+    \[\frac{1}{2} - \frac{0.7849 - 0.4806}{64 \cdot 0.2480} \approx \frac{1}{2} - 0.019 = 0.481.\]
+    For $a = 4$: $\sin\theta = \frac{1}{4}$ and $\theta \approx 0.2527$. Then
+    $\sin 2\theta \approx 0.4841$, $\sin 4\theta \approx 0.8472$ and
+    $\sin(68\theta) = \sin(17.182) \approx -0.9953$. The probability is
+    \[\frac{1}{2} - \frac{-0.9953 - 0.8472}{64 \cdot 0.4841} \approx \frac{1}{2} + 0.059 = 0.559.\]
+    Both are above $\sfrac{3}{8} = 0.375$. The reason it works: averaged over many values of $k$,
+    $\sin^2$ of the angle is about $\frac{1}{2}$, whatever $\theta$ is. The last inequality of (b)
+    holds because
+    $K \sin 2\theta \geq \sqrt{2N} \cdot \sqrt{\sfrac{2a}{N}} = 2\sqrt{a} \geq 2$, so the subtracted
+    term is at most $\sfrac{1}{8}$. It uses $a \leq \sfrac{N}{2}$.
+
+    (d) Check the measured $x$ with one query to $f$. If it is not a solution, repeat with a new
+    random $k$. After $r$ rounds the failure probability is at most
+    $\left(\frac{5}{8}\right)^r$, which is below $1\%$ for $r = 10$.
+
+    Each round costs at most $16 = 2\sqrt{N}$ queries, so the algorithm is still
+    $\bigO{\sqrt{N}}$ without knowing $a$.
+\end{wsolution}
+\end{exercisebox}
+
+
+\subsection{Structure of the Iteration}
+
+\begin{exercisebox}
+\begin{pproblem}[The rotation for $N = 4$, $a = 1$]\label{wp:rot4}
+    In the basis $(\ket{B}, \ket{A})$, write the matrix $G$ of one Grover iteration and the matrix
+    $M$ of the rotation by $\theta$. Check that $M^2 = G$, and compute $G\ket{h}$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{ex:grover-rotation-1006}; \scr{ex:msquare-1008}}
+    Here $a = 1$, $b = 3$, $\sin\theta = \frac{1}{2}$, $\theta = 30^\circ$.
+    \begin{enumerate}
+        \item $G$ has entries $\frac{b - a}{N} = \frac{1}{2}$ and
+              $\frac{2\sqrt{ab}}{N} = \frac{2\sqrt{3}}{4} = \frac{\sqrt{3}}{2}$:
+              \[G = \begin{pmatrix} \tfrac{1}{2} & -\tfrac{\sqrt{3}}{2} \\[0.5ex] \tfrac{\sqrt{3}}{2} & \tfrac{1}{2} \end{pmatrix} = R_{60^\circ}.\]
+        \item $M$ has entries $\sqrt{\sfrac{b}{N}} = \frac{\sqrt{3}}{2} = \cos 30^\circ$ and
+              $\sqrt{\sfrac{a}{N}} = \frac{1}{2} = \sin 30^\circ$, so $M = R_{30^\circ}$.
+        \item $M^2 = \begin{pmatrix} \tfrac{3}{4} - \tfrac{1}{4} & -\tfrac{\sqrt{3}}{4} - \tfrac{\sqrt{3}}{4} \\[0.5ex] \tfrac{\sqrt{3}}{4} + \tfrac{\sqrt{3}}{4} & -\tfrac{1}{4} + \tfrac{3}{4} \end{pmatrix}
+                  = \begin{pmatrix} \tfrac{1}{2} & -\tfrac{\sqrt{3}}{2} \\[0.5ex] \tfrac{\sqrt{3}}{2} & \tfrac{1}{2} \end{pmatrix} = G$.
+        \item $\ket{h} = \cos 30^\circ \ket{B} + \sin 30^\circ \ket{A}$ has coordinates
+              $\left(\frac{\sqrt{3}}{2}, \frac{1}{2}\right)$, and
+              $G\ket{h} = \left(\frac{\sqrt{3}}{4} - \frac{\sqrt{3}}{4},\ \frac{3}{4} + \frac{1}{4}\right) = (0, 1)$,
+              that is, $G\ket{h} = \ket{A}$.
+    \end{enumerate}
+    The angle goes from $30^\circ$ to $90^\circ$ in one iteration, which is why
+    \cref{pp:grover4} succeeds with certainty.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$D$ is a reflection]\label{wp:dref}
+    Let $D = 2\ket{h}\bra{h} - I$ with $\braket{h}{h} = 1$. Show that $D$ is unitary, $D^2 = I$,
+    $D\ket{h} = \ket{h}$, and $D\ket{v} = -\ket{v}$ for every $\ket{v}$ orthogonal to $\ket{h}$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{ex:diffusion-1008}}
+    $D\ket{h} = 2\ket{h}\braket{h}{h} - \ket{h} = \ket{h}$, and if $\braket{h}{v} = 0$ then
+    $D\ket{v} = 2\ket{h}\braket{h}{v} - \ket{v} = -\ket{v}$. Next,
+    \[D^2 = 4\ket{h}\braket{h}{h}\bra{h} - 4\ket{h}\bra{h} + I = I.\]
+    Also $D^\dagger = 2\ket{h}\bra{h} - I = D$, because $(\ket{h}\bra{h})^\dagger = \ket{h}\bra{h}$.
+    So $D^\dagger D = D^2 = I$ and $D$ is unitary. Geometrically $D$ keeps the $\ket{h}$ direction
+    and flips everything orthogonal to it: a reflection about $\ket{h}$.
+\end{wsolution}
+\end{exercisebox}
+
+\subsection{Amplitude Amplification}
+
+For a measurement-free algorithm $\mathcal{A}$ that succeeds with probability $p$:
+$\sin\theta = \sqrt{p}$, $Q = -\mathcal{A}\, Z_0\, \mathcal{A}^{-1} Z_f$, success after $k$ rounds
+$\sin^2\left((2k+1)\theta\right)$, and $k = \floor{\sfrac{\pi}{(4\theta)}}$. The cost is $2k + 1$
+applications of $\mathcal{A}$ or $\mathcal{A}^{-1}$: one to prepare the state and two per round.
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 1/100$]\label{pp:amp100}
+    A quantum algorithm $\mathcal{A}$ outputs a good answer with probability $\sfrac{1}{100}$, and we
+    can check an answer with $f$. How many runs of $\mathcal{A}$ are needed classically, and how
+    many with amplitude amplification?
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:ampamp-1008}}
+    \leavevmode
+    \begin{enumerate}
+        \item Classically: run, check, repeat. The number of runs is geometric with mean
+              $\sfrac{1}{p} = 100$.
+        \item $\sin\theta = \sqrt{\sfrac{1}{100}} = 0.1$, so $\theta \approx 0.1002$.
+        \item $k = \floor{\sfrac{\pi}{(4 \cdot 0.1002)}} = \floor{7.84} = 7$.
+        \item The success probability is $\sin^2(15 \cdot 0.1002) = \sin^2(1.503) \approx 0.995$.
+        \item Cost: $2 \cdot 7 + 1 = 15$ applications of $\mathcal{A}$ or its inverse, and $7$
+              queries to $f$.
+    \end{enumerate}
+    So $15$ applications instead of $100$. In general the cost is at most
+    $\frac{\pi}{2\sqrt{p}} + 1 = \bigO{\sfrac{1}{\sqrt{p}}}$ against $\sfrac{1}{p}$.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 1/4$]\label{pp:amp4}
+    Answer the same question for $p = \sfrac{1}{4}$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:ampamp-1008}}
+    $\sin\theta = \frac{1}{2}$, $\theta = 30^\circ$, $k = 1$, and the success probability is
+    $\sin^2 90^\circ = 1$. Three applications of $\mathcal{A}$ or its inverse give a good answer
+    with certainty. Classically the expected number of runs is $4$, and no fixed number of runs
+    gives certainty.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Short questions]\label{pp:ampshort}
+    \leavevmode
+    \begin{enumerate}[label=(\alph*)]
+        \item Why must $\mathcal{A}$ contain no measurement?
+        \item How is Grover's algorithm a special case?
+        \item What if $p$ is unknown?
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:ampamp-1008}}
+    (a) The operator $Q$ uses the inverse of $\mathcal{A}$. A unitary circuit is inverted by running
+    it backwards with each gate inverted. A measurement is not unitary and cannot be undone.
+
+    (b) Take $\mathcal{A} = H^{\otimes n}$. Then $\mathcal{A}\ket{0^n}$ is the uniform state,
+    $p = \sfrac{a}{N}$, and $Q = -H^{\otimes n} Z_0 H^{\otimes n} Z_f$ is the Grover iteration.
+
+    (c) The formula for $k$ needs $p$. The theorem in the scribe assumes that $p$ is known; the
+    unknown case was not covered.
+\end{wsolution}
+\end{exercisebox}
+
+\subsection{Comparing the Models}
+
+\begin{exercisebox}
+\begin{pproblem}[The numbers for $n = 20$]\label{pp:n20}
+    Fill in the query counts for $n = 20$, $N = 1{,}048{,}576$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:simon-det-lb-1001}; \scr{thm:bv-0929}; \scr{thm:dj-0924}}
+    The classical count for Simon lies between the lower bound of Oct 1 and the deterministic
+    algorithm of Sep 29.
+    \begin{center}
+        \begin{tabular}{lp{4.4cm}p{4.4cm}}
+            \toprule
+            Problem                   & Classical                                                                         & Quantum                                                         \\ \midrule
+            Deutsch--Jozsa, no error  & $524{,}289$                                                                       & $1$                                                             \\
+            Bernstein--Vazirani       & $20$                                                                              & $1$                                                             \\
+            Simon                     & more than $512$ ($\sfrac{\sqrt{N}}{2}$); about $1024$ suffice up to a constant    & $21$ per attempt: $19$ quantum and $2$ classical                \\
+            Search, one solution      & $1{,}048{,}575$ deterministic                                                     & $804$ Grover iterations: $\floor{\frac{\pi}{4} \cdot 1024}$     \\ \bottomrule
+        \end{tabular}
+    \end{center}
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[One-line reasons]\label{pp:reasons}
+    Give a one-line reason for each statement.
+    \begin{enumerate}[label=(\alph*)]
+        \item Search is only a quadratic speedup.
+        \item Bernstein--Vazirani is $n$ against $1$.
+        \item Simon and collisions have the same square root.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:bv-0929}; \scr{thm:collision-lb-0903}}
+    (a) Grover uses $\bigO{\sqrt{N}}$ queries and the scribe notes that $\bigOm{\sqrt{N}}$ quantum
+    queries are necessary, so there is no exponential gain for unstructured search.
+
+    (b) Each classical answer is one bit and $s$ has $n$ bits. One quantum query returns all $n$
+    bits because the Hadamard transform turns the sign pattern $(-1)^{s \cdot x}$ into $\ket{s}$.
+
+    (c) Classically $s$ is found only by a collision, and $k$ queries make about $\sfrac{k^2}{2}$
+    pairs, so $k$ must reach about $\sqrt{N}$. This is the birthday paradox of Sep 3.
+\end{wsolution}
+\end{exercisebox}

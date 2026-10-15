@@ -1,0 +1,112 @@
+\section{Week 1: Expectation and the Deterministic Search Lower Bound}\label{sec:week1}
+
+Lectures of August 25 and 27. No exercises were assigned in these two lectures, so the questions
+below vary the theorems.
+
+\begin{opentable}
+    \openrow{thm:detsearch-0825}{Deterministic search needs $n - 1$ queries (adversary)}
+    \openrow{def:expectation-0827}{Expectation}
+    \openrow{thm:linearity-0827}{Linearity of expectation}
+    \openrow{thm:binomial-0827}{$\expectation{B(n,p)} = np$}
+    \openrow{thm:tower-0827}{$\expectation{\expectation{X \given Y}} = \expectation{X}$}
+    \openrow{thm:geometric-0827}{$\expectation{G(p)} = \sfrac{1}{p}$}
+\end{opentable}
+
+\begin{exercisebox}
+\begin{pproblem}[Membership needs $n$ queries]\label{pp:membership}
+    The scribe shows that finding $x$ needs $n - 1$ queries when $x$ is promised to be in the array.
+    Show that deciding whether $x$ is in the array at all needs $n$ queries.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:detsearch-0825}}
+    \leavevmode
+    \begin{enumerate}
+        \item Fix a deterministic algorithm. The adversary answers every query with ``not $x$''.
+        \item Suppose the algorithm stops after at most $n - 1$ queries. Then some slot $j$ was never
+              queried.
+        \item Two arrays agree with all the answers: one has $x$ in slot $j$, the other has no $x$
+              anywhere.
+        \item The algorithm saw the same answers on both, so it gives the same output on both. It is
+              wrong on one.
+        \item So a correct algorithm makes $n$ queries.
+    \end{enumerate}
+    The promise is what saved one query on Aug 25: with a promise, $n - 1$ answers of ``no'' leave
+    only one possible slot.
+\end{wsolution}
+\end{exercisebox}
+
+
+\begin{exercisebox}
+\begin{pproblem}[Search with $k$ copies of $x$]\label{wp:kcopies}
+    An array of $n$ slots contains $x$ in exactly $k$ slots, $1 \leq k < n$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Random sampling queries uniformly random slots (with replacement) until it finds $x$.
+              What is the expected number of queries?
+        \item Show that a deterministic algorithm needs $n - k$ queries in the worst case.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:geometric-0827}; \scr{thm:detsearch-0825}}
+    (a) Each query finds $x$ with probability $p = \sfrac{k}{n}$, independently of the others, so the
+    number of queries is geometric with $p = \sfrac{k}{n}$. Its expectation is
+    $\sfrac{1}{p} = \sfrac{n}{k}$.
+
+    (b) The adversary answers ``not $x$'' to every query. Suppose the algorithm stops after
+    $q < n - k$ queries and outputs a slot $j$. The array has $n - k$ slots without $x$, and only
+    $q$ of them have been used up by the answers, so at least one more slot without $x$ remains. If
+    $j$ was queried, the answer at $j$ was ``not $x$'' and the output is wrong. Otherwise the
+    adversary puts the remaining empty slot at $j$ and the $k$ copies of $x$ in other unqueried
+    slots; this agrees with all the answers, and the output is wrong. After $n - k$ answers of
+    ``no'', the $k$ unqueried slots all contain $x$, so $n - k$ queries suffice.
+
+    For $k = 1$ this is the $n - 1$ of the scribe.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Fixed points of a random permutation]\label{wp:fixed}
+    A permutation $\pi$ of $\set{1, \dots, n}$ is chosen uniformly at random. Find the expected
+    number of $i$ with $\pi(i) = i$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:linearity-0827}}
+    Let $X_i = 1$ if $\pi(i) = i$ and $0$ otherwise. By symmetry $\pi(i)$ is uniform on
+    $\set{1, \dots, n}$, so $\expectation{X_i} = \prob{\pi(i) = i} = \sfrac{1}{n}$. The number of
+    fixed points is $X = X_1 + \dots + X_n$, and by linearity
+    \[\expectation{X} = \sum_{i=1}^{n} \frac{1}{n} = 1.\]
+    The $X_i$ are not independent (if $n - 1$ points are fixed, so is the last one); linearity does
+    not need independence.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[A die, then coins]\label{wp:tower}
+    Roll a fair die and let $Y$ be the result. Then toss $Y$ fair coins and let $X$ be the number of
+    heads. Find $\expectation{X}$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:binomial-0827}; \scr{thm:tower-0827}}
+    Given $Y = y$, $X$ is binomial $B(y, \frac{1}{2})$, so $\expectation{X \given Y = y} = \sfrac{y}{2}$.
+    So $\expectation{X \given Y} = \sfrac{Y}{2}$, and by the tower rule
+    \[\expectation{X} = \expectation{\expectation{X \given Y}} = \frac{\expectation{Y}}{2}
+        = \frac{1}{2} \cdot \frac{1 + 2 + \dots + 6}{6} = \frac{7}{4}.\]
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[Two heads in a row]\label{wp:twoheads}
+    A coin shows heads with probability $p$. Toss it in pairs: two tosses, then two more, and so
+    on, until a pair is $HH$. Find the expected number of tosses.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:geometric-0827}}
+    A pair is $HH$ with probability $p^2$, and pairs are independent. So the number of pairs is
+    geometric $G(p^2)$, with expectation $\sfrac{1}{p^2}$. Each pair is two tosses, so the expected
+    number of tosses is $\sfrac{2}{p^2}$. For a fair coin this is $8$.
+\end{wsolution}
+\end{exercisebox}

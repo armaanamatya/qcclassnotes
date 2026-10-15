@@ -1,0 +1,79 @@
+\practiceweek{3}
+
+\begin{exercisebox}
+\begin{pproblem}[$p = 3 \ln n / n$]\label{pp:leader3}
+    Redo the analysis with candidate probability $p = \sfrac{3 \ln n}{n}$ and the same $k$.
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{thm:leader-atleast-0908}; \scr{lem:disjoint-0908}; \scr{thm:leader-atmost-0908}; \scr{thm:complexity-0908}}
+    \leavevmode
+    \begin{enumerate}
+        \item At least one leader: the candidate with the smallest id always wins at all its
+              referees, so there is no leader only if there is no candidate.
+              $\prob{\text{no candidate}} = (1-p)^n \leq e^{-pn} = e^{-3 \ln n} = \sfrac{1}{n^3}$.
+        \item Two candidates with a common referee cannot both be leaders. Two referee sets are
+              disjoint with probability at most $e^{-k^2/n} \leq e^{-\ln n} = \sfrac{1}{n}$, as
+              before.
+        \item A fixed pair is bad (both are candidates, with no common referee) with probability at
+              most $\sfrac{p^2}{n}$. The expected number of bad pairs is at most
+              \[\binom{n}{2} \frac{p^2}{n} \leq \frac{n^2}{2} \cdot \frac{9 \ln^2 n}{n^2} \cdot \frac{1}{n} = \frac{9 \ln^2 n}{2n}.\]
+        \item By Markov,
+              $\prob{\text{more than one leader}} \leq \prob{\text{at least one bad pair}} \leq \frac{9 \ln^2 n}{2n}$.
+        \item Messages: at most $2k$ per candidate and $3 \ln n$ candidates in expectation, so at
+              most $6k \ln n = \bigO{\sqrt{n} \log^{3/2} n}$.
+    \end{enumerate}
+    More candidates make ``no leader'' less likely, and ``two leaders'' and the message count
+    slightly larger. The asymptotics do not change.
+\end{wsolution}
+\end{exercisebox}
+
+\begin{exercisebox}
+\begin{pproblem}[A triangle with a tail]\label{pp:triangle}
+    Vertices $1, 2, 3$ form a triangle and vertex $4$ is joined to vertex $3$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Write $P$.
+        \item Find $\pi$ and verify it.
+        \item Does the walk converge?
+        \item Starting at vertex $4$, compute $p_1, p_2, p_3$.
+    \end{enumerate}
+\end{pproblem}
+\tcblower
+\begin{wsolution}
+    \uses{\scr{lem:evolution-0910}; \scr{thm:stationary-0910}; \scr{thm:convergence-0910}}
+    (a) The degrees are $2, 2, 3, 1$, so
+    \[P = \begin{pmatrix}
+            0            & \tfrac{1}{2} & \tfrac{1}{2} & 0            \\
+            \tfrac{1}{2} & 0            & \tfrac{1}{2} & 0            \\
+            \tfrac{1}{3} & \tfrac{1}{3} & 0            & \tfrac{1}{3} \\
+            0            & 0            & 1            & 0
+        \end{pmatrix}.\]
+    Every row sums to $1$.
+
+    (b) There are $m = 4$ edges, so
+    $\pi = \left(\frac{2}{8}, \frac{2}{8}, \frac{3}{8}, \frac{1}{8}\right)
+        = \left(\frac{1}{4}, \frac{1}{4}, \frac{3}{8}, \frac{1}{8}\right)$.
+    Verify $\pi P = \pi$ entry by entry:
+    \begin{itemize}
+        \item Vertex $1$: $\pi_2 \cdot \frac{1}{2} + \pi_3 \cdot \frac{1}{3} = \frac{1}{8} + \frac{1}{8} = \frac{1}{4}$.
+        \item Vertex $2$: $\pi_1 \cdot \frac{1}{2} + \pi_3 \cdot \frac{1}{3} = \frac{1}{8} + \frac{1}{8} = \frac{1}{4}$.
+        \item Vertex $3$: $\pi_1 \cdot \frac{1}{2} + \pi_2 \cdot \frac{1}{2} + \pi_4 \cdot 1
+                  = \frac{1}{8} + \frac{1}{8} + \frac{1}{8} = \frac{3}{8}$.
+        \item Vertex $4$: $\pi_3 \cdot \frac{1}{3} = \frac{1}{8}$.
+    \end{itemize}
+
+    (c) Yes. The graph is connected, and it contains a triangle (an odd cycle), so it is not
+    bipartite.
+
+    (d) $p_0 = (0, 0, 0, 1)$.
+    \begin{itemize}
+        \item $p_1 = (0, 0, 1, 0)$: from $4$ the walk must go to $3$.
+        \item $p_2 = \left(\frac{1}{3}, \frac{1}{3}, 0, \frac{1}{3}\right)$: from $3$ each
+              neighbour has probability $\frac{1}{3}$.
+        \item $p_3 = \left(\frac{1}{3} \cdot \frac{1}{2},\ \frac{1}{3} \cdot \frac{1}{2},\
+                  \frac{1}{3} \cdot \frac{1}{2} + \frac{1}{3} \cdot \frac{1}{2} + \frac{1}{3} \cdot 1,\ 0\right)
+                  = \left(\frac{1}{6}, \frac{1}{6}, \frac{2}{3}, 0\right)$.
+    \end{itemize}
+    Each $p_t$ sums to $1$, as it must (a row stochastic matrix preserves probability vectors).
+\end{wsolution}
+\end{exercisebox}
